@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://ctlp5fwvfjjk0"]
 
-[ext_resource type="Script" uid="uid://3blyi71uql88" path="res://scenes/player.gd" id="1_3li8b"]
+[ext_resource type="Script" uid="uid://3blyi71uql88" path="res://scripts/player.gd" id="1_3li8b"]
 [ext_resource type="Texture2D" uid="uid://l83yai5eupvg" path="res://assets/Sprites&Tiles/(V2) Down Idle (F).png" id="2_mdl7e"]
 [ext_resource type="Texture2D" uid="uid://dwkn3ciopbnva" path="res://assets/Sprites&Tiles/(V2) Run - Down Left (F).png" id="3_qu4a1"]
-[ext_resource type="Script" uid="uid://xbse0cnx5dc7" path="res://scenes/warp_area.gd" id="4_qu4a1"]
+[ext_resource type="Script" uid="uid://xbse0cnx5dc7" path="res://scripts/warp_area.gd" id="4_qu4a1"]
 [ext_resource type="Texture2D" uid="uid://y4sjq2oqegrw" path="res://assets/Sprites&Tiles/warp_ember.png" id="5_70d11"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_70d11"]
@@ -129,21 +129,12 @@ particle_flag_disable_z = true
 emission_shape = 6
 emission_ring_axis = Vector3(0, 0, 1)
 emission_ring_height = 1.0
-emission_ring_radius = 300.0
-emission_ring_inner_radius = 285.0
+emission_ring_radius = 250.0
+emission_ring_inner_radius = 248.0
 emission_ring_cone_angle = 90.0
 gravity = Vector3(0, 0, 0)
 scale_min = 0.01
-scale_max = 0.03
-
-[sub_resource type="Gradient" id="Gradient_4ffog"]
-colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 0)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_txj4k"]
-gradient = SubResource("Gradient_4ffog")
-fill = 1
-fill_from = Vector2(0.5, 0.5)
-fill_to = Vector2(1, 0.5)
+scale_max = 0.02
 
 [node name="Player" type="CharacterBody2D" unique_id=1594491723]
 scale = Vector2(1.5, 1.5)
@@ -155,23 +146,17 @@ animation = &"run"
 frame_progress = 0.28262088
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1731395525]
+zoom = Vector2(2, 2)
 
 [node name="WarpArea" type="Node2D" parent="." unique_id=1699028451]
 script = ExtResource("4_qu4a1")
 
 [node name="EmberParticles" type="GPUParticles2D" parent="WarpArea" unique_id=1882980489]
-amount = 180
+amount = 300
 texture = ExtResource("5_70d11")
 lifetime = 2.5
 preprocess = 2.5
 process_material = SubResource("ParticleProcessMaterial_3li8b")
 
-[node name="WarpLights" type="Node2D" parent="WarpArea" unique_id=37400102]
-
-[node name="Light1" type="PointLight2D" parent="WarpArea/WarpLights" unique_id=320224759]
-energy = 10.0
-texture = SubResource("GradientTexture2D_txj4k")
-texture_scale = 10.0
-
-[node name="Floor" type="Sprite2D" parent="." unique_id=442414020]
-z_index = -1
+[node name="WarpLights" type="PointLight2D" parent="WarpArea" unique_id=1523147089]
+energy = 0.5

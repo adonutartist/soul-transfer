@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://clar88ca0ol7a"]
+
+[ext_resource type="PackedScene" uid="uid://ctlp5fwvfjjk0" path="res://scenes/Player.tscn" id="1_32lhk"]
+[ext_resource type="PackedScene" uid="uid://de2ew0toofreg" path="res://scenes/Mage.tscn" id="2_7g83o"]
+
+[node name="World" type="Node2D" unique_id=2033759001]
+
+[node name="Player" parent="." unique_id=1594491723 instance=ExtResource("1_32lhk")]
+
+[node name="Mage" parent="." unique_id=1204145115 instance=ExtResource("2_7g83o")]
+position = Vector2(239, -17)
+
+[node name="Floor" type="Polygon2D" parent="." unique_id=338229310]
+z_index = -1
+color = Color(0.10244231, 0.102442294, 0.10244231, 1)
+polygon = PackedVector2Array(-469.33334, -402, 472.6667, -410.6667, 487.33334, 353.33334, -504.6667, 357.33334)

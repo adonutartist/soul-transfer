@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Can't Kill Me Lad :]"
-run/main_scene="uid://ctlp5fwvfjjk0"
+run/main_scene="uid://clar88ca0ol7a"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
