@@ -15,11 +15,16 @@ var afterimage_timer := 0.0
 var afterimages_created := 0
 var normal_zoom := Vector2(2.0, 2.0)
 var warp_zoom := Vector2(1.0, 1.0)
+var controlled_body: CharacterBody2D = null
+var possessing := false
 var last_move_direction := Vector2.LEFT
 var transfer_active := false
 
 func _ready():
 	sprite.play("idle")
+	for child in get_parent().get_children():
+		if child is CharacterBody2D and child.has_signal("selected"):
+			child.selected.connect(_on_body_selected)
 
 func _physics_process(delta):
 	if Input.is_action_just_pressed("warp_area"):
@@ -27,6 +32,7 @@ func _physics_process(delta):
 		var mage = get_parent().get_node("Mage")
 		mage.can_be_selected = true
 		mage.target_particles.emitting = true
+		mage.soul_line_particles.emitting = true
 		warp_area.show_warp()
 		var tween := create_tween()
 		tween.tween_property(camera, "zoom", warp_zoom, 0.35)
@@ -50,24 +56,39 @@ func _physics_process(delta):
 	)
 	if direction.length() > 1.0:
 		direction = direction.normalized()
-	velocity = direction * speed
-	move_and_slide()
+	if possessing and controlled_body != null:
+		controlled_body.velocity = direction * speed
+		controlled_body.move_and_slide()
+		global_position = controlled_body.global_position
+	else:
+		velocity = direction * speed
+		move_and_slide()
 	if direction != Vector2.ZERO:
 		last_move_direction = direction.normalized()
-	if direction != Vector2.ZERO:
-		sprite.play("run")
-		if direction.x < 0:
-			facing_right = false
-		elif direction.x > 0:
-			facing_right = true
-		sprite.flip_h = facing_right
-	else:
-		sprite.play("idle")
+	if possessing and controlled_body != null:
+		var body_sprite: AnimatedSprite2D = controlled_body.get_node("AnimatedSprite2D")
+		if direction != Vector2.ZERO:
+			body_sprite.play("walk")
+			if direction.x < 0:
+				body_sprite.flip_h = false
+			elif direction.x > 0:
+				body_sprite.flip_h = true
+		else:
+			if direction != Vector2.ZERO:
+				sprite.play("run")
+				if direction.x < 0:
+					facing_right = false
+				elif direction.x > 0:
+					facing_right = true
+				sprite.flip_h = facing_right
+			else:
+				sprite.play("idle")
 	if transfer_active and not warp_area.warp_active:
 		transfer_active = false
 		var mage = get_parent().get_node("Mage")
 		mage.can_be_selected = false
 		mage.target_particles.emitting = false
+		mage.soul_line_particles.emitting = false
 
 func start_dash():
 	is_dashing = true
@@ -91,3 +112,19 @@ func create_afterimage():
 	var tween := create_tween()
 	tween.tween_property(ghost, "modulate:a", 0.0, 0.18)
 	tween.tween_callback(ghost.queue_free)
+
+func possess_mage(mage):
+	if possessing:
+		return
+	possessing = true
+	controlled_body = mage
+	sprite.visible = false
+	mage.is_possessed = true
+	mage.is_dead = false
+	mage.can_be_selected = false
+	warp_area.global_position = mage.global_position
+	global_position = mage.global_position
+	mage.play_reverse_death
+
+func _on_body_selected():
+	pass

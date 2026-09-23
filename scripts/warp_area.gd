@@ -1,5 +1,5 @@
 extends Node2D
-@export var warp_radius := 250.0
+@export var warp_radius := 280.0
 @export var ember_count := 400
 @export var warp_duration: float = 3.0
 @onready var particles: GPUParticles2D = $EmberParticles
@@ -23,8 +23,9 @@ func _process(delta):
 			warp_active = false
 
 func create_warp_light():
+	var radius: float = 200.0
 	var padding: int = 60
-	var size := int(warp_radius * 2.0) + padding * 2
+	var size := int(radius * 2.0) + padding * 2
 	var image := Image.create(
 		size,
 		size,
@@ -35,7 +36,7 @@ func create_warp_light():
 	for y in range(size):
 		for x in range(size):
 			var distance : float = Vector2(x, y).distance_to(center)
-			var difference : float = abs(distance - warp_radius)
+			var difference : float = abs(distance - radius)
 			var alpha : float = clampf(
 				1.0 - difference / 70.0,
 				0.0,

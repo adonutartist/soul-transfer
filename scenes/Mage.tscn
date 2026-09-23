@@ -243,14 +243,18 @@ gravity = Vector3(0, 0, 0)
 scale_min = 0.29999998
 scale_max = 0.29999998
 
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_4ffog"]
+particle_flag_disable_z = true
+gravity = Vector3(0, 0, 0)
+scale_min = 0.29999998
+scale_max = 0.29999998
+
 [node name="Mage" type="CharacterBody2D" unique_id=1204145115]
 script = ExtResource("1_mxl01")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1439554698]
 sprite_frames = SubResource("SpriteFrames_txj4k")
 animation = &"death"
-frame = 12
-frame_progress = 1.0
 
 [node name="TargetArea" type="Area2D" parent="." unique_id=1175623626]
 
@@ -265,3 +269,14 @@ amount = 80
 lifetime = 1.2
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_txj4k")
+
+[node name="SoulLineParticles" type="GPUParticles2D" parent="." unique_id=364839544]
+emitting = false
+amount = 100
+lifetime = 0.35000000000000003
+randomness = 0.2
+process_material = SubResource("ParticleProcessMaterial_4ffog")
+
+[node name="SoulLight" type="PointLight2D" parent="." unique_id=1937691906]
+energy = 0.8
+texture_scale = 2.0
