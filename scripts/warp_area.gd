@@ -9,11 +9,21 @@ var warp_timer: float = 0.0
 
 func _ready():
 	particles.emitting = false
-	particles.amount = ember_count
-	particles.lifetime = 2.5
+	particles.amount = 500
+	particles.lifetime = 0.25
 	particles.local_coords = true
-	create_ember_texture()
-	create_warp_light()
+	particles.emitting = false
+	var mat := ParticleProcessMaterial.new()
+	mat.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_RING
+	mat.emission_ring_radius = 200.0
+	mat.emission_ring_inner_radius = 198.0
+	mat.direction = Vector3.ZERO
+	mat.initial_velocity_min = 0.0
+	mat.initial_velocity_max = 0.0
+	mat.scale_min = 0.012
+	mat.scale_max = 0.025
+	particles.process_material = mat
+	particles.material = preload("res://materials/soul_glow_material.tres")
 
 func _process(delta):
 	if warp_active:
@@ -53,29 +63,6 @@ func create_warp_light():
 	warp_lights.energy = 0.6
 	warp_lights.position = Vector2.ZERO
 	warp_lights.visible = false
-
-func create_ember_texture():
-	var size: int = 64
-	var image : Image = Image.create(size, size, false, Image.FORMAT_RGBA8)
-	var center : Vector2 = Vector2(size, size) * 0.5
-	var max_distance: float = size * 0.7
-	for y in range(size):
-		for x in range(size):
-			var distance: float = Vector2(x, y).distance_to(center)
-			var t: float = clampf(distance / max_distance, 0.0, 1.0)
-			var color: Color
-			if t < 0.25:
-				color = Color(1.0, 1.0, 0.9, 1.0)
-			elif t < 0.5:
-				color = Color(1.0, 0.85, 0.25, 1.0)
-			elif t < 0.8:
-				color = Color(1.0, 0.45, 0.05, 0.7)
-			else:
-				var alpha: float = 1.0 - t
-				color = Color(1.0, 0.25, 0.02, alpha)
-			image.set_pixel(x, y, color)
-	var texture: ImageTexture = ImageTexture.create_from_image(image)
-	particles.texture = texture
 
 func show_warp():
 	visible = true

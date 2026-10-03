@@ -276,7 +276,3 @@ amount = 100
 lifetime = 0.35000000000000003
 randomness = 0.2
 process_material = SubResource("ParticleProcessMaterial_4ffog")
-
-[node name="SoulLight" type="PointLight2D" parent="." unique_id=1937691906]
-energy = 0.8
-texture_scale = 2.0

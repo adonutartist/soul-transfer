@@ -1,0 +1,8 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://c543oaby88tl4"]
+
+[ext_resource type="Shader" uid="uid://dmxe3vch6kb6a" path="res://materials/soul_glow.gdshader" id="1_lmp53"]
+
+[resource]
+shader = ExtResource("1_lmp53")
+shader_parameter/tint = Color(0.46129155, 0.10351019, 0, 1)
+shader_parameter/brightness = 8.0

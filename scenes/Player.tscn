@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://l83yai5eupvg" path="res://assets/Sprites&Tiles/(V2) Down Idle (F).png" id="2_mdl7e"]
 [ext_resource type="Texture2D" uid="uid://dwkn3ciopbnva" path="res://assets/Sprites&Tiles/(V2) Run - Down Left (F).png" id="3_qu4a1"]
 [ext_resource type="Script" uid="uid://xbse0cnx5dc7" path="res://scripts/warp_area.gd" id="4_qu4a1"]
-[ext_resource type="Texture2D" uid="uid://y4sjq2oqegrw" path="res://assets/Sprites&Tiles/warp_ember.png" id="5_70d11"]
+[ext_resource type="Texture2D" uid="uid://bkjqi4xpyikhv" path="res://assets/Sprites&Tiles/Square_0.png" id="5_qu4a1"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_70d11"]
 atlas = ExtResource("2_mdl7e")
@@ -153,7 +153,7 @@ script = ExtResource("4_qu4a1")
 
 [node name="EmberParticles" type="GPUParticles2D" parent="WarpArea" unique_id=1882980489]
 amount = 300
-texture = ExtResource("5_70d11")
+texture = ExtResource("5_qu4a1")
 lifetime = 2.5
 preprocess = 2.5
 process_material = SubResource("ParticleProcessMaterial_3li8b")
