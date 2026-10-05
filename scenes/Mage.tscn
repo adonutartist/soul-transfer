@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://dl15dcwnedwfq" path="res://assets/Sprites&Tiles/Mage Death.png" id="2_hkpov"]
 [ext_resource type="Texture2D" uid="uid://diffjrvn3jy8e" path="res://assets/Sprites&Tiles/Mage Idle.png" id="3_wwtnx"]
 [ext_resource type="Texture2D" uid="uid://ch2ldd4grw2g7" path="res://assets/Sprites&Tiles/Mage Move.png" id="4_57fwn"]
+[ext_resource type="Texture2D" uid="uid://cust6brxco1w4" path="res://assets/Sprites&Tiles/Mage Slam Attack.png" id="5_hkpov"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5y4tf"]
 atlas = ExtResource("2_hkpov")
@@ -229,6 +230,13 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_txj4k"]
 radius = 40.0
 
+[sub_resource type="Gradient" id="Gradient_mxl01"]
+offsets = PackedFloat32Array(0, 0.7368421, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_mxl01"]
+gradient = SubResource("Gradient_mxl01")
+
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_txj4k"]
 particle_flag_disable_z = true
 emission_shape = 6
@@ -237,17 +245,138 @@ emission_ring_height = 1.0
 emission_ring_radius = 40.0
 emission_ring_inner_radius = 38.0
 emission_ring_cone_angle = 90.0
-initial_velocity_min = 3.0
-initial_velocity_max = 3.0
+orbit_velocity_min = 0.010000096
+orbit_velocity_max = 0.020000096
 gravity = Vector3(0, 0, 0)
 scale_min = 0.29999998
 scale_max = 0.29999998
+color_initial_ramp = SubResource("GradientTexture1D_mxl01")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_4ffog"]
 particle_flag_disable_z = true
 gravity = Vector3(0, 0, 0)
 scale_min = 0.29999998
 scale_max = 0.29999998
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wwtnx"]
+atlas = ExtResource("5_hkpov")
+region = Rect2(0, 0, 220, 220)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_57fwn"]
+atlas = ExtResource("5_hkpov")
+region = Rect2(220, 0, 220, 220)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tvl5m"]
+atlas = ExtResource("5_hkpov")
+region = Rect2(440, 0, 220, 220)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qanxx"]
+atlas = ExtResource("5_hkpov")
+region = Rect2(660, 0, 220, 220)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s2yhu"]
+atlas = ExtResource("5_hkpov")
+region = Rect2(880, 0, 220, 220)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c0p70"]
+atlas = ExtResource("5_hkpov")
+region = Rect2(1100, 0, 220, 220)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d6l6h"]
+atlas = ExtResource("5_hkpov")
+region = Rect2(1320, 0, 220, 220)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4va4j"]
+atlas = ExtResource("5_hkpov")
+region = Rect2(1540, 0, 220, 220)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g3arr"]
+atlas = ExtResource("5_hkpov")
+region = Rect2(1760, 0, 220, 220)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p6pw8"]
+atlas = ExtResource("5_hkpov")
+region = Rect2(1980, 0, 220, 220)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_knv0d"]
+atlas = ExtResource("5_hkpov")
+region = Rect2(2200, 0, 220, 220)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o54xx"]
+atlas = ExtResource("5_hkpov")
+region = Rect2(2420, 0, 220, 220)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q8m16"]
+atlas = ExtResource("5_hkpov")
+region = Rect2(2640, 0, 220, 220)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7lpmi"]
+atlas = ExtResource("5_hkpov")
+region = Rect2(2860, 0, 220, 220)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yy8kj"]
+atlas = ExtResource("5_hkpov")
+region = Rect2(3080, 0, 220, 220)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tc2j3"]
+atlas = ExtResource("5_hkpov")
+region = Rect2(3300, 0, 220, 220)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_4ffog"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wwtnx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_57fwn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tvl5m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qanxx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s2yhu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c0p70")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d6l6h")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4va4j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g3arr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p6pw8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_knv0d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o54xx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q8m16")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7lpmi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yy8kj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tc2j3")
+}],
+"loop": 0,
+"name": &"slam",
+"speed": 10.0
+}]
 
 [node name="Mage" type="CharacterBody2D" unique_id=1204145115]
 script = ExtResource("1_mxl01")
@@ -266,8 +395,9 @@ shape = SubResource("CircleShape2D_txj4k")
 position = Vector2(-2, 38)
 emitting = false
 amount = 80
-lifetime = 1.2
+lifetime = 0.35000000000000003
 local_coords = true
+trail_lifetime = 0.01
 process_material = SubResource("ParticleProcessMaterial_txj4k")
 
 [node name="SoulLineParticles" type="GPUParticles2D" parent="." unique_id=364839544]
@@ -276,3 +406,10 @@ amount = 100
 lifetime = 0.35000000000000003
 randomness = 0.2
 process_material = SubResource("ParticleProcessMaterial_4ffog")
+
+[node name="AttackSprite" type="AnimatedSprite2D" parent="." unique_id=1495191596]
+visible = false
+sprite_frames = SubResource("SpriteFrames_4ffog")
+animation = &"slam"
+frame = 6
+frame_progress = 0.47964397

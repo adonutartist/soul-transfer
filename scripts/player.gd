@@ -35,7 +35,7 @@ func _physics_process(delta):
 		mage.target_particles.emitting = true
 		mage.soul_line_particles.emitting = true
 		warp_area.show_warp()
-		var tween := create_tween()
+		var tween := create_tween().set_ignore_time_scale(true)
 		tween.tween_property(camera, "zoom", warp_zoom, 0.35)
 	if Input.is_action_just_pressed("dash") and not is_dashing:
 		start_dash()
@@ -148,9 +148,9 @@ func possess_mage(mage):
 	transfer_active = false
 	warp_area.hide_warp()
 	mage.target_particles.emitting = false
-	mage.soul_line_particles.emitting = false
-	warp_area.global_position = mage.global_position
 	global_position = mage.global_position
+	warp_area.global_position = global_position
+	mage.just_possessed = true
 	mage.play_reverse_death()
 
 func _on_body_selected():

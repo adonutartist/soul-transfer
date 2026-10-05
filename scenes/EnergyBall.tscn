@@ -1,0 +1,154 @@
+[gd_scene format=3 uid="uid://cm4a310325lro"]
+
+[ext_resource type="Texture2D" uid="uid://bnbl7nqxvgu5n" path="res://assets/Sprites&Tiles/Mage Projectile.png" id="1_6vevg"]
+[ext_resource type="Script" uid="uid://botsxg4ups3j5" path="res://scripts/energy_ball.gd" id="1_862cn"]
+[ext_resource type="Shader" uid="uid://cvoy0q1tsdigk" path="res://materials/EnergyBall.gdshader" id="3_3v26a"]
+[ext_resource type="Texture2D" uid="uid://dthmyl24ua7tt" path="res://assets/Sprites&Tiles/Mage Projectile Emission.png" id="3_jjtvf"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_862cn"]
+atlas = ExtResource("1_6vevg")
+region = Rect2(0, 0, 92, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jjtvf"]
+atlas = ExtResource("1_6vevg")
+region = Rect2(92, 0, 92, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3v26a"]
+atlas = ExtResource("1_6vevg")
+region = Rect2(184, 0, 92, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m1yk8"]
+atlas = ExtResource("1_6vevg")
+region = Rect2(276, 0, 92, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4dgjv"]
+atlas = ExtResource("1_6vevg")
+region = Rect2(368, 0, 92, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ng72k"]
+atlas = ExtResource("1_6vevg")
+region = Rect2(460, 0, 92, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dgftq"]
+atlas = ExtResource("1_6vevg")
+region = Rect2(552, 0, 92, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o61s1"]
+atlas = ExtResource("1_6vevg")
+region = Rect2(644, 0, 92, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_t3wya"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_862cn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jjtvf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3v26a")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m1yk8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4dgjv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ng72k")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dgftq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o61s1")
+}],
+"loop": 1,
+"name": &"energy_ball",
+"speed": 10.0
+}]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jjtvf"]
+shader = ExtResource("3_3v26a")
+shader_parameter/emission_strength = 20.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0t5ts"]
+atlas = ExtResource("3_jjtvf")
+region = Rect2(0, 0, 92, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_part0"]
+atlas = ExtResource("3_jjtvf")
+region = Rect2(92, 0, 92, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wjg7j"]
+atlas = ExtResource("3_jjtvf")
+region = Rect2(184, 0, 92, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wrcfv"]
+atlas = ExtResource("3_jjtvf")
+region = Rect2(276, 0, 92, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3sblb"]
+atlas = ExtResource("3_jjtvf")
+region = Rect2(368, 0, 92, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jfj5f"]
+atlas = ExtResource("3_jjtvf")
+region = Rect2(460, 0, 92, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jottl"]
+atlas = ExtResource("3_jjtvf")
+region = Rect2(552, 0, 92, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5t57i"]
+atlas = ExtResource("3_jjtvf")
+region = Rect2(644, 0, 92, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_txj4k"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0t5ts")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_part0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wjg7j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wrcfv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3sblb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jfj5f")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jottl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5t57i")
+}],
+"loop": 1,
+"name": &"energy_ball",
+"speed": 10.0
+}]
+
+[node name="EnergyBall" type="Area2D" unique_id=1829095982]
+script = ExtResource("1_862cn")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1671567641]
+sprite_frames = SubResource("SpriteFrames_t3wya")
+animation = &"energy_ball"
+frame_progress = 0.21416831
+
+[node name="EmissionSprite" type="AnimatedSprite2D" parent="." unique_id=1903884202]
+material = SubResource("ShaderMaterial_jjtvf")
+sprite_frames = SubResource("SpriteFrames_txj4k")
+animation = &"energy_ball"
+frame_progress = 0.23085949
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1270989391]

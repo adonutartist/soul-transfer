@@ -10,11 +10,17 @@ var can_be_selected := false
 var soul_particle_timer: float = 0.0
 var soul_dots: Array[Sprite2D] = []
 var soul_dot_count: int = 30
+var mouse_over_corpse := false
+var attacking := false
+var just_possessed := false
+
 signal selected
 
 func _ready():
 	sprite.animation_finished.connect(_on_animation_finished)
 	target_area.input_event.connect(_on_target_area_input_event)
+	target_area.mouse_entered.connect(_on_mouse_entered_corpse)
+	target_area.mouse_exited.connect(_on_mouse_exited_corpse)
 	sprite.play("death")
 	target_particles.emitting = false
 	target_particles.one_shot = false
@@ -61,9 +67,20 @@ func _on_target_area_input_event(_viewport, event, _shape_idx):
 func _process(_delta):
 	z_index = int(global_position.y)
 	var player = get_parent().get_node("Player")
+	if is_possessed and not attacking and not just_possessed:
+		if Input.is_action_just_pressed("mage_attack_right"):
+			attack_right()
+		if Input.is_action_just_pressed("mage_attack_left"):
+			attack_left()
+	if just_possessed:
+		just_possessed = false
+	if is_possessed:
+		target_particles.emitting = false
+		hide_soul_chain()
+		return
 	var distance_to_player: float = global_position.distance_to(player.global_position)
 	var in_range: bool = distance_to_player <= player.warp_area.warp_radius
-	if can_be_selected and in_range:
+	if can_be_selected and in_range and mouse_over_corpse:
 		target_particles.emitting = true
 		update_soul_chain()
 	else:
@@ -137,7 +154,6 @@ func update_soul_chain():
 
 func hide_soul_chain():
 	soul_line_particles.emitting = false
-	soul_line_particles.visible = false
 
 func play_reverse_death():
 	reversing_death = true
@@ -150,3 +166,62 @@ func play_reverse_death():
 	await sprite.animation_finished
 	sprite.play("idle")
 	reversing_death = false
+
+func _on_mouse_entered_corpse():
+	mouse_over_corpse = true
+	target_particles.restart()
+	target_particles.emitting = true
+
+func _on_mouse_exited_corpse():
+	mouse_over_corpse = false
+	target_particles.emitting = false
+	hide_soul_chain()
+
+func attack_right():
+	attacking = true
+	var mouse_position := get_global_mouse_position()
+	var direction := (mouse_position - global_position).normalized()
+	sprite.visible = false
+	$AttackSprite.visible = true
+	$AttackSprite.play("slam")
+	while $AttackSprite.frame < 11:
+		await get_tree().process_frame
+	var ball = preload("res://scenes/EnergyBall.tscn").instantiate()
+	get_parent().add_child(ball)
+	ball.global_position = global_position
+	ball.direction = direction
+	while $AttackSprite.frame < 15:
+		await get_tree().process_frame
+	sprite.visible = true
+	$AttackSprite.visible = false
+	attacking = false
+
+func attack_left():
+	attacking = true
+	sprite.visible = false
+	$AttackSprite.visible = true
+	$AttackSprite.play("slam")
+	var mouse_position := get_global_mouse_position()
+	var direction := (mouse_position - global_position).normalized()
+	var fireballs: Array[Area2D] = []
+	var fireball_count := 6
+	var circle_radius := 55.0
+	for i in range(fireball_count):
+		var fireball = preload("res://scenes/Fireball.tscn").instantiate()
+		get_parent().add_child(fireball)
+		var angle := (TAU / fireball_count) * i
+		fireball.global_position = global_position + Vector2(cos(angle), sin(angle)) * circle_radius
+		fireballs.append(fireball)
+		await get_tree().create_timer(0.08).timeout
+	while $AttackSprite.frame < 11:
+		await get_tree().process_frame
+	for i in range(fireballs.size()):
+		if is_instance_valid(fireballs[i]):
+			var spread := deg_to_rad((i - (fireballs.size() - 1) / 2.0) * 5.0)
+			fireballs[i].direction = direction.rotated(spread)
+			fireballs[i].launched = true
+	while $AttackSprite.frame < 15:
+		await get_tree().process_frame
+	sprite.visible = true
+	$AttackSprite.visible = false
+	attacking = false

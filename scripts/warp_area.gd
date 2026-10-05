@@ -27,7 +27,7 @@ func _ready():
 
 func _process(delta):
 	if warp_active:
-		warp_timer -= delta
+		warp_timer -= delta / Engine.time_scale
 		if warp_timer <= 0.0:
 			hide_warp()
 			warp_active = false
@@ -70,8 +70,10 @@ func show_warp():
 	warp_lights.visible = true
 	warp_active = true
 	warp_timer = warp_duration
+	Engine.time_scale = 0.3
 
 func hide_warp():
+	Engine.time_scale = 1.0
 	visible = false
 	particles.emitting = false
 	warp_lights.visible = false
