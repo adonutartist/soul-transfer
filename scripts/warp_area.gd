@@ -20,8 +20,8 @@ func _ready():
 	mat.direction = Vector3.ZERO
 	mat.initial_velocity_min = 0.0
 	mat.initial_velocity_max = 0.0
-	mat.scale_min = 0.012
-	mat.scale_max = 0.025
+	mat.scale_min = 0.001
+	mat.scale_max = 0.01
 	particles.process_material = mat
 	particles.material = preload("res://materials/soul_glow_material.tres")
 
@@ -67,7 +67,6 @@ func create_warp_light():
 func show_warp():
 	visible = true
 	particles.emitting = true
-	warp_lights.visible = true
 	warp_active = true
 	warp_timer = warp_duration
 	Engine.time_scale = 0.3
@@ -76,7 +75,6 @@ func hide_warp():
 	Engine.time_scale = 1.0
 	visible = false
 	particles.emitting = false
-	warp_lights.visible = false
 	var tween := get_parent().create_tween()
 	tween.tween_property(
 		get_parent().camera,

@@ -4,20 +4,32 @@
 [ext_resource type="PackedScene" uid="uid://de2ew0toofreg" path="res://scenes/Mage.tscn" id="2_7g83o"]
 
 [sub_resource type="Environment" id="Environment_txj4k"]
+background_mode = 3
 glow_enabled = true
-glow_intensity = 8.0
-glow_strength = 2.0
-glow_bloom = 1.0
-glow_blend_mode = 0
-glow_hdr_threshold = 0.0
-glow_hdr_luminance_cap = 256.0
+glow_intensity = 0.1
+glow_strength = 1.7
+glow_hdr_threshold = 2.0
+glow_hdr_luminance_cap = 3.82
 
 [node name="World" type="Node2D" unique_id=2033759001]
 
 [node name="Player" parent="." unique_id=1594491723 instance=ExtResource("1_32lhk")]
+y_sort_enabled = true
 
 [node name="Mage" parent="." unique_id=1204145115 instance=ExtResource("2_7g83o")]
+y_sort_enabled = true
 position = Vector2(239, -17)
+
+[node name="MageEnemy" parent="." unique_id=1690632162 instance=ExtResource("2_7g83o")]
+self_modulate = Color(0.012617188, 0.012617188, 0.012617188, 1)
+y_sort_enabled = true
+position = Vector2(100, 200)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1873190623]
 environment = SubResource("Environment_txj4k")
+
+[node name="Polygon2D" type="Polygon2D" parent="." unique_id=1982804086]
+z_index = -4096
+position = Vector2(-114, -3)
+color = Color(0.09239707, 0.09239706, 0.09239706, 1)
+polygon = PackedVector2Array(-485, -378, -477, 296, 470, 343, 431, -442)

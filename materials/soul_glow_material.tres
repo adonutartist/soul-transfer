@@ -4,5 +4,5 @@
 
 [resource]
 shader = ExtResource("1_lmp53")
-shader_parameter/tint = Color(0.46129155, 0.10351019, 0, 1)
-shader_parameter/brightness = 8.0
+shader_parameter/tint = Color(0.6702896, 0.32710826, 0.103933685, 1)
+shader_parameter/brightness = 6.0

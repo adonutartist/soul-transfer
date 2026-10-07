@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://bnbl7nqxvgu5n" path="res://assets/Sprites&Tiles/Mage Projectile.png" id="1_6vevg"]
 [ext_resource type="Script" uid="uid://botsxg4ups3j5" path="res://scripts/energy_ball.gd" id="1_862cn"]
-[ext_resource type="Shader" uid="uid://cvoy0q1tsdigk" path="res://materials/EnergyBall.gdshader" id="3_3v26a"]
+[ext_resource type="Shader" uid="uid://cvoy0q1tsdigk" path="res://materials/EnergyBall_Glow.gdshader" id="3_3v26a"]
 [ext_resource type="Texture2D" uid="uid://dthmyl24ua7tt" path="res://assets/Sprites&Tiles/Mage Projectile Emission.png" id="3_jjtvf"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_862cn"]
@@ -66,12 +66,13 @@ animations = [{
 }],
 "loop": 1,
 "name": &"energy_ball",
-"speed": 10.0
+"speed": 8.0
 }]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jjtvf"]
 shader = ExtResource("3_3v26a")
-shader_parameter/emission_strength = 20.0
+shader_parameter/hdr_color = Color(0.12907735, 0.62275136, 0.7653253, 1)
+shader_parameter/brightness = 15.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0t5ts"]
 atlas = ExtResource("3_jjtvf")
@@ -134,7 +135,7 @@ animations = [{
 }],
 "loop": 1,
 "name": &"energy_ball",
-"speed": 10.0
+"speed": 2.0
 }]
 
 [node name="EnergyBall" type="Area2D" unique_id=1829095982]
@@ -143,12 +144,15 @@ script = ExtResource("1_862cn")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1671567641]
 sprite_frames = SubResource("SpriteFrames_t3wya")
 animation = &"energy_ball"
-frame_progress = 0.21416831
+frame_progress = 0.94109637
 
 [node name="EmissionSprite" type="AnimatedSprite2D" parent="." unique_id=1903884202]
+self_modulate = Color(1.8247963, 1.8247963, 1.8247963, 1)
+z_index = 1
 material = SubResource("ShaderMaterial_jjtvf")
 sprite_frames = SubResource("SpriteFrames_txj4k")
 animation = &"energy_ball"
-frame_progress = 0.23085949
+frame_progress = 0.728825
+speed_scale = 2.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1270989391]

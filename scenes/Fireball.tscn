@@ -6,7 +6,8 @@
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4ffog"]
 shader = ExtResource("1_6se3a")
-shader_parameter/emission_strength = 1.2
+shader_parameter/tint = Color(0.6322086, 0.2688749, 0.021691663, 1)
+shader_parameter/brightness = 15.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_arubn"]
 atlas = ExtResource("2_2map7")
@@ -76,9 +77,11 @@ animations = [{
 script = ExtResource("1_2map7")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1859079284]
+self_modulate = Color(1.8247963, 1.8247963, 1.8247963, 1)
+z_index = 1
 material = SubResource("ShaderMaterial_4ffog")
 sprite_frames = SubResource("SpriteFrames_txj4k")
 animation = &"fireball"
-frame_progress = 0.26321927
+frame_progress = 0.7874716
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1036348804]

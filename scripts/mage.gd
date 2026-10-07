@@ -22,15 +22,23 @@ func _ready():
 	target_area.mouse_entered.connect(_on_mouse_entered_corpse)
 	target_area.mouse_exited.connect(_on_mouse_exited_corpse)
 	sprite.play("death")
+	var ember_texture = preload("res://assets/Sprites&Tiles/Square_0.png")
+	target_particles.texture = ember_texture
+	soul_line_particles.texture = ember_texture
 	target_particles.emitting = false
 	target_particles.one_shot = false
 	soul_line_particles.emitting = false
 	soul_line_particles.visible = false
-	create_target_texture()
 	target_particles.material = preload("res://materials/soul_glow_material.tres").duplicate()
 	soul_line_particles.material = preload("res://materials/soul_glow_material.tres").duplicate()
-	target_particles.material.set_shader_parameter("tint", Color(0.0, 0.2, 1.0, 1.0))
-	soul_line_particles.material.set_shader_parameter("tint", Color(0.0, 0.2, 1.0, 1.0))
+	var target_mat := target_particles.process_material as ParticleProcessMaterial
+	var soul_line_mat := soul_line_particles.process_material as ParticleProcessMaterial
+	target_mat.scale_min = 0.001
+	target_mat.scale_max = 0.01
+	soul_line_mat.scale_min = 0.001
+	soul_line_mat.scale_max = 0.01
+	target_particles.material.set_shader_parameter("tint", Color(0.062, 0.733, 0.871, 1.0))
+	soul_line_particles.material.set_shader_parameter("tint", Color(0.062, 0.733, 0.871, 1.0))
 
 func _on_animation_finished():
 	if sprite.animation == "death" and not reversing_death:
@@ -87,24 +95,7 @@ func _process(_delta):
 		target_particles.emitting = false
 		hide_soul_chain()
 
-func create_target_texture():
-	var size : int = 32
-	var image : Image = Image.create(size, size, false, Image.FORMAT_RGBA8)
-	var center : Vector2 = Vector2(size, size) * 0.5
-	for y in range(size):
-		for x in range(size):
-			var pixel_position: Vector2 = Vector2(x, y)
-			var pixel_distance: float = pixel_position.distance_to(center)
-			var alpha: float = clampf(1.0 - pixel_distance / 16.0, 0.0, 1.0)
-			alpha = alpha * alpha
-			image.set_pixel(
-				x,
-				y,
-				Color(0.1, 0.45, 1.0, alpha)
-			)
-	var texture := ImageTexture.create_from_image(image)
-	target_particles.texture = texture
-	soul_line_particles.texture = texture
+
 
 func create_soul_dots():
 	var dot_texture := target_particles.texture
@@ -204,8 +195,8 @@ func attack_left():
 	var mouse_position := get_global_mouse_position()
 	var direction := (mouse_position - global_position).normalized()
 	var fireballs: Array[Area2D] = []
-	var fireball_count := 6
-	var circle_radius := 55.0
+	var fireball_count := 8
+	var circle_radius := 35.0
 	for i in range(fireball_count):
 		var fireball = preload("res://scenes/Fireball.tscn").instantiate()
 		get_parent().add_child(fireball)
@@ -215,11 +206,13 @@ func attack_left():
 		await get_tree().create_timer(0.08).timeout
 	while $AttackSprite.frame < 11:
 		await get_tree().process_frame
-	for i in range(fireballs.size()):
-		if is_instance_valid(fireballs[i]):
-			var spread := deg_to_rad((i - (fireballs.size() - 1) / 2.0) * 5.0)
-			fireballs[i].direction = direction.rotated(spread)
-			fireballs[i].launched = true
+	for fireball in fireballs:
+		if is_instance_valid(fireball):
+			var random_angle := deg_to_rad(randf_range(-0.5, 0.5))
+			var random_speed := randf_range(280.0, 300.0)
+			fireball.direction = direction.rotated(random_angle)
+			fireball.speed = random_speed
+			fireball.launched = true
 	while $AttackSprite.frame < 15:
 		await get_tree().process_frame
 	sprite.visible = true
