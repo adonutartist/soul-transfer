@@ -13,6 +13,7 @@ var soul_dot_count: int = 30
 var mouse_over_corpse := false
 var attacking := false
 var just_possessed := false
+var soul_transfer_active := false
 
 signal selected
 
@@ -22,7 +23,7 @@ func _ready():
 	target_area.mouse_entered.connect(_on_mouse_entered_corpse)
 	target_area.mouse_exited.connect(_on_mouse_exited_corpse)
 	sprite.play("death")
-	var ember_texture = preload("res://assets/Sprites&Tiles/Square_0.png")
+	var ember_texture = preload("res://assets/Sprites&Tiles/Chain.png")
 	target_particles.texture = ember_texture
 	soul_line_particles.texture = ember_texture
 	target_particles.emitting = false
@@ -33,10 +34,10 @@ func _ready():
 	soul_line_particles.material = preload("res://materials/soul_glow_material.tres").duplicate()
 	var target_mat := target_particles.process_material as ParticleProcessMaterial
 	var soul_line_mat := soul_line_particles.process_material as ParticleProcessMaterial
-	target_mat.scale_min = 0.001
-	target_mat.scale_max = 0.01
-	soul_line_mat.scale_min = 0.001
-	soul_line_mat.scale_max = 0.01
+	target_mat.scale_min = 0.1
+	target_mat.scale_max = 0.4
+	soul_line_mat.scale_min = 0.1
+	soul_line_mat.scale_max = 0.4
 	target_particles.material.set_shader_parameter("tint", Color(0.062, 0.733, 0.871, 1.0))
 	soul_line_particles.material.set_shader_parameter("tint", Color(0.062, 0.733, 0.871, 1.0))
 
@@ -57,6 +58,7 @@ func _input_event(_viewport, event, _shape_idx):
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			selected.emit()
+			play_soul_transfer()
 			player.possess_mage(self)
 
 func _on_target_area_input_event(_viewport, event, _shape_idx):
@@ -70,6 +72,7 @@ func _on_target_area_input_event(_viewport, event, _shape_idx):
 			if global_position.distance_to(player.global_position) > player.warp_area.warp_radius:
 				return
 			selected.emit()
+			play_soul_transfer()
 			player.possess_mage(self)
 
 func _process(_delta):
@@ -84,7 +87,10 @@ func _process(_delta):
 		just_possessed = false
 	if is_possessed:
 		target_particles.emitting = false
-		hide_soul_chain()
+		if not soul_transfer_active:
+			hide_soul_chain()
+		return
+	if soul_transfer_active:
 		return
 	var distance_to_player: float = global_position.distance_to(player.global_position)
 	var in_range: bool = distance_to_player <= player.warp_area.warp_radius
@@ -94,8 +100,6 @@ func _process(_delta):
 	else:
 		target_particles.emitting = false
 		hide_soul_chain()
-
-
 
 func create_soul_dots():
 	var dot_texture := target_particles.texture
@@ -218,3 +222,22 @@ func attack_left():
 	sprite.visible = true
 	$AttackSprite.visible = false
 	attacking = false
+
+func play_soul_transfer():
+	var player: Node2D = get_parent().get_node("Player")
+	var target_center := target_particles.global_position
+	var player_position := player.global_position
+	var line := player_position - target_center
+	var line_length := line.length()
+	if line_length <= 1.0:
+		soul_transfer_active = false
+		return
+	soul_line_particles.visible = true
+	soul_line_particles.emitting = true
+	soul_line_particles.emitting = false
+	var transfer_time := 0.9
+	await get_tree().create_timer(transfer_time).timeout
+	var fade_time: float = soul_line_particles.lifetime
+	await get_tree().create_timer(fade_time).timeout
+	soul_line_particles.visible = false
+	soul_transfer_active = false
