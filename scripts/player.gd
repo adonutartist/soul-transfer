@@ -22,18 +22,24 @@ var transfer_active := false
 
 func _ready():
 	sprite.play("idle")
-	for child in get_parent().get_children():
-		if child is CharacterBody2D and child.has_signal("selected"):
-			child.selected.connect(_on_body_selected)
+	for body in get_tree().get_nodes_in_group("possessable_bodies"):
+		if body.has_signal("selected"):
+			body.selected.connect(_on_body_selected)
 
 func _physics_process(delta):
 	z_index = int(global_position.y)
-	if Input.is_action_just_pressed("warp_area"):
+	if Input.is_action_just_pressed("warp_area") and not transfer_active:
 		transfer_active = true
-		var mage = get_parent().get_node("Mage")
-		mage.can_be_selected = true
-		mage.target_particles.emitting = true
-		mage.soul_line_particles.emitting = true
+		for body in get_tree().get_nodes_in_group("possessable_bodies"):
+			body.can_be_selected = false
+			body.target_particles.emitting = false
+			body.target_particles.visible = false
+			body.soul_line_particles.emitting = false
+			body.soul_line_particles.visible = false
+			if body.is_dead and global_position.distance_to(body.global_position) <= warp_area.warp_radius:
+				body.can_be_selected = true
+				body.target_particles.visible = true
+				body.soul_line_particles.visible = true
 		warp_area.show_warp()
 		var tween := create_tween().set_ignore_time_scale(true)
 		tween.tween_property(camera, "zoom", warp_zoom, 0.35)
@@ -94,10 +100,10 @@ func _physics_process(delta):
 			sprite.play("idle")
 	if transfer_active and not warp_area.warp_active:
 		transfer_active = false
-		var mage = get_parent().get_node("Mage")
-		mage.can_be_selected = false
-		mage.target_particles.emitting = false
-		mage.soul_line_particles.emitting = false
+		for body in get_tree().get_nodes_in_group("possessable_bodies"):
+			body.can_be_selected = false
+			body.target_particles.emitting = false
+			body.soul_line_particles.emitting = false
 
 func start_dash():
 	is_dashing = true
@@ -137,20 +143,34 @@ func create_afterimage():
 	tween.tween_callback(ghost.queue_free)
 
 func possess_mage(mage):
-	if possessing:
+	if not is_instance_valid(mage) or controlled_body == mage:
 		return
+	transfer_active = false
+	warp_area.hide_warp()
+	for body in get_tree().get_nodes_in_group("possessable_bodies"):
+		body.can_be_selected = false
+		body.target_particles.emitting = false
+		body.target_particles.visible = false
+		body.soul_line_particles.emitting = false
+		body.soul_line_particles.visible = false
+	var previous_body = controlled_body
+	if previous_body != null and is_instance_valid(previous_body):
+		previous_body.is_possessed = false
+		previous_body.attacking = false
+		previous_body.queue_free()
 	possessing = true
 	controlled_body = mage
 	sprite.visible = false
 	mage.is_possessed = true
 	mage.is_dead = false
 	mage.can_be_selected = false
-	transfer_active = false
-	warp_area.hide_warp()
+	mage.just_possessed = true
 	mage.target_particles.emitting = false
+	mage.target_particles.visible = false
+	mage.soul_line_particles.emitting = false
+	mage.soul_line_particles.visible = false
 	global_position = mage.global_position
 	warp_area.global_position = global_position
-	mage.just_possessed = true
 	mage.play_reverse_death()
 
 func _on_body_selected():

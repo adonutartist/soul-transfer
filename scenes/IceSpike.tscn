@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://bs618s3ar0wbg"]
+
+[ext_resource type="Script" uid="uid://8c8p6bdoveti" path="res://scripts/ice_spike.gd" id="1_48ksh"]
+
+[node name="IceSpike" type="Node2D" unique_id=485179621]
+script = ExtResource("1_48ksh")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=1037620053]

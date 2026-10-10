@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://c2x8dipglab4w"]
+
+[ext_resource type="Script" uid="uid://da2ocb6mbai2n" path="res://scripts/ice_smash.gd" id="1_x552o"]
+[ext_resource type="PackedScene" uid="uid://bs618s3ar0wbg" path="res://scenes/IceSpike.tscn" id="2_apaa3"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_txj4k"]
+radius = 0.01
+
+[node name="IceSmash" type="Node2D" unique_id=1076592143]
+script = ExtResource("1_x552o")
+spike_scene = ExtResource("2_apaa3")
+
+[node name="Damage" type="Area2D" parent="." unique_id=738195084]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Damage" unique_id=1120232375]
+shape = SubResource("CircleShape2D_txj4k")

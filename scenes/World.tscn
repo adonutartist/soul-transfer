@@ -2,6 +2,8 @@
 
 [ext_resource type="PackedScene" uid="uid://ctlp5fwvfjjk0" path="res://scenes/Player.tscn" id="1_32lhk"]
 [ext_resource type="PackedScene" uid="uid://de2ew0toofreg" path="res://scenes/Mage.tscn" id="2_7g83o"]
+[ext_resource type="PackedScene" uid="uid://wtcyb0tpj1sy" path="res://scenes/Tank.tscn" id="3_7g83o"]
+[ext_resource type="PackedScene" uid="uid://rfmi3vc5k46q" path="res://scenes/Rogue.tscn" id="4_d1c63"]
 
 [sub_resource type="Environment" id="Environment_txj4k"]
 background_mode = 3
@@ -25,6 +27,9 @@ self_modulate = Color(0.012617188, 0.012617188, 0.012617188, 1)
 y_sort_enabled = true
 position = Vector2(100, 200)
 
+[node name="Tank" parent="." unique_id=1622895860 instance=ExtResource("3_7g83o")]
+position = Vector2(-139.855, 0)
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1873190623]
 environment = SubResource("Environment_txj4k")
 
@@ -33,3 +38,6 @@ z_index = -4096
 position = Vector2(-114, -3)
 color = Color(0.09239707, 0.09239706, 0.09239706, 1)
 polygon = PackedVector2Array(-485, -378, -477, 296, 470, 343, 431, -442)
+
+[node name="Rogue" parent="." unique_id=240379131 instance=ExtResource("4_d1c63")]
+position = Vector2(0, -190.225)

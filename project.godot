@@ -15,6 +15,10 @@ run/main_scene="uid://clar88ca0ol7a"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+IceFrames="*uid://cx3wrc2flsnbo"
+
 [display]
 
 window/stretch/mode="canvas_items"

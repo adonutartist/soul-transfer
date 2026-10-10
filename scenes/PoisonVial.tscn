@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://pe4nd1bwjn0o"]
+
+[ext_resource type="Script" uid="uid://hpnmr5mvx7b" path="res://scripts/poison_vial.gd" id="1_q051x"]
+
+[node name="PoisonVial" type="Area2D" unique_id=1460686650]
+script = ExtResource("1_q051x")

@@ -1,4 +1,5 @@
 extends CharacterBody2D
+@export var is_possessable := true
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var target_area: Area2D = $TargetArea
 @onready var target_particles: GPUParticles2D = $TargetParticles
@@ -18,6 +19,7 @@ var soul_transfer_active := false
 signal selected
 
 func _ready():
+	add_to_group("possessable_bodies")
 	sprite.animation_finished.connect(_on_animation_finished)
 	target_area.input_event.connect(_on_target_area_input_event)
 	target_area.mouse_entered.connect(_on_mouse_entered_corpse)
@@ -25,19 +27,19 @@ func _ready():
 	sprite.play("death")
 	var ember_texture = preload("res://assets/Sprites&Tiles/Chain.png")
 	target_particles.texture = ember_texture
-	soul_line_particles.texture = ember_texture
+	soul_line_particles.texture = preload("res://assets/Sprites&Tiles/Chain.png")
 	target_particles.emitting = false
 	target_particles.one_shot = false
 	soul_line_particles.emitting = false
 	soul_line_particles.visible = false
-	target_particles.material = preload("res://materials/soul_glow_material.tres").duplicate()
-	soul_line_particles.material = preload("res://materials/soul_glow_material.tres").duplicate()
+
+
 	var target_mat := target_particles.process_material as ParticleProcessMaterial
-	var soul_line_mat := soul_line_particles.process_material as ParticleProcessMaterial
 	target_mat.scale_min = 0.1
 	target_mat.scale_max = 0.4
-	soul_line_mat.scale_min = 0.1
-	soul_line_mat.scale_max = 0.4
+	var soul_line_mat := soul_line_particles.process_material as ShaderMaterial
+	soul_line_mat.set_shader_parameter("scale_min", 0.1)
+	soul_line_mat.set_shader_parameter("scale_max", 0.4)
 	target_particles.material.set_shader_parameter("tint", Color(0.062, 0.733, 0.871, 1.0))
 	soul_line_particles.material.set_shader_parameter("tint", Color(0.062, 0.733, 0.871, 1.0))
 
@@ -133,12 +135,14 @@ func update_soul_chain():
 		return
 	soul_line_particles.global_position = start + line * 0.5
 	soul_line_particles.rotation = line.angle()
-	var mat := soul_line_particles.process_material as ParticleProcessMaterial
-	mat.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_BOX
-	mat.emission_box_extents = Vector3(
-		line_length * 0.5,
-		2.5,
-		1.0
+	var mat := soul_line_particles.process_material as ShaderMaterial
+	mat.set_shader_parameter(
+		"line_half_length",
+		line_length * 0.5
+	)
+	mat.set_shader_parameter(
+		"line_half_width",
+		2.5
 	)
 	soul_line_particles.amount = 30
 	soul_line_particles.lifetime = 0.15
@@ -149,6 +153,7 @@ func update_soul_chain():
 
 func hide_soul_chain():
 	soul_line_particles.emitting = false
+	soul_line_particles.visible = false
 
 func play_reverse_death():
 	reversing_death = true
@@ -164,8 +169,8 @@ func play_reverse_death():
 
 func _on_mouse_entered_corpse():
 	mouse_over_corpse = true
-	target_particles.restart()
-	target_particles.emitting = true
+	if can_be_selected and is_dead and not is_possessed:
+		target_particles.emitting = true
 
 func _on_mouse_exited_corpse():
 	mouse_over_corpse = false
@@ -224,20 +229,23 @@ func attack_left():
 	attacking = false
 
 func play_soul_transfer():
-	var player: Node2D = get_parent().get_node("Player")
-	var target_center := target_particles.global_position
-	var player_position := player.global_position
-	var line := player_position - target_center
-	var line_length := line.length()
-	if line_length <= 1.0:
-		soul_transfer_active = false
-		return
+	soul_transfer_active = true
+	var chain_shader := soul_line_particles.material as ShaderMaterial
 	soul_line_particles.visible = true
 	soul_line_particles.emitting = true
+	chain_shader.set_shader_parameter("dissolve_position", -1.0)
+	var duration := 10.0
+	var elapsed := 0.0
+	while elapsed < duration:
+		await get_tree().process_frame
+		if not is_inside_tree():
+			return
+		elapsed += get_process_delta_time()
+		var progress := elapsed / duration
+		chain_shader.set_shader_parameter(
+			"dissolve_position",
+			progress
+		)
 	soul_line_particles.emitting = false
-	var transfer_time := 0.9
-	await get_tree().create_timer(transfer_time).timeout
-	var fade_time: float = soul_line_particles.lifetime
-	await get_tree().create_timer(fade_time).timeout
 	soul_line_particles.visible = false
 	soul_transfer_active = false
