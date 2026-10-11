@@ -148,6 +148,8 @@ frame_progress = 0.28262088
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1731395525]
 zoom = Vector2(2, 2)
+position_smoothing_enabled = true
+position_smoothing_speed = 3.0
 
 [node name="WarpArea" type="Node2D" parent="." unique_id=1699028451]
 self_modulate = Color(1.8247963, 1.8247963, 1.8247963, 1)

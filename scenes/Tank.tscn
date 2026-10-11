@@ -1092,8 +1092,9 @@ script = ExtResource("1_afltc")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=799078571]
 sprite_frames = SubResource("SpriteFrames_txj4k")
-animation = &"idle"
-frame_progress = 0.41217324
+animation = &"death"
+frame = 12
+frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=572448166]
 
@@ -1121,14 +1122,14 @@ script = ExtResource("9_nowge")
 [node name="TargetArea" type="Area2D" parent="." unique_id=822489879]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="TargetArea" unique_id=193811042]
-position = Vector2(-2, 38)
+position = Vector2(-2, 42.16)
 shape = SubResource("CircleShape2D_r7f8t")
 
 [node name="TargetParticles" type="GPUParticles2D" parent="." unique_id=1893382828]
 self_modulate = Color(1.8247963, 1.8247963, 1.8247963, 1)
 z_index = 1
 material = SubResource("ShaderMaterial_3bgbk")
-position = Vector2(-2, 38)
+position = Vector2(-2, 43.18)
 emitting = false
 amount = 80
 lifetime = 0.35000000000000003

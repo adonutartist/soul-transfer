@@ -4,8 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://3pnwuqhspx4i" path="res://assets/Sprites&Tiles/Rogue Death.png" id="1_461f2"]
 [ext_resource type="Texture2D" uid="uid://c7cdbmi45toir" path="res://assets/Sprites&Tiles/Rogue Idle 2.png" id="2_vwujp"]
 [ext_resource type="Texture2D" uid="uid://c2fgvweuurb3x" path="res://assets/Sprites&Tiles/Rogue Move.png" id="3_xrvrq"]
-[ext_resource type="Texture2D" uid="uid://66ueta6bxd3b" path="res://assets/Sprites&Tiles/Rogue Jump Attack.png" id="4_wvb3g"]
 [ext_resource type="Texture2D" uid="uid://l7ehvagnxjkg" path="res://assets/Sprites&Tiles/Rogue Throw.png" id="5_65x0j"]
+[ext_resource type="Texture2D" uid="uid://3wq568sxo5ri" path="res://assets/Sprites&Tiles/rogue_jump_attack_baked.png" id="5_cmxd6"]
 [ext_resource type="Shader" uid="uid://dqqhh3hr5rcw4" path="res://materials/target_particles_draw.gdshader" id="6_wvb3g"]
 [ext_resource type="Shader" uid="uid://fej85c1wxaut" path="res://materials/soul_chain_draw.gdshader" id="7_65x0j"]
 [ext_resource type="Texture2D" uid="uid://dsknu1d1xblls" path="res://assets/Sprites&Tiles/Chain.png" id="8_cmxd6"]
@@ -204,84 +204,48 @@ animations = [{
 }]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dxeup"]
-atlas = ExtResource("4_wvb3g")
-region = Rect2(0, 0, 220, 96)
+atlas = ExtResource("5_cmxd6")
+region = Rect2(0, 0, 79, 61)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_minh3"]
-atlas = ExtResource("4_wvb3g")
-region = Rect2(220, 0, 220, 96)
+atlas = ExtResource("5_cmxd6")
+region = Rect2(79, 0, 79, 61)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_inexm"]
-atlas = ExtResource("4_wvb3g")
-region = Rect2(440, 0, 220, 96)
+atlas = ExtResource("5_cmxd6")
+region = Rect2(158, 0, 79, 61)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dc7qf"]
-atlas = ExtResource("4_wvb3g")
-region = Rect2(660, 0, 220, 96)
+atlas = ExtResource("5_cmxd6")
+region = Rect2(237, 0, 79, 61)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_upx4h"]
-atlas = ExtResource("4_wvb3g")
-region = Rect2(880, 0, 220, 96)
+atlas = ExtResource("5_cmxd6")
+region = Rect2(316, 0, 79, 61)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ptoqt"]
-atlas = ExtResource("4_wvb3g")
-region = Rect2(1100, 0, 220, 96)
+atlas = ExtResource("5_cmxd6")
+region = Rect2(395, 0, 79, 61)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hxvyx"]
-atlas = ExtResource("4_wvb3g")
-region = Rect2(1320, 0, 220, 96)
+atlas = ExtResource("5_cmxd6")
+region = Rect2(474, 0, 79, 61)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fwmkv"]
-atlas = ExtResource("4_wvb3g")
-region = Rect2(1540, 0, 220, 96)
+atlas = ExtResource("5_cmxd6")
+region = Rect2(553, 0, 79, 61)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2p16f"]
-atlas = ExtResource("4_wvb3g")
-region = Rect2(1760, 0, 220, 96)
+atlas = ExtResource("5_cmxd6")
+region = Rect2(632, 0, 79, 61)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_i1y87"]
-atlas = ExtResource("4_wvb3g")
-region = Rect2(1980, 0, 220, 96)
+atlas = ExtResource("5_cmxd6")
+region = Rect2(711, 0, 79, 61)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_m7ker"]
-atlas = ExtResource("4_wvb3g")
-region = Rect2(2200, 0, 220, 96)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_3kwxv"]
-atlas = ExtResource("5_65x0j")
-region = Rect2(0, 0, 220, 96)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ht0nu"]
-atlas = ExtResource("5_65x0j")
-region = Rect2(220, 0, 220, 96)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_tluwx"]
-atlas = ExtResource("5_65x0j")
-region = Rect2(440, 0, 220, 96)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_1pdq8"]
-atlas = ExtResource("5_65x0j")
-region = Rect2(660, 0, 220, 96)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_bodl4"]
-atlas = ExtResource("5_65x0j")
-region = Rect2(880, 0, 220, 96)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_1dkvo"]
-atlas = ExtResource("5_65x0j")
-region = Rect2(1100, 0, 220, 96)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_e3rp4"]
-atlas = ExtResource("5_65x0j")
-region = Rect2(1320, 0, 220, 96)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_yxowk"]
-atlas = ExtResource("5_65x0j")
-region = Rect2(1540, 0, 220, 96)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_wvh6s"]
-atlas = ExtResource("5_65x0j")
-region = Rect2(1760, 0, 220, 96)
+atlas = ExtResource("5_cmxd6")
+region = Rect2(790, 0, 79, 61)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_4ffog"]
 animations = [{
@@ -322,8 +286,50 @@ animations = [{
 "loop": 0,
 "name": &"dash_slash",
 "speed": 10.0
-}, {
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_65x0j"]
+atlas = ExtResource("5_65x0j")
+region = Rect2(0, 0, 220, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3kwxv"]
+atlas = ExtResource("5_65x0j")
+region = Rect2(220, 0, 220, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ht0nu"]
+atlas = ExtResource("5_65x0j")
+region = Rect2(440, 0, 220, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tluwx"]
+atlas = ExtResource("5_65x0j")
+region = Rect2(660, 0, 220, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1pdq8"]
+atlas = ExtResource("5_65x0j")
+region = Rect2(880, 0, 220, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bodl4"]
+atlas = ExtResource("5_65x0j")
+region = Rect2(1100, 0, 220, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1dkvo"]
+atlas = ExtResource("5_65x0j")
+region = Rect2(1320, 0, 220, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e3rp4"]
+atlas = ExtResource("5_65x0j")
+region = Rect2(1540, 0, 220, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yxowk"]
+atlas = ExtResource("5_65x0j")
+region = Rect2(1760, 0, 220, 96)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_d22tc"]
+animations = [{
 "frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_65x0j")
+}, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_3kwxv")
 }, {
@@ -347,9 +353,6 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_yxowk")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_wvh6s")
 }],
 "loop": 0,
 "name": &"poison_throw",
@@ -824,24 +827,31 @@ shader_parameter/line_half_width = 2.5
 
 [node name="Rogue" type="CharacterBody2D" unique_id=240379131]
 script = ExtResource("1_65x0j")
+dash_end_offset = 60.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1353174163]
 sprite_frames = SubResource("SpriteFrames_txj4k")
-animation = &"walk"
+animation = &"death"
+frame = 11
+frame_progress = 1.0
+
+[node name="SlashSprite" type="AnimatedSprite2D" parent="." unique_id=1089357276]
+visible = false
+position = Vector2(-3, 7)
+sprite_frames = SubResource("SpriteFrames_4ffog")
+animation = &"dash_slash"
+
+[node name="PoisonSprite" type="AnimatedSprite2D" parent="." unique_id=1950377791]
+visible = false
+position = Vector2(1, -1)
+sprite_frames = SubResource("SpriteFrames_d22tc")
+animation = &"poison_throw"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2113870111]
 
 [node name="Hurtbox" type="Area2D" parent="." unique_id=1025719041]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=175801083]
-
-[node name="AttackSprite" type="AnimatedSprite2D" parent="." unique_id=1089357276]
-visible = false
-position = Vector2(-16, 5)
-sprite_frames = SubResource("SpriteFrames_4ffog")
-animation = &"dash_slash"
-frame = 10
-frame_progress = 1.0
 
 [node name="AttackArea" type="Area2D" parent="." unique_id=1509220405]
 position = Vector2(36.475, 0)
@@ -853,14 +863,14 @@ shape = SubResource("RectangleShape2D_txj4k")
 [node name="TargetArea" type="Area2D" parent="." unique_id=499564273]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="TargetArea" unique_id=1170744534]
-position = Vector2(-2, 38)
+position = Vector2(14, 28)
 shape = SubResource("CircleShape2D_im4tn")
 
 [node name="TargetParticles" type="GPUParticles2D" parent="." unique_id=26766811]
 self_modulate = Color(1.8247963, 1.8247963, 1.8247963, 1)
 z_index = 1
 material = SubResource("ShaderMaterial_34mkd")
-position = Vector2(-2, 38)
+position = Vector2(14.01, 28.165)
 emitting = false
 amount = 80
 lifetime = 0.35000000000000003

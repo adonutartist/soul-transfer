@@ -1,6 +1,122 @@
 [gd_scene format=3 uid="uid://pe4nd1bwjn0o"]
 
 [ext_resource type="Script" uid="uid://hpnmr5mvx7b" path="res://scripts/poison_vial.gd" id="1_q051x"]
+[ext_resource type="Texture2D" uid="uid://hw6d7oe0l4u1" path="res://assets/Sprites&Tiles/Poison Glass Bottle-SPin Slow.png" id="2_aavja"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5oxyj"]
+atlas = ExtResource("2_aavja")
+region = Rect2(0, 0, 63, 53)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t64bt"]
+atlas = ExtResource("2_aavja")
+region = Rect2(63, 0, 63, 53)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2ff0q"]
+atlas = ExtResource("2_aavja")
+region = Rect2(126, 0, 63, 53)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pdyam"]
+atlas = ExtResource("2_aavja")
+region = Rect2(189, 0, 63, 53)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6b8n5"]
+atlas = ExtResource("2_aavja")
+region = Rect2(252, 0, 63, 53)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ii005"]
+atlas = ExtResource("2_aavja")
+region = Rect2(315, 0, 63, 53)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bn304"]
+atlas = ExtResource("2_aavja")
+region = Rect2(378, 0, 63, 53)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bkri7"]
+atlas = ExtResource("2_aavja")
+region = Rect2(441, 0, 63, 53)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rkl56"]
+atlas = ExtResource("2_aavja")
+region = Rect2(504, 0, 63, 53)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rd3yg"]
+atlas = ExtResource("2_aavja")
+region = Rect2(567, 0, 63, 53)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qgfy8"]
+atlas = ExtResource("2_aavja")
+region = Rect2(630, 0, 63, 53)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4rdp7"]
+atlas = ExtResource("2_aavja")
+region = Rect2(693, 0, 63, 53)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hie1t"]
+atlas = ExtResource("2_aavja")
+region = Rect2(756, 0, 63, 53)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7n25n"]
+atlas = ExtResource("2_aavja")
+region = Rect2(819, 0, 63, 53)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_txj4k"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5oxyj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t64bt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2ff0q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pdyam")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6b8n5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ii005")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bn304")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bkri7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rkl56")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rd3yg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qgfy8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4rdp7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hie1t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7n25n")
+}],
+"loop": 1,
+"name": &"poison_flying",
+"speed": 10.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_aavja"]
 
 [node name="PoisonVial" type="Area2D" unique_id=1460686650]
 script = ExtResource("1_q051x")
+
+[node name="VialSprite" type="AnimatedSprite2D" parent="." unique_id=150544739]
+sprite_frames = SubResource("SpriteFrames_txj4k")
+animation = &"poison_flying"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2010830429]
+shape = SubResource("CircleShape2D_aavja")
