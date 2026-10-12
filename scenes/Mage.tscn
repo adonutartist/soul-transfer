@@ -813,12 +813,16 @@ animations = [{
 "speed": 10.0
 }]
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_txj4k"]
+radius = 12.0
+height = 44.0
+
 [node name="Mage" type="CharacterBody2D" unique_id=1204145115]
 script = ExtResource("1_mxl01")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1439554698]
 sprite_frames = SubResource("SpriteFrames_txj4k")
-animation = &"death"
+animation = &"idle"
 
 [node name="TargetArea" type="Area2D" parent="." unique_id=1175623626]
 
@@ -855,3 +859,7 @@ sprite_frames = SubResource("SpriteFrames_4ffog")
 animation = &"slam"
 frame = 6
 frame_progress = 0.47964397
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1936196440]
+position = Vector2(3, 16)
+shape = SubResource("CapsuleShape2D_txj4k")

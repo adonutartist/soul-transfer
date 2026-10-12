@@ -359,6 +359,10 @@ animations = [{
 "speed": 10.0
 }]
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_5y4tf"]
+radius = 9.0
+height = 38.0
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_txj4k"]
 size = Vector2(121, 41)
 
@@ -831,9 +835,7 @@ dash_end_offset = 60.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1353174163]
 sprite_frames = SubResource("SpriteFrames_txj4k")
-animation = &"death"
-frame = 11
-frame_progress = 1.0
+animation = &"idle"
 
 [node name="SlashSprite" type="AnimatedSprite2D" parent="." unique_id=1089357276]
 visible = false
@@ -848,6 +850,8 @@ sprite_frames = SubResource("SpriteFrames_d22tc")
 animation = &"poison_throw"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2113870111]
+position = Vector2(1, 8)
+shape = SubResource("CapsuleShape2D_5y4tf")
 
 [node name="Hurtbox" type="Area2D" parent="." unique_id=1025719041]
 

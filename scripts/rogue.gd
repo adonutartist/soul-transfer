@@ -64,7 +64,6 @@ func _ready() -> void:
 	sprite.play("death")
 
 func _process(delta: float) -> void:
-	z_index = int(global_position.y)
 	var player := get_parent().get_node_or_null("Player")
 	if player == null:
 		return

@@ -22,6 +22,8 @@ signal selected
 
 func _ready() -> void:
 	add_to_group("possessable_bodies")
+	collision_layer = 1
+	collision_mask = 1
 	sprite.animation_finished.connect(_on_animation_finished)
 	target_area.input_event.connect(_on_target_area_input_event)
 	target_area.mouse_entered.connect(_on_mouse_entered_corpse)
@@ -48,7 +50,6 @@ func _ready() -> void:
 	sprite.play("death")
 
 func _process(delta: float) -> void:
-	z_index = int(global_position.y)
 	var player := get_parent().get_node_or_null("Player")
 	if player == null:
 		return

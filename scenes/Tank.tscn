@@ -234,6 +234,10 @@ animations = [{
 "speed": 10.0
 }]
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_65x0j"]
+radius = 11.0
+height = 46.0
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_qfv8q"]
 atlas = ExtResource("4_afltc")
 region = Rect2(0, 0, 220, 220)
@@ -1092,11 +1096,11 @@ script = ExtResource("1_afltc")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=799078571]
 sprite_frames = SubResource("SpriteFrames_txj4k")
-animation = &"death"
-frame = 12
-frame_progress = 1.0
+animation = &"idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=572448166]
+position = Vector2(2, 15)
+shape = SubResource("CapsuleShape2D_65x0j")
 
 [node name="HurtBox" type="Area2D" parent="." unique_id=1634364654]
 

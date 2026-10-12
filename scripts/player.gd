@@ -27,7 +27,6 @@ func _ready():
 			body.selected.connect(_on_body_selected)
 
 func _physics_process(delta):
-	z_index = int(global_position.y)
 	if Input.is_action_just_pressed("warp_area") and not transfer_active:
 		transfer_active = true
 		for body in get_tree().get_nodes_in_group("possessable_bodies"):
@@ -161,6 +160,7 @@ func possess_mage(mage):
 	possessing = true
 	controlled_body = mage
 	sprite.visible = false
+	$CollisionShape2D.set_deferred("disabled", true)
 	mage.is_possessed = true
 	mage.is_dead = false
 	mage.can_be_selected = false

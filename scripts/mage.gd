@@ -78,7 +78,6 @@ func _on_target_area_input_event(_viewport, event, _shape_idx):
 			player.possess_mage(self)
 
 func _process(_delta):
-	z_index = int(global_position.y)
 	var player = get_parent().get_node("Player")
 	if is_possessed and not attacking and not just_possessed:
 		if Input.is_action_just_pressed("mage_attack_right"):

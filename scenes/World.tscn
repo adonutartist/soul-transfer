@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://de2ew0toofreg" path="res://scenes/Mage.tscn" id="2_7g83o"]
 [ext_resource type="PackedScene" uid="uid://wtcyb0tpj1sy" path="res://scenes/Tank.tscn" id="3_7g83o"]
 [ext_resource type="PackedScene" uid="uid://rfmi3vc5k46q" path="res://scenes/Rogue.tscn" id="4_d1c63"]
+[ext_resource type="PackedScene" uid="uid://d0jyad7omem2y" path="res://scenes/Level_1.tscn" id="5_1lgw5"]
 
 [sub_resource type="Environment" id="Environment_txj4k"]
 background_mode = 3
@@ -16,11 +17,12 @@ glow_hdr_luminance_cap = 3.82
 [node name="World" type="Node2D" unique_id=2033759001]
 
 [node name="Player" parent="." unique_id=1594491723 instance=ExtResource("1_32lhk")]
+z_index = 1
 y_sort_enabled = true
 
 [node name="Mage" parent="." unique_id=1204145115 instance=ExtResource("2_7g83o")]
 y_sort_enabled = true
-position = Vector2(239, -17)
+position = Vector2(210, -1025)
 
 [node name="MageEnemy" parent="." unique_id=1690632162 instance=ExtResource("2_7g83o")]
 self_modulate = Color(0.012617188, 0.012617188, 0.012617188, 1)
@@ -28,16 +30,22 @@ y_sort_enabled = true
 position = Vector2(100, 200)
 
 [node name="Tank" parent="." unique_id=1622895860 instance=ExtResource("3_7g83o")]
-position = Vector2(-139.855, 0)
+position = Vector2(436.07, -218.675)
 
 [node name="Rogue" parent="." unique_id=240379131 instance=ExtResource("4_d1c63")]
-position = Vector2(0, -190.225)
+position = Vector2(58.425, -654.24)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1873190623]
 environment = SubResource("Environment_txj4k")
 
 [node name="Polygon2D" type="Polygon2D" parent="." unique_id=1982804086]
 z_index = -4096
-position = Vector2(-114, -3)
-color = Color(0.09239707, 0.09239706, 0.09239706, 1)
+position = Vector2(347.99988, 1920)
+scale = Vector2(17.274343, 19.58981)
+color = Color(0.12941177, 0.05490196, 0.11764706, 1)
 polygon = PackedVector2Array(-485, -378, -477, 296, 470, 343, 431, -442)
+
+[node name="Map" type="Node2D" parent="." unique_id=1487938762]
+
+[node name="Level1" parent="." unique_id=19848164 instance=ExtResource("5_1lgw5")]
+z_index = -5
