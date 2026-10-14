@@ -1,4 +1,4 @@
-extends CharacterBody2D
+extends RogueAI
 @export var is_possessable := true
 @export var dash_distance: float = 150.0
 @export var dash_duration: float = 0.22
@@ -15,9 +15,7 @@ extends CharacterBody2D
 @onready var target_particles: GPUParticles2D = $TargetParticles
 @onready var soul_line_particles: GPUParticles2D = $SoulLineParticles
 
-var is_dead := false
 var reversing_death := false
-var is_possessed := false
 var can_be_selected := false
 var just_possessed := false
 var attacking := false
@@ -30,6 +28,10 @@ var poison_vial_scene: PackedScene = preload("res://scenes/PoisonVial.tscn")
 signal selected
 
 func _ready() -> void:
+	super._ready()
+	visual = sprite
+	is_dead = true
+	corpse_ready = false
 	add_to_group("possessable_bodies")
 	sprite.animation_finished.connect(_on_animation_finished)
 	target_area.input_event.connect(_on_target_area_input_event)
@@ -96,6 +98,7 @@ func _on_animation_finished() -> void:
 		is_dead = true
 		sprite.stop()
 		sprite.frame = sprite.sprite_frames.get_frame_count("death") - 1
+		_finish_corpse()
 
 func play_reverse_death() -> void:
 	reversing_death = true
@@ -239,3 +242,20 @@ func throw_poison() -> void:
 	await get_tree().create_timer(poison_cooldown).timeout
 	if is_inside_tree():
 		poison_ready = true
+
+func _play_death() -> void:
+	reversing_death = false
+	sprite.play("death")
+
+func _show_corpse_pose() -> void:
+	reversing_death = false
+	sprite.stop()
+	sprite.animation = "death"
+	sprite.frame = sprite.sprite_frames.get_frame_count("death") - 1
+
+func _play_revive() -> void:
+	play_reverse_death()
+
+func _abort_actions() -> void:
+	attacking = false
+	hide_soul_chain()

@@ -1,8 +1,16 @@
 extends CharacterBody2D
 class_name EnemyAI
 
+signal died(body: EnemyAI)
+signal became_corpse(body: EnemyAI)
+signal possessed(body: EnemyAI)
+
 const PX: float = 32.0
 
+@export_group("Lifecycle")
+
+@export var max_health: float = 5.0
+@export var dead_on_start: bool = false
 @export var speed: float = 2.0
 @export var alert_radius: float = 6.0
 @export var time_to_lose_detection: float = 2.0
@@ -16,6 +24,8 @@ const PX: float = 32.0
 
 var alerted: bool = false
 var is_dead: bool = false
+var health: float = 5.0
+var corpse_ready: bool = false
 var casting: bool = false
 var is_possessed: bool = false
 var movement_dir: Vector2 = Vector2.ZERO
@@ -40,6 +50,10 @@ func _ready() -> void:
 	circle.radius = alert_radius * PX
 	shape_node.shape = circle
 	agent.target_desired_distance = stopping_distance * PX
+	add_to_group("enemies")
+	health = max_health
+	if dead_on_start:
+		start_as_corpse.call_deferred()
 
 func _physics_process(delta: float) -> void:
 	if is_dead or is_possessed or is_in_group("player"):
@@ -164,14 +178,77 @@ func try_enqueue(slot: int, target: Vector2) -> Dictionary:
 		"duration": duration
 	}
 
+func take_damage(amount: float, _source: Node = null) -> void:
+	if is_dead or amount <= 0.0:
+		return
+	health = maxf(0.0, health - amount)
+	if health <= 0.0:
+		die()
+
 func die() -> void:
 	if is_dead:
 		return
 	is_dead = true
+	corpse_ready = false
+	alerted = false
+	casting = false
 	movement_dir = Vector2.ZERO
 	velocity = Vector2.ZERO
+	_abort_actions()
 	if abilities.size() > 2 and is_instance_valid(abilities[2]):
 		abilities[2].call("cast", self, global_position)
+	died.emit(self)
+	_play_death()
+
+func start_as_corpse() -> void:
+	if is_dead:
+		return
+	is_dead = true
+	corpse_ready = false
+	alerted = false
+	casting = false
+	movement_dir = Vector2.ZERO
+	velocity = Vector2.ZERO
+	_show_corpse_pose()
+	_finish_corpse()
+
+func _finish_corpse() -> void:
+	if corpse_ready:
+		return
+	corpse_ready = true
+	became_corpse.emit(self)
+
+func on_possessed() -> void:
+	is_dead = false
+	corpse_ready = false
+	health = max_health
+	is_possessed = true
+	alerted = false
+	casting = false
+	movement_dir = Vector2.ZERO
+	velocity = Vector2.ZERO
+	add_to_group("player")
+	_play_revive()
+	possessed.emit(self)
+
+func on_released() -> void:
+	is_possessed = false
+	remove_from_group("player")
+
+func _play_death() -> void:
+	_finish_corpse()
+
+func _show_corpse_pose() -> void:
+	pass
+
+func _play_revive() -> void:
+	pass
+
+func _abort_actions() -> void:
+	pass
+
+func _on_damaged() -> void:
+	pass
 
 func _update_facing() -> void:
 	if visual == null:

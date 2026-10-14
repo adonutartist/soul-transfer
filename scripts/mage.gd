@@ -1,12 +1,11 @@
-extends CharacterBody2D
+extends MageAI
 @export var is_possessable := true
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var target_area: Area2D = $TargetArea
 @onready var target_particles: GPUParticles2D = $TargetParticles
 @onready var soul_line_particles: GPUParticles2D = $SoulLineParticles
-var is_dead := false
+
 var reversing_death := false
-var is_possessed := false
 var can_be_selected := false
 var soul_particle_timer: float = 0.0
 var soul_dots: Array[Sprite2D] = []
@@ -19,11 +18,15 @@ var soul_transfer_active := false
 signal selected
 
 func _ready():
+	super._ready()
+	visual = sprite
 	add_to_group("possessable_bodies")
 	sprite.animation_finished.connect(_on_animation_finished)
 	target_area.input_event.connect(_on_target_area_input_event)
 	target_area.mouse_entered.connect(_on_mouse_entered_corpse)
 	target_area.mouse_exited.connect(_on_mouse_exited_corpse)
+	is_dead = true
+	corpse_ready = false
 	sprite.play("death")
 	var ember_texture = preload("res://assets/Sprites&Tiles/Chain.png")
 	target_particles.texture = ember_texture
@@ -32,8 +35,6 @@ func _ready():
 	target_particles.one_shot = false
 	soul_line_particles.emitting = false
 	soul_line_particles.visible = false
-
-
 	var target_mat := target_particles.process_material as ParticleProcessMaterial
 	target_mat.scale_min = 0.1
 	target_mat.scale_max = 0.4
@@ -48,6 +49,7 @@ func _on_animation_finished():
 		is_dead = true
 		sprite.stop()
 		sprite.frame = sprite.sprite_frames.get_frame_count("death") - 1
+		_finish_corpse()
 
 func _input_event(_viewport, event, _shape_idx): 
 	if not is_dead:
@@ -248,3 +250,21 @@ func play_soul_transfer():
 	soul_line_particles.emitting = false
 	soul_line_particles.visible = false
 	soul_transfer_active = false
+
+func _play_death() -> void:
+	reversing_death = false
+	sprite.play("death")
+
+func _show_corpse_pose() -> void:
+	reversing_death = false
+	sprite.stop()
+	sprite.animation = "death"
+	sprite.frame = sprite.sprite_frames.get_frame_count("death") - 1
+
+func _play_revive() -> void:
+	play_reverse_death()
+
+func _abort_actions() -> void:
+	attacking = false
+	soul_transfer_active = false
+	hide_soul_chain()
