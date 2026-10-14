@@ -1091,6 +1091,8 @@ shader_parameter/gravity = Vector3(0, 98, 0)
 shader_parameter/line_half_length = 100.0
 shader_parameter/line_half_width = 2.5
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_nowge"]
+
 [node name="Tank" type="CharacterBody2D" unique_id=1622895860]
 script = ExtResource("1_afltc")
 
@@ -1151,3 +1153,12 @@ texture = ExtResource("11_dyess")
 lifetime = 0.35000000000000003
 randomness = 0.2
 process_material = SubResource("ShaderMaterial_n7vmg")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=420358118]
+path_desired_distance = 4.0
+target_desired_distance = 6.4
+
+[node name="PlayerDetector" type="Area2D" parent="." unique_id=744155336]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetector" unique_id=1148003000]
+shape = SubResource("CircleShape2D_nowge")

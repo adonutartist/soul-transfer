@@ -829,6 +829,8 @@ shader_parameter/gravity = Vector3(0, 98, 0)
 shader_parameter/line_half_length = 100.0
 shader_parameter/line_half_width = 2.5
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_65x0j"]
+
 [node name="Rogue" type="CharacterBody2D" unique_id=240379131]
 script = ExtResource("1_65x0j")
 dash_end_offset = 60.0
@@ -892,3 +894,12 @@ texture = ExtResource("8_cmxd6")
 lifetime = 0.35000000000000003
 randomness = 0.2
 process_material = SubResource("ShaderMaterial_23756")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=401371552]
+path_desired_distance = 4.0
+target_desired_distance = 6.4
+
+[node name="PlayerDetector" type="Area2D" parent="." unique_id=1676274664]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetector" unique_id=763114419]
+shape = SubResource("CircleShape2D_65x0j")

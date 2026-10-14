@@ -817,6 +817,8 @@ animations = [{
 radius = 12.0
 height = 44.0
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_4ffog"]
+
 [node name="Mage" type="CharacterBody2D" unique_id=1204145115]
 script = ExtResource("1_mxl01")
 
@@ -863,3 +865,12 @@ frame_progress = 0.47964397
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1936196440]
 position = Vector2(3, 16)
 shape = SubResource("CapsuleShape2D_txj4k")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1521139662]
+path_desired_distance = 4.0
+target_desired_distance = 6.4
+
+[node name="PlayerDetector" type="Area2D" parent="." unique_id=1588585267]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetector" unique_id=181386860]
+shape = SubResource("CircleShape2D_4ffog")

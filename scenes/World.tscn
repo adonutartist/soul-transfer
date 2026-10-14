@@ -19,6 +19,7 @@ glow_hdr_luminance_cap = 3.82
 [node name="Player" parent="." unique_id=1594491723 instance=ExtResource("1_32lhk")]
 z_index = 1
 y_sort_enabled = true
+position = Vector2(-57.36, 190.58)
 
 [node name="Mage" parent="." unique_id=1204145115 instance=ExtResource("2_7g83o")]
 y_sort_enabled = true
