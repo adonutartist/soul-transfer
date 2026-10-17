@@ -31,10 +31,13 @@ y_sort_enabled = true
 position = Vector2(100, 200)
 
 [node name="Tank" parent="." unique_id=1622895860 instance=ExtResource("3_7g83o")]
-position = Vector2(436.07, -218.675)
+position = Vector2(436.07, -195.175)
 
 [node name="Rogue" parent="." unique_id=240379131 instance=ExtResource("4_d1c63")]
-position = Vector2(58.425, -654.24)
+position = Vector2(94.66, -654.24)
+
+[node name="Rogue2" parent="." unique_id=864894430 instance=ExtResource("4_d1c63")]
+position = Vector2(414.81, -485.025)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1873190623]
 environment = SubResource("Environment_txj4k")

@@ -144,6 +144,8 @@ func create_afterimage():
 func possess_mage(mage):
 	if not is_instance_valid(mage) or controlled_body == mage:
 		return
+	if not mage.is_dead or not mage.corpse_ready:
+		return
 	transfer_active = false
 	warp_area.hide_warp()
 	for body in get_tree().get_nodes_in_group("possessable_bodies"):
@@ -152,17 +154,18 @@ func possess_mage(mage):
 		body.target_particles.visible = false
 		body.soul_line_particles.emitting = false
 		body.soul_line_particles.visible = false
-	var previous_body = controlled_body
-	if previous_body != null and is_instance_valid(previous_body):
-		previous_body.is_possessed = false
+	var previous_body := controlled_body
+	if is_instance_valid(previous_body):
+		previous_body.on_released()
 		previous_body.attacking = false
 		previous_body.queue_free()
 	possessing = true
 	controlled_body = mage
+	if mage is EnemyAI:
+		mage.died.connect(_on_controlled_body_died)
 	sprite.visible = false
 	$CollisionShape2D.set_deferred("disabled", true)
-	mage.is_possessed = true
-	mage.is_dead = false
+	mage.on_possessed()
 	mage.can_be_selected = false
 	mage.just_possessed = true
 	mage.target_particles.emitting = false
@@ -171,7 +174,20 @@ func possess_mage(mage):
 	mage.soul_line_particles.visible = false
 	global_position = mage.global_position
 	warp_area.global_position = global_position
-	mage.play_reverse_death()
 
 func _on_body_selected():
 	pass
+
+func _on_controlled_body_died(body: EnemyAI) -> void:
+	print("POSSESSED BODY DIED: ", body.name)
+	if controlled_body != body:
+		return
+	possessing = false
+	controlled_body = null
+	is_dashing = false
+	velocity = Vector2.ZERO
+	global_position = body.global_position
+	sprite.visible = true
+	$CollisionShape2D.set_diferred("disabled", false)
+	body.on_released()
+	sprite.play("idle")

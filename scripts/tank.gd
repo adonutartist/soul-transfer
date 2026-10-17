@@ -1,4 +1,4 @@
-extends CharacterBody2D
+extends TankAI
 @export var is_possessable := true
 @export var ice_smash_cooldown: float = 3.0
 
@@ -7,9 +7,7 @@ extends CharacterBody2D
 @onready var target_particles: GPUParticles2D = $TargetParticles
 @onready var soul_line_particles: GPUParticles2D = $SoulLineParticles
 
-var is_dead := false
 var reversing_death := false
-var is_possessed := false
 var can_be_selected := false
 var just_possessed := false
 var attacking := false
@@ -21,6 +19,10 @@ var ice_smash_active := false
 signal selected
 
 func _ready() -> void:
+	super._ready()
+	visual = sprite
+	is_dead = true
+	corpse_ready = false
 	add_to_group("possessable_bodies")
 	collision_layer = 1
 	collision_mask = 1
@@ -79,6 +81,7 @@ func _on_animation_finished() -> void:
 		is_dead = true
 		sprite.stop()
 		sprite.frame = sprite.sprite_frames.get_frame_count("death") - 1
+		_finish_corpse()
 
 func play_reverse_death() -> void:
 	reversing_death = true
@@ -208,3 +211,21 @@ func throw_axe() -> void:
 	sprite.play("idle")
 	attack_sprite.visible= false
 	attacking = false
+
+func _play_death() -> void:
+	reversing_death = false
+	sprite.play("death")
+
+func _show_corpse_pose() -> void:
+	reversing_death = false
+	sprite.stop()
+	sprite.animation = "death"
+	sprite.frame = sprite.sprite_frames.get_frame_count("death") - 1
+
+func _play_revive() -> void:
+	play_reverse_death()
+
+func _abort_actions() -> void:
+	attacking = false
+	ice_smash_active = false
+	hide_soul_chain()
