@@ -25,9 +25,8 @@ func _ready():
 	target_area.input_event.connect(_on_target_area_input_event)
 	target_area.mouse_entered.connect(_on_mouse_entered_corpse)
 	target_area.mouse_exited.connect(_on_mouse_exited_corpse)
-	is_dead = true
-	corpse_ready = false
-	sprite.play("death")
+	if not dead_on_start:
+		sprite.play("idle")
 	var ember_texture = preload("res://assets/Sprites&Tiles/Chain.png")
 	target_particles.texture = ember_texture
 	soul_line_particles.texture = preload("res://assets/Sprites&Tiles/Chain.png")

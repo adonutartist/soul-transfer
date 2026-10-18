@@ -21,8 +21,6 @@ signal selected
 func _ready() -> void:
 	super._ready()
 	visual = sprite
-	is_dead = true
-	corpse_ready = false
 	add_to_group("possessable_bodies")
 	collision_layer = 1
 	collision_mask = 1
@@ -49,7 +47,8 @@ func _ready() -> void:
 	soul_line_particles.material.set_shader_parameter(
 		"tint", Color(0.062, 0.733, 0.871, 1.0)
 	)
-	sprite.play("death")
+	if not dead_on_start:
+		sprite.play("idle")
 
 func _process(delta: float) -> void:
 	var player := get_parent().get_node_or_null("Player")

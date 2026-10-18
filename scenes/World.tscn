@@ -24,17 +24,21 @@ position = Vector2(-57.36, 190.58)
 [node name="Mage" parent="." unique_id=1204145115 instance=ExtResource("2_7g83o")]
 y_sort_enabled = true
 position = Vector2(210, -1025)
+dead_on_start = true
 
-[node name="MageEnemy" parent="." unique_id=1690632162 instance=ExtResource("2_7g83o")]
+[node name="MageEnemy" parent="." unique_id=1690632162 node_paths=PackedStringArray("patrol_points") instance=ExtResource("2_7g83o")]
 self_modulate = Color(0.012617188, 0.012617188, 0.012617188, 1)
 y_sort_enabled = true
 position = Vector2(100, 200)
+patrol_points = [NodePath("../PatrolPoints/MagePointA"), NodePath("../PatrolPoints/MagePointB")]
 
 [node name="Tank" parent="." unique_id=1622895860 instance=ExtResource("3_7g83o")]
 position = Vector2(436.07, -195.175)
+dead_on_start = true
 
 [node name="Rogue" parent="." unique_id=240379131 instance=ExtResource("4_d1c63")]
 position = Vector2(94.66, -654.24)
+dead_on_start = true
 
 [node name="Rogue2" parent="." unique_id=864894430 instance=ExtResource("4_d1c63")]
 position = Vector2(414.81, -485.025)
@@ -53,3 +57,11 @@ polygon = PackedVector2Array(-485, -378, -477, 296, 470, 343, 431, -442)
 
 [node name="Level1" parent="." unique_id=19848164 instance=ExtResource("5_1lgw5")]
 z_index = -5
+
+[node name="PatrolPoints" type="Node2D" parent="." unique_id=1860021400]
+
+[node name="MagePointA" type="Marker2D" parent="PatrolPoints" unique_id=1701056257]
+position = Vector2(-13, 228)
+
+[node name="MagePointB" type="Marker2D" parent="PatrolPoints" unique_id=529482034]
+position = Vector2(479, 217)
