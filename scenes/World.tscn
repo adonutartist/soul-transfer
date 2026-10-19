@@ -42,6 +42,7 @@ dead_on_start = true
 
 [node name="Rogue2" parent="." unique_id=864894430 instance=ExtResource("4_d1c63")]
 position = Vector2(414.81, -485.025)
+dead_on_start = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1873190623]
 environment = SubResource("Environment_txj4k")
@@ -61,7 +62,7 @@ z_index = -5
 [node name="PatrolPoints" type="Node2D" parent="." unique_id=1860021400]
 
 [node name="MagePointA" type="Marker2D" parent="PatrolPoints" unique_id=1701056257]
-position = Vector2(-13, 228)
+position = Vector2(409.6, 92.8)
 
 [node name="MagePointB" type="Marker2D" parent="PatrolPoints" unique_id=529482034]
-position = Vector2(479, 217)
+position = Vector2(14, 210)

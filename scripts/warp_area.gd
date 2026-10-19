@@ -1,5 +1,5 @@
 extends Node2D
-@export var warp_radius := 280.0
+@export var warp_radius := 416.0
 @export var ember_count := 400
 @export var warp_duration: float = 3.0
 @onready var particles: GPUParticles2D = $EmberParticles

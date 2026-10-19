@@ -13,8 +13,8 @@ var dash_timer := 0.0
 var dash_direction := Vector2.LEFT
 var afterimage_timer := 0.0
 var afterimages_created := 0
-var normal_zoom := Vector2(2.0, 2.0)
-var warp_zoom := Vector2(1.0, 1.0)
+var normal_zoom := Vector2(1.45, 1.45)
+var warp_zoom := Vector2(1.01, 1.01)
 var controlled_body: CharacterBody2D = null
 var possessing := false
 var last_move_direction := Vector2.LEFT
@@ -22,6 +22,7 @@ var transfer_active := false
 
 func _ready():
 	sprite.play("idle")
+	camera.zoom = normal_zoom
 	for body in get_tree().get_nodes_in_group("possessable_bodies"):
 		if body.has_signal("selected"):
 			body.selected.connect(_on_body_selected)

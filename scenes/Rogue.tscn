@@ -360,8 +360,8 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_5y4tf"]
-radius = 9.0
-height = 38.0
+radius = 7.0
+height = 26.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_txj4k"]
 size = Vector2(121, 41)
@@ -852,7 +852,7 @@ sprite_frames = SubResource("SpriteFrames_d22tc")
 animation = &"poison_throw"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2113870111]
-position = Vector2(1, 8)
+position = Vector2(1, 14)
 shape = SubResource("CapsuleShape2D_5y4tf")
 
 [node name="Hurtbox" type="Area2D" parent="." unique_id=1025719041]

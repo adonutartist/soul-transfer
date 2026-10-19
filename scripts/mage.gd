@@ -102,6 +102,13 @@ func _process(_delta):
 	else:
 		target_particles.emitting = false
 		hide_soul_chain()
+	if not is_dead and not is_possessed and not attacking:
+		if movement_dir.length_squared() > 0.01:
+			if sprite.animation != "walk":
+				sprite.play("walk")
+		else:
+			if sprite.animation != "idle":
+				sprite.play("idle")
 
 func create_soul_dots():
 	var dot_texture := target_particles.texture

@@ -137,8 +137,8 @@ scale_min = 0.0
 scale_max = 0.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_txj4k"]
-radius = 6.666667
-height = 26.666668
+radius = 4.0
+height = 14.666668
 
 [node name="Player" type="CharacterBody2D" unique_id=1594491723]
 scale = Vector2(1.5, 1.5)
@@ -169,5 +169,5 @@ preprocess = 2.5
 process_material = SubResource("ParticleProcessMaterial_3li8b")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1612460614]
-position = Vector2(0, 2.6666667)
+position = Vector2(0, 8.666666)
 shape = SubResource("CapsuleShape2D_txj4k")
