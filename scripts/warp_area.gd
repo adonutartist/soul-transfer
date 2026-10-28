@@ -15,8 +15,8 @@ func _ready():
 	particles.emitting = false
 	var mat := ParticleProcessMaterial.new()
 	mat.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_RING
-	mat.emission_ring_radius = 200.0
-	mat.emission_ring_inner_radius = 198.0
+	mat.emission_ring_radius = warp_radius - 100.0
+	mat.emission_ring_inner_radius = warp_radius - 110.0
 	mat.direction = Vector3.ZERO
 	mat.initial_velocity_min = 0.0
 	mat.initial_velocity_max = 0.0
@@ -33,7 +33,7 @@ func _process(delta):
 			warp_active = false
 
 func create_warp_light():
-	var radius: float = 200.0
+	var radius: float = warp_radius
 	var padding: int = 60
 	var size := int(radius * 2.0) + padding * 2
 	var image := Image.create(
