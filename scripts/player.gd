@@ -22,18 +22,14 @@ var transfer_active := false
 
 func _ready():
 	add_to_group("player")
-	print("Possessable bodies found: ", get_tree().get_nodes_in_group("possessable_bodies").size())
 	sprite.play("idle")
 	camera.zoom = normal_zoom
 	for body in get_tree().get_nodes_in_group("possessable_bodies"):
 		if body.has_signal("selected"):
 			body.selected.connect(_on_body_selected)
-	await get_tree().process_frame
-	_connect_possessable_bodies()
 
 func _physics_process(delta):
 	if Input.is_action_just_pressed("warp_area") and not transfer_active:
-		_connect_possessable_bodies()
 		transfer_active = true
 		for body in get_tree().get_nodes_in_group("possessable_bodies"):
 			body.can_be_selected = false
@@ -48,6 +44,11 @@ func _physics_process(delta):
 		warp_area.show_warp()
 		var tween := create_tween().set_ignore_time_scale(true)
 		tween.tween_property(camera, "zoom", warp_zoom, 0.35)
+	if possessing and is_instance_valid(controlled_body):
+		if controlled_body.reversing_death or controlled_body.attacking:
+			controlled_body.velocity = Vector2.ZERO
+			velocity = Vector2.ZERO
+			return
 	if Input.is_action_just_pressed("dash") and not is_dashing:
 		start_dash()
 	if is_dashing:
@@ -194,11 +195,6 @@ func _on_controlled_body_died(body: EnemyAI) -> void:
 	velocity = Vector2.ZERO
 	global_position = body.global_position
 	sprite.visible = true
-	$CollisionShape2D.set_diferred("disabled", false)
+	$CollisionShape2D.set_deferred("disabled", false)
 	body.on_released()
 	sprite.play("idle")
-
-func _connect_possessable_bodies() -> void:
-	for body in get_tree().get_nodes_in_group("possessable_bodies"):
-		if body.has_signal("selected") and not body.selected.is_connected(_on_body_selected):
-			body.selected.connect(_on_body_selected)

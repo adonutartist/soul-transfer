@@ -88,7 +88,7 @@ func _process(_delta):
 			" | Distance: ", global_position.distance_to(player.global_position),
 			" | Warp radius: ", player.warp_area.warp_radius
 		)
-	if is_possessed and not attacking and not just_possessed:
+	if is_possessed and not attacking and not reversing_death and not just_possessed:
 		if Input.is_action_just_pressed("mage_attack_right"):
 			attack_right()
 		if Input.is_action_just_pressed("mage_attack_left"):
@@ -202,7 +202,7 @@ func attack_right(target_position: Vector2 = Vector2.INF):
 	while $AttackSprite.frame < 11:
 		await get_tree().process_frame
 	var ball = preload("res://scenes/EnergyBall.tscn").instantiate()
-	get_parent().add_child(ball)
+	get_parent().get_parent().get_node("Map").add_child(ball)
 	ball.global_position = global_position
 	ball.direction = direction
 	while $AttackSprite.frame < 15:

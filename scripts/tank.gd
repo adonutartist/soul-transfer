@@ -51,7 +51,7 @@ func _ready() -> void:
 		sprite.play("idle")
 
 func _process(delta: float) -> void:
-	var player := get_parent().get_node_or_null("Player")
+	var player := get_parent().get_tree().get_first_node_in_group("player")
 	if player == null:
 		return
 	if just_possessed:
@@ -60,9 +60,9 @@ func _process(delta: float) -> void:
 	if is_possessed:
 		target_particles.emitting = false
 		hide_soul_chain()
-		if not attacking and Input.is_action_just_pressed("mage_attack_left"):
+		if not attacking and not reversing_death and Input.is_action_just_pressed("mage_attack_left"):
 			start_ice_smash()
-		if not attacking and Input.is_action_just_pressed("mage_attack_right"):
+		if not attacking and not reversing_death and Input.is_action_just_pressed("mage_attack_right"):
 			throw_axe()
 		return
 	var in_range : bool = (
@@ -100,7 +100,7 @@ func _on_target_area_input_event(_viewport: Node, event: InputEvent, _shape_idx:
 		return
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-			var player = get_parent().get_node_or_null("Player")
+			var player = get_parent().get_tree().get_first_node_in_group("player")
 			if player == null:
 				return
 			if global_position.distance_to(player.global_position) > player.warp_area.warp_radius:
@@ -117,7 +117,7 @@ func _on_mouse_exited_corpse() -> void:
 	hide_soul_chain()
 
 func update_soul_chain() -> void:
-	var player := get_parent().get_node_or_null("Player")
+	var player := get_parent().get_tree().get_first_node_in_group("player")
 	if player == null:
 		hide_soul_chain()
 		return

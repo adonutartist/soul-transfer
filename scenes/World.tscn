@@ -16,7 +16,7 @@ glow_hdr_luminance_cap = 3.82
 [node name="Player" parent="." unique_id=1594491723 instance=ExtResource("1_32lhk")]
 z_index = 1
 y_sort_enabled = true
-position = Vector2(-57.36, 190.58)
+position = Vector2(-24, 199)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1873190623]
 environment = SubResource("Environment_txj4k")

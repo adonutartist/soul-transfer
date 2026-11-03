@@ -21,9 +21,16 @@ var _next := 0
 var _alive := 0
 var _done_spawning := false
 var _hit := {}
+var ground_layer: TileMapLayer
 
 func start(pos: Vector2) -> void:
 	global_position = pos
+	ground_layer = get_tree().current_scene.find_child(
+		"Ground", true, false
+	) as TileMapLayer
+	if ground_layer == null:
+		push_error("IceSmash: Ground TileMapLayer not found.")
+		return
 	shape = shape.duplicate(); $Damage/CollisionShape2D.shape = shape
 	shape.radius = 0.0
 	damage_area.body_entered.connect(_on_body)
@@ -56,6 +63,9 @@ func _pick_kind(t: float) -> String:
 
 
 func _spawn(pos: Vector2, t: float) -> void:
+	var cell := ground_layer.local_to_map(ground_layer.to_local(pos))
+	if ground_layer.get_cell_source_id(cell) == -1:
+		return
 	var s: IceSpike = spike_scene.instantiate()
 	add_child(s)
 	s.global_position = pos
@@ -71,6 +81,10 @@ func _check_end() -> void:
 		queue_free()
 
 func _on_body(body: Node2D) -> void:
+	if body.is_in_group("player"):
+		return
+	if body == get_tree().get_first_node_in_group("player").controlled_body:
+		return
 	if _hit.has(body): return 
 	_hit[body] = true
 	if body.has_method("take_damage"): body.take_damage(base_damage)

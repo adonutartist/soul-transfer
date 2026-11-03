@@ -163,7 +163,6 @@ frame_progress = 0.728825
 speed_scale = 2.0
 
 [node name="Lens" type="Sprite2D" parent="." unique_id=529481108]
-z_index = 5
 material = SubResource("ShaderMaterial_txj4k")
 texture = ExtResource("6_4dgjv")
 

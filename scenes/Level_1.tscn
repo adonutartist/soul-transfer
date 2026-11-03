@@ -3712,6 +3712,7 @@ position = Vector2(409.6, 92.8)
 position = Vector2(14, 210)
 
 [node name="Enemies" type="Node2D" parent="." unique_id=510735830]
+z_index = 5
 
 [node name="Mage" parent="Enemies" unique_id=1204145115 instance=ExtResource("6_bmqp6")]
 y_sort_enabled = true
