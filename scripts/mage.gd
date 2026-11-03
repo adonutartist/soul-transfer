@@ -55,7 +55,7 @@ func _input_event(_viewport, event, _shape_idx):
 		return
 	if not can_be_selected:
 		return
-	var player = get_parent().get_node("Player")
+	var player = get_tree().get_first_node_in_group("player")
 	if global_position.distance_to(player.global_position) > player.warp_area.warp_radius:
 		return
 	if event is InputEventMouseButton:
@@ -71,7 +71,7 @@ func _on_target_area_input_event(_viewport, event, _shape_idx):
 		return
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-			var player = get_parent().get_node("Player")
+			var player = get_tree().get_first_node_in_group("player")
 			if global_position.distance_to(player.global_position) > player.warp_area.warp_radius:
 				return
 			selected.emit()
@@ -79,7 +79,15 @@ func _on_target_area_input_event(_viewport, event, _shape_idx):
 			player.possess_mage(self)
 
 func _process(_delta):
-	var player = get_parent().get_node("Player")
+	var player = get_tree().get_first_node_in_group("player")
+	if is_dead:
+		print(
+			"Dead: ", is_dead,
+			" | Selectable: ", can_be_selected,
+			" | Hover: ", mouse_over_corpse,
+			" | Distance: ", global_position.distance_to(player.global_position),
+			" | Warp radius: ", player.warp_area.warp_radius
+		)
 	if is_possessed and not attacking and not just_possessed:
 		if Input.is_action_just_pressed("mage_attack_right"):
 			attack_right()
@@ -123,7 +131,7 @@ func create_soul_dots():
 		soul_dots.append(dot)
 
 func update_soul_chain():
-	var player = get_parent().get_node("Player")
+	var player = get_tree().get_first_node_in_group("player")
 	var target_mat := target_particles.process_material as ParticleProcessMaterial
 	var target_radius: float = target_mat.emission_ring_radius
 	target_mat.emission_ring_inner_radius = target_radius - 5.0
@@ -184,10 +192,10 @@ func _on_mouse_exited_corpse():
 	target_particles.emitting = false
 	hide_soul_chain()
 
-func attack_right():
+func attack_right(target_position: Vector2 = Vector2.INF):
 	attacking = true
-	var mouse_position := get_global_mouse_position()
-	var direction := (mouse_position - global_position).normalized()
+	var aim_position := get_global_mouse_position() if target_position == Vector2.INF else target_position
+	var direction := (aim_position - global_position).normalized()
 	sprite.visible = false
 	$AttackSprite.visible = true
 	$AttackSprite.play("slam")
@@ -203,13 +211,13 @@ func attack_right():
 	$AttackSprite.visible = false
 	attacking = false
 
-func attack_left():
+func attack_left(target_position: Vector2 = Vector2.INF):
 	attacking = true
 	sprite.visible = false
 	$AttackSprite.visible = true
 	$AttackSprite.play("slam")
-	var mouse_position := get_global_mouse_position()
-	var direction := (mouse_position - global_position).normalized()
+	var aim_position := get_global_mouse_position() if target_position == Vector2.INF else target_position
+	var direction := (aim_position - global_position).normalized()
 	var fireballs: Array[Area2D] = []
 	var fireball_count := 8
 	var circle_radius := 35.0

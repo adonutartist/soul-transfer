@@ -82,6 +82,13 @@ func _physics_process(delta: float) -> void:
 	_update_facing()
 	velocity = movement_dir.normalized() * speed * PX
 	move_and_slide()
+	print(
+		name,
+		" | Alerted: ", alerted,
+		" | Direction: ", movement_dir,
+		" | Player: ", get_player().global_position,
+		" | Target: ", agent.target_position
+	)
 
 func _tick_cooldowns(delta: float) -> void:
 	for i in range(_cooldowns.size()):

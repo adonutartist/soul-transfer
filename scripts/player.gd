@@ -21,14 +21,19 @@ var last_move_direction := Vector2.LEFT
 var transfer_active := false
 
 func _ready():
+	add_to_group("player")
+	print("Possessable bodies found: ", get_tree().get_nodes_in_group("possessable_bodies").size())
 	sprite.play("idle")
 	camera.zoom = normal_zoom
 	for body in get_tree().get_nodes_in_group("possessable_bodies"):
 		if body.has_signal("selected"):
 			body.selected.connect(_on_body_selected)
+	await get_tree().process_frame
+	_connect_possessable_bodies()
 
 func _physics_process(delta):
 	if Input.is_action_just_pressed("warp_area") and not transfer_active:
+		_connect_possessable_bodies()
 		transfer_active = true
 		for body in get_tree().get_nodes_in_group("possessable_bodies"):
 			body.can_be_selected = false
@@ -192,3 +197,8 @@ func _on_controlled_body_died(body: EnemyAI) -> void:
 	$CollisionShape2D.set_diferred("disabled", false)
 	body.on_released()
 	sprite.play("idle")
+
+func _connect_possessable_bodies() -> void:
+	for body in get_tree().get_nodes_in_group("possessable_bodies"):
+		if body.has_signal("selected") and not body.selected.is_connected(_on_body_selected):
+			body.selected.connect(_on_body_selected)

@@ -5,6 +5,9 @@
 [ext_resource type="Texture2D" uid="uid://xf1kesc7cop2" path="res://assets/Sprites&Tiles/Sprite-0002.png" id="3_1tdkx"]
 [ext_resource type="Texture2D" uid="uid://ciky4gfhbivce" path="res://assets/Sprites&Tiles/atlas-props-old prison.png" id="4_wknwv"]
 [ext_resource type="Texture2D" uid="uid://d2forb4dfybya" path="res://assets/Sprites&Tiles/Prison Gate-with wall-18 frames-no-background.png" id="5_fxqaj"]
+[ext_resource type="PackedScene" uid="uid://de2ew0toofreg" path="res://scenes/Mage.tscn" id="6_bmqp6"]
+[ext_resource type="PackedScene" uid="uid://wtcyb0tpj1sy" path="res://scenes/Tank.tscn" id="7_f63rn"]
+[ext_resource type="PackedScene" uid="uid://rfmi3vc5k46q" path="res://scenes/Rogue.tscn" id="8_rp28y"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_5f7sk"]
 vertices = PackedVector2Array(16, 16, -16, 16, -16, -16, 16, -16)
@@ -3707,3 +3710,28 @@ position = Vector2(409.6, 92.8)
 
 [node name="MagePointB" type="Marker2D" parent="PatrolPoints" unique_id=1949528445]
 position = Vector2(14, 210)
+
+[node name="Enemies" type="Node2D" parent="." unique_id=510735830]
+
+[node name="Mage" parent="Enemies" unique_id=1204145115 instance=ExtResource("6_bmqp6")]
+y_sort_enabled = true
+position = Vector2(210, -1025)
+dead_on_start = true
+
+[node name="MageEnemy" parent="Enemies" unique_id=2120881559 node_paths=PackedStringArray("patrol_points") instance=ExtResource("6_bmqp6")]
+self_modulate = Color(0.012617188, 0.012617188, 0.012617188, 1)
+y_sort_enabled = true
+position = Vector2(100, 200)
+patrol_points = [NodePath("../../PatrolPoints/MagePointA"), NodePath("../../PatrolPoints/MagePointB")]
+
+[node name="Tank" parent="Enemies" unique_id=1622895860 instance=ExtResource("7_f63rn")]
+position = Vector2(436.07, -195.175)
+dead_on_start = true
+
+[node name="Rogue" parent="Enemies" unique_id=240379131 instance=ExtResource("8_rp28y")]
+position = Vector2(94.66, -654.24)
+dead_on_start = true
+
+[node name="Rogue2" parent="Enemies" unique_id=676044659 instance=ExtResource("8_rp28y")]
+position = Vector2(414.81, -485.025)
+dead_on_start = true
