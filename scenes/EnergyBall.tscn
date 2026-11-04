@@ -251,7 +251,7 @@ animations = [{
 }],
 "loop": 0,
 "name": &"default",
-"speed": 10.0
+"speed": 9.0
 }]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_7doe7"]
@@ -306,10 +306,6 @@ region = Rect2(462, 0, 42, 70)
 atlas = ExtResource("8_o61s1")
 region = Rect2(504, 0, 42, 70)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_30chr"]
-atlas = ExtResource("8_o61s1")
-region = Rect2(546, 0, 42, 70)
-
 [sub_resource type="SpriteFrames" id="SpriteFrames_d22tc"]
 animations = [{
 "frames": [{
@@ -351,13 +347,10 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_jyslh")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_30chr")
 }],
 "loop": 0,
 "name": &"default",
-"speed": 12.0
+"speed": 8.0
 }]
 
 [node name="EnergyBall" type="Area2D" unique_id=1829095982]

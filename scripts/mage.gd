@@ -202,6 +202,7 @@ func attack_right(target_position: Vector2 = Vector2.INF):
 	while $AttackSprite.frame < 11:
 		await get_tree().process_frame
 	var ball = preload("res://scenes/EnergyBall.tscn").instantiate()
+	ball.owner_body = self
 	get_parent().get_parent().get_node("Map").add_child(ball)
 	ball.global_position = global_position
 	ball.direction = direction

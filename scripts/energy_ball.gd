@@ -4,8 +4,13 @@ extends Area2D
 
 var direction := Vector2.RIGHT
 var impacted := false
+var owner_body: Node2D = null
+var ground_layer: TileMapLayer
+var ground_wall_layer: TileMapLayer
 
 func _ready() -> void:
+	ground_layer = get_tree().current_scene.find_child("Ground", true, false) as TileMapLayer
+	ground_wall_layer = get_tree().current_scene.find_child("GroundWall", true, false) as TileMapLayer
 	body_entered.connect(_on_body_entered)
 	$AnimatedSprite2D.play("energy_ball")
 	$EmissionSprite.visible = true
@@ -21,6 +26,8 @@ func _physics_process(delta):
 func _on_body_entered(body: Node2D) -> void:
 	if impacted:
 		return
+	if body == owner_body:
+		return
 	if body.is_in_group("player"):
 		return
 	if body is EnemyAI and body.is_dead:
@@ -28,6 +35,10 @@ func _on_body_entered(body: Node2D) -> void:
 	_impact()
 
 func _impact() -> void:
+	if ground_layer == null or ground_wall_layer == null:
+		push_warning("EnergyBall: Ground or GroundWall TileMapLayer not found.")
+		queue_free()
+		return
 	impacted = true
 	set_physics_process(false)
 	monitoring = false
@@ -35,21 +46,57 @@ func _impact() -> void:
 	$AnimatedSprite2D.hide()
 	$EmissionSprite.hide()
 	$Lens.hide()
-	var effect_parent := get_parent()
+	var positions: Array[Vector2] = []
+	var attempts := 0
 	var effect_count := randi_range(3, 4)
-	for i in range(effect_count):
-		var lightning := $LightningSprite.duplicate() as AnimatedSprite2D
-		var ground := $LightningEmission.duplicate()as AnimatedSprite2D
-		effect_parent.add_child(lightning)
-		effect_parent.add_child(ground)
+	while positions.size() < effect_count and attempts < effect_count * 15:
+		attempts += 1
 		var offset := Vector2.from_angle(randf() * TAU) * randf_range(12.0, 35.0)
-		var spawn_position := global_position + offset
-		lightning.global_position = spawn_position
-		ground.global_position = spawn_position
-		lightning.visible = true
-		ground.visible = true
-		lightning.animation_finished.connect(lightning.queue_free)
-		ground.animation_finished.connect(ground.queue_free)
-		lightning.play()
-		ground.play()
+		var pos := global_position + offset
+		var cell := ground_layer.local_to_map(ground_layer.to_local(pos))
+		if ground_layer.get_cell_source_id(cell) == -1:
+			continue
+		var wall_cell := ground_wall_layer.local_to_map(ground_wall_layer.to_local(pos))
+		if ground_wall_layer.get_cell_source_id(wall_cell) != -1:
+			continue
+		var overlapping := false
+		for existing in positions:
+			if existing.distance_to(pos) < 28.0:
+				overlapping = true
+				break
+		if overlapping:
+			continue
+		positions.append(pos)
+	for i in range(positions.size()):
+		var pos := positions[i]
+		if i > 0:
+			await get_tree().create_timer(randf_range(0.25, 0.55)).timeout
+		_spawn_lightning_strike(pos)
+		if randf() < 0.4:
+			var second_offset := Vector2(
+				randf_range(-30.0, 30.0),
+				randf_range(-30.0, 30.0)
+			)
+			await get_tree().create_timer(randf_range(0.18, 0.35)).timeout
+			_spawn_lightning_strike(pos + second_offset)
 	queue_free()
+
+func _spawn_lightning_strike(spawn_position: Vector2) -> void:
+	var lightning := $LightningSprite.duplicate() as AnimatedSprite2D
+	var ground := $LightningEmission.duplicate() as AnimatedSprite2D
+	var glow_material := ShaderMaterial.new()
+	glow_material.shader = preload("res://materials/Lightning_Glow.gdshader")
+	glow_material.set_shader_parameter("hdr_color", Color(0.12907735, 0.62275136, 0.7653253, 1.0))
+	glow_material.set_shader_parameter("brightness", 15.0)
+	lightning.material = glow_material
+	lightning.self_modulate = Color(1.8247963, 1.8247963, 1.8247963, 1.0)
+	get_parent().add_child(lightning)
+	get_parent().add_child(ground)
+	lightning.global_position = spawn_position
+	ground.global_position = spawn_position
+	lightning.visible = true
+	ground.visible = true
+	lightning.animation_finished.connect(lightning.queue_free)
+	ground.animation_finished.connect(ground.queue_free)
+	lightning.play()
+	ground.play()

@@ -6,7 +6,6 @@ uniform float brightness = 10.0;
 void fragment() {
     vec4 tex = texture(TEXTURE, UV);
     float mask = max(tex.r, max(tex.g, tex.b));
-
     COLOR = vec4(
         hdr_color.rgb * brightness * mask,
         mask
