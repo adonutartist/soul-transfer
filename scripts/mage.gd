@@ -224,6 +224,7 @@ func attack_left(target_position: Vector2 = Vector2.INF):
 	var circle_radius := 35.0
 	for i in range(fireball_count):
 		var fireball = preload("res://scenes/Fireball.tscn").instantiate()
+		fireball.owner_body = self
 		get_parent().add_child(fireball)
 		var angle := (TAU / fireball_count) * i
 		fireball.global_position = global_position + Vector2(cos(angle), sin(angle)) * circle_radius

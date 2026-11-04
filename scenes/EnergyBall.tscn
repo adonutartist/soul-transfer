@@ -8,6 +8,8 @@
 [ext_resource type="Texture2D" uid="uid://ddet14tubc5y0" path="res://assets/Sprites&Tiles/Soft.png" id="6_4dgjv"]
 [ext_resource type="Texture2D" uid="uid://px0ke6uvi0hf" path="res://assets/Sprites&Tiles/Lightning Bolt-More Particles.png" id="7_dgftq"]
 [ext_resource type="Texture2D" uid="uid://ct87skldw8bp2" path="res://assets/Sprites&Tiles/Lightning Bolt-More Particles Emission.png" id="8_o61s1"]
+[ext_resource type="Texture2D" uid="uid://b1pogmmwjm6vi" path="res://assets/Sprites&Tiles/Mage Skeleton -projectile-destroy2.png" id="9_o61s1"]
+[ext_resource type="Texture2D" uid="uid://duwjk0trwx67i" path="res://assets/Sprites&Tiles/Mage Skeleton -projectile-destroy2 Emisson.png" id="10_0t5ts"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_862cn"]
 atlas = ExtResource("1_6vevg")
@@ -353,6 +355,92 @@ animations = [{
 "speed": 8.0
 }]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_30chr"]
+atlas = ExtResource("9_o61s1")
+region = Rect2(0, 0, 92, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3fdrp"]
+atlas = ExtResource("9_o61s1")
+region = Rect2(92, 0, 92, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rm5io"]
+atlas = ExtResource("9_o61s1")
+region = Rect2(184, 0, 92, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hji7o"]
+atlas = ExtResource("9_o61s1")
+region = Rect2(276, 0, 92, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wvsjv"]
+atlas = ExtResource("9_o61s1")
+region = Rect2(368, 0, 92, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_a7ikw"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_30chr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3fdrp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rm5io")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hji7o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wvsjv")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 8.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y86cd"]
+atlas = ExtResource("10_0t5ts")
+region = Rect2(0, 0, 92, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c55o4"]
+atlas = ExtResource("10_0t5ts")
+region = Rect2(92, 0, 92, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fvob7"]
+atlas = ExtResource("10_0t5ts")
+region = Rect2(184, 0, 92, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1dsp7"]
+atlas = ExtResource("10_0t5ts")
+region = Rect2(276, 0, 92, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wv202"]
+atlas = ExtResource("10_0t5ts")
+region = Rect2(368, 0, 92, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_y86cd"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y86cd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c55o4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fvob7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1dsp7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wv202")
+}],
+"loop": 0,
+"name": &"default",
+"speed": 2.0
+}]
+
 [node name="EnergyBall" type="Area2D" unique_id=1829095982]
 script = ExtResource("1_862cn")
 
@@ -388,3 +476,9 @@ sprite_frames = SubResource("SpriteFrames_4ffog")
 visible = false
 z_index = 11
 sprite_frames = SubResource("SpriteFrames_d22tc")
+
+[node name="DestroySprite" type="AnimatedSprite2D" parent="." unique_id=1236924137]
+sprite_frames = SubResource("SpriteFrames_a7ikw")
+
+[node name="DestroyEmission" type="AnimatedSprite2D" parent="." unique_id=1114176333]
+sprite_frames = SubResource("SpriteFrames_y86cd")
