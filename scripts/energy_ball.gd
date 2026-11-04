@@ -35,9 +35,7 @@ func _on_body_entered(body: Node2D) -> void:
 	_impact()
 
 func _impact() -> void:
-	if ground_layer == null or ground_wall_layer == null:
-		push_warning("EnergyBall: Ground or GroundWall TileMapLayer not found.")
-		queue_free()
+	if impacted:
 		return
 	impacted = true
 	set_physics_process(false)
@@ -46,6 +44,11 @@ func _impact() -> void:
 	$AnimatedSprite2D.hide()
 	$EmissionSprite.hide()
 	$Lens.hide()
+	_spawn_destruction_effect()
+	if ground_layer == null or ground_wall_layer == null:
+		push_warning("EnergyBall: Ground or GroundWall TileMapLayer not found.")
+		queue_free()
+		return
 	var positions: Array[Vector2] = []
 	var attempts := 0
 	var effect_count := randi_range(3, 4)
@@ -67,6 +70,7 @@ func _impact() -> void:
 		if overlapping:
 			continue
 		positions.append(pos)
+	await get_tree().create_timer(0.5).timeout
 	for i in range(positions.size()):
 		var pos := positions[i]
 		if i > 0:
@@ -80,6 +84,30 @@ func _impact() -> void:
 			await get_tree().create_timer(randf_range(0.18, 0.35)).timeout
 			_spawn_lightning_strike(pos + second_offset)
 	queue_free()
+
+func _spawn_destruction_effect() -> void:
+	var effect_parent := get_parent()
+	var normal := $DestroySprite.duplicate() as AnimatedSprite2D
+	var emission := $DestroyEmission.duplicate() as AnimatedSprite2D
+	var glow_material := ShaderMaterial.new()
+	glow_material.shader = preload("res://materials/EnergyBall_Glow.gdshader")
+	glow_material.set_shader_parameter("hdr_color", Color(0.12907735, 0.62275136, 0.7653253, 1.0))
+	glow_material.set_shader_parameter("brightness", 15.0)
+	emission.material = glow_material
+	effect_parent.add_child(emission)
+	effect_parent.add_child(normal)
+	emission.global_position = global_position
+	normal.global_position = global_position
+	emission.visible = true
+	normal.visible = true
+	emission.z_index = 10
+	normal.z_index = 10
+	var normal_animation: StringName = normal.sprite_frames.get_animation_names()[0]
+	var emission_animation: StringName = emission.sprite_frames.get_animation_names()[0]
+	normal.animation_finished.connect(normal.queue_free)
+	emission.animation_finished.connect(emission.queue_free)
+	normal.play(normal_animation)
+	emission.play(emission_animation)
 
 func _spawn_lightning_strike(spawn_position: Vector2) -> void:
 	var lightning := $LightningSprite.duplicate() as AnimatedSprite2D

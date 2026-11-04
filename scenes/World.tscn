@@ -10,6 +10,10 @@ glow_intensity = 0.1
 glow_strength = 1.7
 glow_hdr_threshold = 2.0
 glow_hdr_luminance_cap = 3.82
+adjustment_brightness = 0.8
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_txj4k"]
+light_mode = 1
 
 [node name="World" type="Node2D" unique_id=2033759001]
 
@@ -32,3 +36,7 @@ polygon = PackedVector2Array(-485, -378, -477, 296, 470, 343, 431, -442)
 
 [node name="Level1" parent="." unique_id=19848164 instance=ExtResource("5_1lgw5")]
 z_index = -5
+
+[node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=1314166336]
+material = SubResource("CanvasItemMaterial_txj4k")
+color = Color(0.6509804, 0.6509804, 0.72156864, 1)

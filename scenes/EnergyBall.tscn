@@ -141,7 +141,7 @@ animations = [{
 }],
 "loop": 1,
 "name": &"energy_ball",
-"speed": 2.0
+"speed": 6.0
 }]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_txj4k"]
@@ -393,7 +393,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_wvsjv")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"default",
 "speed": 8.0
 }]
@@ -438,7 +438,7 @@ animations = [{
 }],
 "loop": 0,
 "name": &"default",
-"speed": 2.0
+"speed": 6.0
 }]
 
 [node name="EnergyBall" type="Area2D" unique_id=1829095982]
@@ -478,7 +478,13 @@ z_index = 11
 sprite_frames = SubResource("SpriteFrames_d22tc")
 
 [node name="DestroySprite" type="AnimatedSprite2D" parent="." unique_id=1236924137]
+visible = false
 sprite_frames = SubResource("SpriteFrames_a7ikw")
+frame = 4
+frame_progress = 1.0
 
 [node name="DestroyEmission" type="AnimatedSprite2D" parent="." unique_id=1114176333]
+visible = false
 sprite_frames = SubResource("SpriteFrames_y86cd")
+frame = 4
+frame_progress = 1.0
