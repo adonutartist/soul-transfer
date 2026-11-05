@@ -204,6 +204,7 @@ func start_as_corpse() -> void:
 	if is_dead:
 		return
 	is_dead = true
+	$CollisionShape2D.set_deferred("disabled", true)
 	corpse_ready = false
 	alerted = false
 	casting = false
@@ -216,10 +217,12 @@ func _finish_corpse() -> void:
 	if corpse_ready:
 		return
 	corpse_ready = true
+	$CollisionShape2D.set_deferred("disabled", true)
 	became_corpse.emit(self)
 
 func on_possessed() -> void:
 	is_dead = false
+	$CollisionShape2D.set_deferred("disabled", false)
 	corpse_ready = false
 	health = max_health
 	is_possessed = true

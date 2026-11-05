@@ -28,6 +28,8 @@ func _on_body_entered(body: Node2D) -> void:
 		return
 	if body == owner_body:
 		return
+	if body.name == "Background" or body.name == "Ground" or body.name == "GroundWall":
+		return
 	if body.is_in_group("player"):
 		return
 	if body is EnemyAI and body.is_dead:

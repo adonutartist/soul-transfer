@@ -230,7 +230,7 @@ func throw_poison() -> void:
 			return
 	var vial := poison_vial_scene.instantiate()
 	get_parent().add_child(vial)
-	vial.launch(global_position, mouse_position)
+	vial.launch(global_position, mouse_position, self)
 	await poison_sprite.animation_finished
 	if not is_inside_tree():
 		return

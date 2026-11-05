@@ -3726,7 +3726,11 @@ position = Vector2(100, 200)
 patrol_points = [NodePath("../../PatrolPoints/MagePointA"), NodePath("../../PatrolPoints/MagePointB")]
 
 [node name="Tank" parent="Enemies" unique_id=1622895860 instance=ExtResource("7_f63rn")]
-position = Vector2(436.07, -195.175)
+position = Vector2(473, -1016)
+dead_on_start = true
+
+[node name="Tank2" parent="Enemies" unique_id=771452657 instance=ExtResource("7_f63rn")]
+position = Vector2(431, -213)
 dead_on_start = true
 
 [node name="Rogue" parent="Enemies" unique_id=240379131 instance=ExtResource("8_rp28y")]
@@ -3735,4 +3739,8 @@ dead_on_start = true
 
 [node name="Rogue2" parent="Enemies" unique_id=676044659 instance=ExtResource("8_rp28y")]
 position = Vector2(414.81, -485.025)
+dead_on_start = true
+
+[node name="Rogue3" parent="Enemies" unique_id=536595343 instance=ExtResource("8_rp28y")]
+position = Vector2(662, -1009)
 dead_on_start = true

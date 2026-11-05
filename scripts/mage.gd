@@ -1,10 +1,14 @@
 extends MageAI
 @export var is_possessable := true
+@export var energy_ball_cooldown: float = 4.0
+@export var fireball_burst_cooldown: float = 2.0
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var target_area: Area2D = $TargetArea
 @onready var target_particles: GPUParticles2D = $TargetParticles
 @onready var soul_line_particles: GPUParticles2D = $SoulLineParticles
 
+var energy_ball_cooldown_timer: float = 0.0
+var fireball_burst_cooldown_timer: float = 0.0
 var reversing_death := false
 var can_be_selected := false
 var soul_particle_timer: float = 0.0
@@ -78,12 +82,16 @@ func _on_target_area_input_event(_viewport, event, _shape_idx):
 			play_soul_transfer()
 			player.possess_mage(self)
 
-func _process(_delta):
+func _process(delta):
+	energy_ball_cooldown_timer = maxf(0.0, energy_ball_cooldown_timer - delta)
+	fireball_burst_cooldown_timer = maxf(0.0, fireball_burst_cooldown_timer - delta)
 	var player = get_tree().get_first_node_in_group("player")
 	if is_possessed and not attacking and not reversing_death and not just_possessed:
-		if Input.is_action_just_pressed("mage_attack_right"):
+		if Input.is_action_just_pressed("mage_attack_right") and energy_ball_cooldown_timer <= 0.0:
+			energy_ball_cooldown_timer = energy_ball_cooldown
 			attack_right()
-		if Input.is_action_just_pressed("mage_attack_left"):
+		if Input.is_action_just_pressed("mage_attack_left") and fireball_burst_cooldown_timer <= 0.0:
+			fireball_burst_cooldown_timer = fireball_burst_cooldown
 			attack_left()
 	if just_possessed:
 		just_possessed = false

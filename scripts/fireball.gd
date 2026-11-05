@@ -21,9 +21,12 @@ func _physics_process(delta: float) -> void:
 		global_position += direction * speed * delta
 
 func _on_body_entered(body: Node2D) -> void:
+	print("Fireball collided with: ", body.name, " | Type: ", body.get_class())
 	if impacted:
 		return
 	if body == owner_body:
+		return
+	if body.name == "Background" or body.name == "Ground" or body.name == "GroundWall":
 		return
 	if body.is_in_group("player"):
 		return

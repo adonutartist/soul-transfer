@@ -4,10 +4,12 @@ extends CharacterBody2D
 @export var dash_duration := 0.25
 @export var afterimage_count := 3
 @export var afterimage_spacing := 0.08
+@export var dash_cooldown: float = 1.5
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var warp_area = $WarpArea
 @onready var camera: Camera2D = $Camera2D
 @onready var possession_light: PointLight2D = $PointLight2D
+var dash_cooldown_timer: float = 0.0
 var facing_right := false
 var is_dashing := false
 var dash_timer := 0.0
@@ -31,6 +33,7 @@ func _ready():
 			body.selected.connect(_on_body_selected)
 
 func _physics_process(delta):
+	dash_cooldown_timer = maxf(0.0, dash_cooldown_timer - delta)
 	if Input.is_action_just_pressed("warp_area") and not transfer_active:
 		transfer_active = true
 		for body in get_tree().get_nodes_in_group("possessable_bodies"):
@@ -51,7 +54,7 @@ func _physics_process(delta):
 			controlled_body.velocity = Vector2.ZERO
 			velocity = Vector2.ZERO
 			return
-	if Input.is_action_just_pressed("dash") and not is_dashing:
+	if Input.is_action_just_pressed("dash") and not is_dashing and dash_cooldown_timer <= 0.0:
 		start_dash()
 	if is_dashing:
 		dash_timer -= delta
@@ -115,6 +118,7 @@ func _physics_process(delta):
 
 func start_dash():
 	is_dashing = true
+	dash_cooldown_timer = dash_cooldown
 	dash_timer = dash_duration
 	afterimages_created = 0
 	afterimage_timer = 0.0

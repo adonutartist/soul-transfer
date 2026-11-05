@@ -1,12 +1,15 @@
 extends TankAI
 @export var is_possessable := true
 @export var ice_smash_cooldown: float = 3.0
+@export var axe_throw_cooldown: float = 2.5
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var target_area: Area2D = $TargetArea
 @onready var target_particles: GPUParticles2D = $TargetParticles
 @onready var soul_line_particles: GPUParticles2D = $SoulLineParticles
+@onready var axe: AnimatedSprite2D = $FlyingAxe
 
+var axe_throw_cooldown_timer: float = 0.0
 var reversing_death := false
 var can_be_selected := false
 var just_possessed := false
@@ -51,6 +54,7 @@ func _ready() -> void:
 		sprite.play("idle")
 
 func _process(delta: float) -> void:
+	axe_throw_cooldown_timer = maxf(0.0, axe_throw_cooldown_timer - delta)
 	var player := get_parent().get_tree().get_first_node_in_group("player")
 	if player == null:
 		return
@@ -62,7 +66,7 @@ func _process(delta: float) -> void:
 		hide_soul_chain()
 		if not attacking and not reversing_death and Input.is_action_just_pressed("mage_attack_left"):
 			start_ice_smash()
-		if not attacking and not reversing_death and Input.is_action_just_pressed("mage_attack_right"):
+		if not attacking and not reversing_death and axe_throw_cooldown_timer <= 0.0 and Input.is_action_just_pressed("mage_attack_right"):
 			throw_axe()
 		return
 	var in_range : bool = (
@@ -186,11 +190,11 @@ func start_ice_smash() -> void:
 		ice_smash_ready = true
 
 func throw_axe() -> void:
-	if not is_possessed or attacking:
+	if not is_possessed or attacking or axe_throw_cooldown_timer > 0.0:
 		return
+	axe_throw_cooldown_timer = axe_throw_cooldown
 	attacking = true
 	var attack_sprite: AnimatedSprite2D = $AttackSprite
-	var axe: AnimatedSprite2D = $FlyingAxe
 	var mouse_position := get_global_mouse_position()
 	var facing_right := mouse_position.x >= global_position.x
 	sprite.flip_h = not facing_right

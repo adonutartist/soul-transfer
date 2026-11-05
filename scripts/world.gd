@@ -21,8 +21,6 @@ func _ready() -> void:
 	_apply_recursive(self)
 
 func _on_node_added(node: Node) -> void:
-	if "Explosion" in str(node.name):
-		print("Explosion node: ", node.name, " | Excluded: ", _is_excluded(node))
 	_apply_recursive(node)
 
 func _apply_recursive(node: Node) -> void:
