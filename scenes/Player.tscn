@@ -146,6 +146,7 @@ script = ExtResource("1_3li8b")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1121769453]
 self_modulate = Color(1.0025334, 1.0025334, 1.0025334, 1)
+light_mask = 2
 sprite_frames = SubResource("SpriteFrames_5q5h1")
 animation = &"idle"
 
@@ -171,3 +172,6 @@ process_material = SubResource("ParticleProcessMaterial_3li8b")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1612460614]
 position = Vector2(0, 8.666666)
 shape = SubResource("CapsuleShape2D_txj4k")
+
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=2121928408]
+range_z_min = -4096

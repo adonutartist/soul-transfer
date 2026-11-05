@@ -50,6 +50,10 @@ func _impact() -> void:
 	effect_parent.add_child(emission)
 	effect_parent.add_child(explosion)
 	explosion.global_position = global_position
+	explosion.self_modulate = Color.WHITE
+	explosion.modulate = Color.WHITE
+	explosion.use_parent_material = false
+	explosion.material = null
 	emission.global_position = global_position
 	emission.scale = explosion.scale * 1.02
 	emission.modulate = Color(1.0, 1.0, 1.0, 0.75)

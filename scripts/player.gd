@@ -7,6 +7,7 @@ extends CharacterBody2D
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var warp_area = $WarpArea
 @onready var camera: Camera2D = $Camera2D
+@onready var possession_light: PointLight2D = $PointLight2D
 var facing_right := false
 var is_dashing := false
 var dash_timer := 0.0
@@ -24,6 +25,7 @@ func _ready():
 	add_to_group("player")
 	sprite.play("idle")
 	camera.zoom = normal_zoom
+	setup_possession_light()
 	for body in get_tree().get_nodes_in_group("possessable_bodies"):
 		if body.has_signal("selected"):
 			body.selected.connect(_on_body_selected)
@@ -186,7 +188,6 @@ func _on_body_selected():
 	pass
 
 func _on_controlled_body_died(body: EnemyAI) -> void:
-	print("POSSESSED BODY DIED: ", body.name)
 	if controlled_body != body:
 		return
 	possessing = false
@@ -198,3 +199,21 @@ func _on_controlled_body_died(body: EnemyAI) -> void:
 	$CollisionShape2D.set_deferred("disabled", false)
 	body.on_released()
 	sprite.play("idle")
+
+func setup_possession_light() -> void:
+	var gradient := Gradient.new()
+	gradient.set_color(0, Color(1, 1, 1, 0.8))
+	gradient.set_color(1, Color(1, 1, 1, 0.0))
+	var light_texture := GradientTexture2D.new()
+	light_texture.gradient = gradient
+	light_texture.fill = GradientTexture2D.FILL_RADIAL
+	light_texture.fill_from = Vector2(0.5, 0.5)
+	light_texture.fill_to = Vector2(0.5, 0.0)
+	light_texture.width = 256
+	light_texture.height = 256
+	possession_light.texture = light_texture
+	possession_light.texture_scale = 0.6
+	possession_light.energy = 1.6
+	possession_light.color = Color.WHITE
+	possession_light.blend_mode = PointLight2D.BLEND_MODE_ADD
+	possession_light.enabled = true

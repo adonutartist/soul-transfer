@@ -80,14 +80,6 @@ func _on_target_area_input_event(_viewport, event, _shape_idx):
 
 func _process(_delta):
 	var player = get_tree().get_first_node_in_group("player")
-	if is_dead:
-		print(
-			"Dead: ", is_dead,
-			" | Selectable: ", can_be_selected,
-			" | Hover: ", mouse_over_corpse,
-			" | Distance: ", global_position.distance_to(player.global_position),
-			" | Warp radius: ", player.warp_area.warp_radius
-		)
 	if is_possessed and not attacking and not reversing_death and not just_possessed:
 		if Input.is_action_just_pressed("mage_attack_right"):
 			attack_right()
