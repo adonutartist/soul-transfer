@@ -9,6 +9,7 @@ extends CharacterBody2D
 @onready var warp_area = $WarpArea
 @onready var camera: Camera2D = $Camera2D
 @onready var possession_light: PointLight2D = $PointLight2D
+@onready var possession_hud: Node = get_node_or_null("../PossessionHUD")
 var dash_cooldown_timer: float = 0.0
 var facing_right := false
 var is_dashing := false
@@ -28,6 +29,8 @@ func _ready():
 	sprite.play("idle")
 	camera.zoom = normal_zoom
 	setup_possession_light()
+	if is_instance_valid(possession_hud):
+		possession_hud.hide_hud()
 	for body in get_tree().get_nodes_in_group("possessable_bodies"):
 		if body.has_signal("selected"):
 			body.selected.connect(_on_body_selected)
@@ -177,6 +180,7 @@ func possess_mage(mage):
 	if mage is EnemyAI:
 		mage.died.connect(_on_controlled_body_died)
 	sprite.visible = false
+	$Shadow.visible = false
 	$CollisionShape2D.set_deferred("disabled", true)
 	mage.on_possessed()
 	mage.can_be_selected = false
@@ -187,6 +191,8 @@ func possess_mage(mage):
 	mage.soul_line_particles.visible = false
 	global_position = mage.global_position
 	warp_area.global_position = global_position
+	if is_instance_valid(possession_hud):
+		possession_hud.show_for_body(mage)
 
 func _on_body_selected():
 	pass
@@ -200,9 +206,12 @@ func _on_controlled_body_died(body: EnemyAI) -> void:
 	velocity = Vector2.ZERO
 	global_position = body.global_position
 	sprite.visible = true
+	$Shadow.visible = true
 	$CollisionShape2D.set_deferred("disabled", false)
 	body.on_released()
 	sprite.play("idle")
+	if is_instance_valid(possession_hud):
+		possession_hud.hide_hud()
 
 func setup_possession_light() -> void:
 	var gradient := Gradient.new()

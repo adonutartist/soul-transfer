@@ -40,6 +40,7 @@ var _patrol_stopped: bool = false
 
 @onready var agent: NavigationAgent2D = $NavigationAgent2D
 @onready var detector: Area2D = $PlayerDetector
+@onready var shadow: Sprite2D = $Shadow
 
 func _ready() -> void:
 	var shape_node := detector.get_node_or_null("CollisionShape2D") as CollisionShape2D
@@ -52,6 +53,7 @@ func _ready() -> void:
 	agent.target_desired_distance = stopping_distance * PX
 	add_to_group("enemies")
 	health = max_health
+	shadow.visible = not dead_on_start
 	if dead_on_start:
 		start_as_corpse.call_deferred()
 
@@ -192,6 +194,7 @@ func die() -> void:
 	corpse_ready = false
 	alerted = false
 	casting = false
+	shadow.visible = false
 	movement_dir = Vector2.ZERO
 	velocity = Vector2.ZERO
 	_abort_actions()
@@ -208,6 +211,7 @@ func start_as_corpse() -> void:
 	corpse_ready = false
 	alerted = false
 	casting = false
+	shadow.visible = false
 	movement_dir = Vector2.ZERO
 	velocity = Vector2.ZERO
 	_show_corpse_pose()
@@ -228,6 +232,7 @@ func on_possessed() -> void:
 	is_possessed = true
 	alerted = false
 	casting = false
+	shadow.visible = true
 	movement_dir = Vector2.ZERO
 	velocity = Vector2.ZERO
 	add_to_group("player")

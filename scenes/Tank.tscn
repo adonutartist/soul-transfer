@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://bo1md60gyw03c" path="res://scripts/tank.gd" id="1_afltc"]
 [ext_resource type="Texture2D" uid="uid://b4xuqidiynqrt" path="res://assets/Sprites&Tiles/Tank Death.png" id="1_tinmt"]
 [ext_resource type="Texture2D" uid="uid://bqa4g2s6l3et5" path="res://assets/Sprites&Tiles/Tank Idle.png" id="2_0l78g"]
+[ext_resource type="Texture2D" uid="uid://dkueth8nen7rt" path="res://assets/Sprites&Tiles/Soulless Shadow.png" id="2_dyess"]
 [ext_resource type="Texture2D" uid="uid://b244r22lckdgy" path="res://assets/Sprites&Tiles/Tank Move.png" id="3_q0k83"]
 [ext_resource type="Texture2D" uid="uid://sptavkbrlb06" path="res://assets/Sprites&Tiles/Tank Attack 2.png" id="4_afltc"]
 [ext_resource type="Texture2D" uid="uid://ca7xasgbc42o0" path="res://assets/Sprites&Tiles/Tank Attack 1.png" id="5_ike63"]
@@ -1097,6 +1098,13 @@ shader_parameter/line_half_width = 2.5
 
 [node name="Tank" type="CharacterBody2D" unique_id=1622895860]
 script = ExtResource("1_afltc")
+
+[node name="Shadow" type="Sprite2D" parent="." unique_id=1113577656]
+modulate = Color(0, 0, 0, 0.6039216)
+z_index = -1
+position = Vector2(1.9073486e-06, 36.000015)
+scale = Vector2(2.4647436, 1.7989132)
+texture = ExtResource("2_dyess")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=799078571]
 sprite_frames = SubResource("SpriteFrames_txj4k")

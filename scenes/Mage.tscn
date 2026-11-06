@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://de2ew0toofreg"]
 
 [ext_resource type="Script" uid="uid://couxxni8umhvl" path="res://scripts/mage.gd" id="1_mxl01"]
+[ext_resource type="Texture2D" uid="uid://dkueth8nen7rt" path="res://assets/Sprites&Tiles/Soulless Shadow.png" id="2_ggij2"]
 [ext_resource type="Texture2D" uid="uid://dl15dcwnedwfq" path="res://assets/Sprites&Tiles/Mage Death.png" id="2_hkpov"]
 [ext_resource type="Texture2D" uid="uid://diffjrvn3jy8e" path="res://assets/Sprites&Tiles/Mage Idle.png" id="3_wwtnx"]
 [ext_resource type="Texture2D" uid="uid://ch2ldd4grw2g7" path="res://assets/Sprites&Tiles/Mage Move.png" id="4_57fwn"]
@@ -821,6 +822,13 @@ height = 28.0
 
 [node name="Mage" type="CharacterBody2D" unique_id=1204145115]
 script = ExtResource("1_mxl01")
+
+[node name="Shadow" type="Sprite2D" parent="." unique_id=50579445]
+modulate = Color(0, 0, 0, 0.6039216)
+z_index = -1
+position = Vector2(1.1920929e-07, 35.000015)
+scale = Vector2(2.7339742, 1.7989126)
+texture = ExtResource("2_ggij2")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1439554698]
 sprite_frames = SubResource("SpriteFrames_txj4k")

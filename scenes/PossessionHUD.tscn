@@ -1,0 +1,339 @@
+[gd_scene format=3 uid="uid://b73h543qaw6c5"]
+
+[ext_resource type="Script" uid="uid://cr4euldtq40ku" path="res://scripts/possession_hud.gd" id="1_j8ddg"]
+[ext_resource type="Texture2D" uid="uid://dj27dk5o5s0k3" path="res://assets/Sprites&Tiles/Border All 9.png" id="1_svlj7"]
+[ext_resource type="Texture2D" uid="uid://diffjrvn3jy8e" path="res://assets/Sprites&Tiles/Mage Idle.png" id="2_ekm78"]
+[ext_resource type="Texture2D" uid="uid://bxsrrqsbaby1h" path="res://assets/Sprites&Tiles/mouse_left.png" id="2_l3crh"]
+[ext_resource type="Texture2D" uid="uid://bqa4g2s6l3et5" path="res://assets/Sprites&Tiles/Tank Idle.png" id="3_ab8ax"]
+[ext_resource type="Texture2D" uid="uid://brvujs4id7ki2" path="res://assets/Sprites&Tiles/mouse_right.png" id="3_j8ddg"]
+[ext_resource type="Texture2D" uid="uid://c7cdbmi45toir" path="res://assets/Sprites&Tiles/Rogue Idle 2.png" id="4_hwv7w"]
+[ext_resource type="Texture2D" uid="uid://bnbl7nqxvgu5n" path="res://assets/Sprites&Tiles/Mage Projectile.png" id="5_5xnqx"]
+[ext_resource type="Texture2D" uid="uid://dvy0ciny4vsfk" path="res://assets/Sprites&Tiles/Projectile SpriteSheet (58x57).png" id="6_qckrw"]
+[ext_resource type="Texture2D" uid="uid://bn4ymu5ay3lgw" path="res://assets/Sprites&Tiles/ice_large.png" id="7_o2n57"]
+[ext_resource type="Texture2D" uid="uid://bu6d4l56aqa4x" path="res://assets/Sprites&Tiles/Boomerang Axe-Slow Speed.png" id="8_pldpy"]
+[ext_resource type="Texture2D" uid="uid://ddjewxh0ywfqm" path="res://assets/Sprites&Tiles/jumpatkicont.png" id="9_lgit7"]
+[ext_resource type="Texture2D" uid="uid://hw6d7oe0l4u1" path="res://assets/Sprites&Tiles/Poison Glass Bottle-SPin Slow.png" id="10_wh4pk"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1lgw5"]
+atlas = ExtResource("2_ekm78")
+region = Rect2(72, 88, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hlk0d"]
+atlas = ExtResource("3_ab8ax")
+region = Rect2(64, 96, 80, 56)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0uv0p"]
+atlas = ExtResource("4_hwv7w")
+region = Rect2(72, 32, 56, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b3faq"]
+atlas = ExtResource("5_5xnqx")
+region = Rect2(216, 24, 32, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pdh0q"]
+atlas = ExtResource("6_qckrw")
+region = Rect2(80, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h1bdy"]
+atlas = ExtResource("7_o2n57")
+region = Rect2(408, 24, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7c4bj"]
+atlas = ExtResource("8_pldpy")
+region = Rect2(0, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nrtoj"]
+atlas = ExtResource("9_lgit7")
+region = Rect2(0, 0, 32, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c0d7e"]
+atlas = ExtResource("10_wh4pk")
+region = Rect2(24, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3o4x1"]
+atlas = ExtResource("1_svlj7")
+region = Rect2(328, 200, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gdbp1"]
+atlas = ExtResource("1_svlj7")
+region = Rect2(464, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ydv5c"]
+atlas = ExtResource("1_svlj7")
+region = Rect2(464, 0, 32, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4ffog"]
+atlas = ExtResource("1_svlj7")
+region = Rect2(448, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_txj4k"]
+atlas = ExtResource("1_svlj7")
+region = Rect2(512, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rt3ka"]
+atlas = ExtResource("1_svlj7")
+region = Rect2(448, 16, 8, 32)
+
+[sub_resource type="Gradient" id="Gradient_7rg41"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_txj4k"]
+gradient = SubResource("Gradient_7rg41")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a7ikw"]
+
+[node name="PossessionHUD" type="CanvasLayer" unique_id=531937331]
+script = ExtResource("1_j8ddg")
+mage_portrait = SubResource("AtlasTexture_1lgw5")
+tank_portrait = SubResource("AtlasTexture_hlk0d")
+rogue_portrait = SubResource("AtlasTexture_0uv0p")
+mage_energy_ball = SubResource("AtlasTexture_b3faq")
+mage_fireball_burst = SubResource("AtlasTexture_pdh0q")
+tank_ice_smash = SubResource("AtlasTexture_h1bdy")
+tank_axe_throw = SubResource("AtlasTexture_7c4bj")
+rogue_dash_slash = SubResource("AtlasTexture_nrtoj")
+rogue_poison_throw = SubResource("AtlasTexture_c0d7e")
+
+[node name="Control" type="Control" parent="." unique_id=1190568674]
+layout_mode = 3
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 9.0
+offset_top = -105.0
+offset_right = 49.0
+offset_bottom = -65.00037
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="TextureRect10" type="TextureRect" parent="Control" unique_id=1765463375]
+layout_mode = 0
+offset_left = -197.0
+offset_top = -6.0
+offset_right = 171.0
+offset_bottom = 253.0
+texture = SubResource("AtlasTexture_3o4x1")
+
+[node name="TextureRect6" type="TextureRect" parent="Control" unique_id=1138727908]
+layout_mode = 0
+offset_left = 122.2
+offset_top = -16.0
+offset_right = 180.19989
+offset_bottom = 41.999992
+texture = SubResource("AtlasTexture_gdbp1")
+
+[node name="TextureRect4" type="TextureRect" parent="Control" unique_id=2060416471]
+layout_mode = 0
+offset_left = -149.0
+offset_top = -16.000025
+offset_right = -91.0
+offset_bottom = -6.0000477
+texture = SubResource("AtlasTexture_ydv5c")
+
+[node name="TextureRect5" type="TextureRect" parent="Control" unique_id=350329639]
+layout_mode = 0
+offset_left = -91.0
+offset_top = -16.0
+offset_right = -33.0
+offset_bottom = -6.000023
+texture = SubResource("AtlasTexture_ydv5c")
+
+[node name="TextureRect7" type="TextureRect" parent="Control" unique_id=1652430096]
+layout_mode = 0
+offset_left = -33.0
+offset_top = -16.0
+offset_right = 25.0
+offset_bottom = -6.000023
+texture = SubResource("AtlasTexture_ydv5c")
+
+[node name="TextureRect8" type="TextureRect" parent="Control" unique_id=380992618]
+layout_mode = 0
+offset_left = 25.0
+offset_top = -16.0
+offset_right = 83.0
+offset_bottom = -6.000023
+texture = SubResource("AtlasTexture_ydv5c")
+
+[node name="TextureRect9" type="TextureRect" parent="Control" unique_id=738546682]
+layout_mode = 0
+offset_left = 83.0
+offset_top = -16.0
+offset_right = 141.0
+offset_bottom = -6.000023
+texture = SubResource("AtlasTexture_ydv5c")
+
+[node name="TextureRect3" type="TextureRect" parent="Control" unique_id=135698362]
+layout_mode = 0
+offset_left = -207.0
+offset_top = -16.0
+offset_right = -149.0
+offset_bottom = 41.999992
+texture = SubResource("AtlasTexture_4ffog")
+
+[node name="TextureRect2" type="TextureRect" parent="Control" unique_id=1379653832]
+layout_mode = 0
+offset_left = 79.0
+offset_right = 163.0
+offset_bottom = 84.00004
+texture = SubResource("AtlasTexture_txj4k")
+
+[node name="TextureRect" type="TextureRect" parent="Control" unique_id=625372989]
+layout_mode = 0
+offset_left = -9.0
+offset_top = -1.0
+offset_right = 75.0
+offset_bottom = 83.00004
+texture = SubResource("AtlasTexture_txj4k")
+
+[node name="TextureRect11" type="TextureRect" parent="Control" unique_id=1856377350]
+layout_mode = 0
+offset_left = -207.0
+offset_top = 42.0
+offset_right = -197.0
+offset_bottom = 100.0
+texture = SubResource("AtlasTexture_rt3ka")
+
+[node name="TextureRect12" type="TextureRect" parent="Control" unique_id=1270328566]
+layout_mode = 0
+offset_left = -207.0
+offset_top = 100.0
+offset_right = -197.0
+offset_bottom = 158.0
+texture = SubResource("AtlasTexture_rt3ka")
+
+[node name="TextureRect13" type="TextureRect" parent="Control" unique_id=2027011578]
+layout_mode = 0
+offset_left = -207.0
+offset_top = 158.0
+offset_right = -197.0
+offset_bottom = 216.0
+texture = SubResource("AtlasTexture_rt3ka")
+
+[node name="TextureRect14" type="TextureRect" parent="Control" unique_id=439297006]
+layout_mode = 0
+offset_left = -207.0
+offset_top = 216.0
+offset_right = -197.0
+offset_bottom = 274.0
+texture = SubResource("AtlasTexture_rt3ka")
+
+[node name="TextureRect15" type="TextureRect" parent="Control" unique_id=321265532]
+layout_mode = 0
+offset_left = 167.0
+offset_top = 42.0
+offset_right = 177.0
+offset_bottom = 100.0
+rotation = 6.2831855
+texture = SubResource("AtlasTexture_rt3ka")
+
+[node name="TextureRect16" type="TextureRect" parent="Control" unique_id=1319750409]
+layout_mode = 0
+offset_left = 167.0
+offset_top = 100.0
+offset_right = 177.0
+offset_bottom = 158.0
+rotation = 6.2831855
+texture = SubResource("AtlasTexture_rt3ka")
+
+[node name="TextureRect17" type="TextureRect" parent="Control" unique_id=470441861]
+layout_mode = 0
+offset_left = 167.0
+offset_top = 158.0
+offset_right = 177.0
+offset_bottom = 216.0
+rotation = 6.2831855
+texture = SubResource("AtlasTexture_rt3ka")
+
+[node name="TextureRect18" type="TextureRect" parent="Control" unique_id=729811226]
+layout_mode = 0
+offset_left = 167.0
+offset_top = 216.0
+offset_right = 177.0
+offset_bottom = 274.0
+rotation = 6.2831855
+texture = SubResource("AtlasTexture_rt3ka")
+
+[node name="HBoxContainer" type="Control" parent="Control" unique_id=2057029448]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 39.999992
+
+[node name="Portrait" type="TextureRect" parent="Control/HBoxContainer" unique_id=634734071]
+layout_mode = 0
+offset_left = -188.085
+offset_right = -188.085
+offset_bottom = 39.999992
+scale = Vector2(2, 2)
+
+[node name="PrimaryAttack" type="Control" parent="Control/HBoxContainer" unique_id=1491503633]
+anchors_preset = 0
+offset_left = 4.0
+offset_right = 4.0
+offset_bottom = 39.999992
+
+[node name="CooldownOverlay" type="TextureProgressBar" parent="Control/HBoxContainer/PrimaryAttack" unique_id=1840599742]
+layout_mode = 0
+offset_left = -3.0
+offset_top = 9.0
+offset_right = 61.0
+offset_bottom = 73.0
+fill_mode = 4
+texture_progress = SubResource("GradientTexture2D_txj4k")
+tint_progress = Color(0, 0, 0, 0.85490197)
+
+[node name="AttackImage" type="TextureRect" parent="Control/HBoxContainer/PrimaryAttack" unique_id=1719573718]
+layout_mode = 0
+offset_left = -0.9999924
+offset_top = 13.000017
+offset_right = 39.000008
+offset_bottom = 53.000008
+scale = Vector2(1.5, 1.5)
+texture = SubResource("AtlasTexture_a7ikw")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="MouseButtonIcon" type="TextureRect" parent="Control/HBoxContainer/PrimaryAttack" unique_id=1240687050]
+layout_mode = 0
+offset_left = -28.0
+offset_top = 54.0
+offset_right = 112.98366
+offset_bottom = 194.98361
+scale = Vector2(0.305, 0.305)
+texture = ExtResource("2_l3crh")
+
+[node name="SecondaryAttack" type="Control" parent="Control/HBoxContainer" unique_id=771891364]
+anchors_preset = 0
+offset_left = 8.0
+offset_right = 8.0
+offset_bottom = 39.999992
+
+[node name="CooldownOverlay" type="TextureProgressBar" parent="Control/HBoxContainer/SecondaryAttack" unique_id=1588809827]
+layout_mode = 0
+offset_left = 81.0
+offset_top = 10.0
+offset_right = 145.0
+offset_bottom = 74.0
+fill_mode = 4
+texture_progress = SubResource("GradientTexture2D_txj4k")
+tint_progress = Color(0, 0, 0, 0.85490197)
+
+[node name="AttackImage" type="TextureRect" parent="Control/HBoxContainer/SecondaryAttack" unique_id=370546530]
+layout_mode = 0
+offset_left = 89.99998
+offset_top = 14.000017
+offset_right = 129.99997
+offset_bottom = 54.000008
+scale = Vector2(1.5, 1.5)
+expand_mode = 1
+stretch_mode = 5
+
+[node name="MouseButtonIcon" type="TextureRect" parent="Control/HBoxContainer/SecondaryAttack" unique_id=373925945]
+layout_mode = 0
+offset_left = 128.0
+offset_top = 54.000004
+offset_right = 268.98004
+offset_bottom = 194.98001
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("3_j8ddg")

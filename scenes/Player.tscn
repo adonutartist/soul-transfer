@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://ctlp5fwvfjjk0"]
 
 [ext_resource type="Script" uid="uid://3blyi71uql88" path="res://scripts/player.gd" id="1_3li8b"]
+[ext_resource type="Texture2D" uid="uid://dkueth8nen7rt" path="res://assets/Sprites&Tiles/Soulless Shadow.png" id="2_70d11"]
 [ext_resource type="Texture2D" uid="uid://l83yai5eupvg" path="res://assets/Sprites&Tiles/(V2) Down Idle (F).png" id="2_mdl7e"]
 [ext_resource type="Texture2D" uid="uid://dwkn3ciopbnva" path="res://assets/Sprites&Tiles/(V2) Run - Down Left (F).png" id="3_qu4a1"]
 [ext_resource type="Script" uid="uid://xbse0cnx5dc7" path="res://scripts/warp_area.gd" id="4_qu4a1"]
@@ -143,6 +144,13 @@ height = 14.666668
 [node name="Player" type="CharacterBody2D" unique_id=1594491723]
 scale = Vector2(1.5, 1.5)
 script = ExtResource("1_3li8b")
+
+[node name="Shadow" type="Sprite2D" parent="." unique_id=2068722811]
+modulate = Color(0, 0, 0, 0.6039216)
+z_index = -1
+position = Vector2(-1.1920929e-07, 14.000002)
+scale = Vector2(0.8589744, 0.84782606)
+texture = ExtResource("2_70d11")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1121769453]
 self_modulate = Color(1.0025334, 1.0025334, 1.0025334, 1)

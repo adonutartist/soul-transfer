@@ -10,6 +10,7 @@ extends TankAI
 @onready var axe: AnimatedSprite2D = $FlyingAxe
 
 var axe_throw_cooldown_timer: float = 0.0
+var ice_smash_cooldown_timer: float = 0.0
 var reversing_death := false
 var can_be_selected := false
 var just_possessed := false
@@ -54,6 +55,9 @@ func _ready() -> void:
 		sprite.play("idle")
 
 func _process(delta: float) -> void:
+	ice_smash_cooldown_timer = maxf(0.0, ice_smash_cooldown_timer - delta)
+	if ice_smash_cooldown_timer <= 0.0:
+		ice_smash_ready = true
 	axe_throw_cooldown_timer = maxf(0.0, axe_throw_cooldown_timer - delta)
 	var player := get_parent().get_tree().get_first_node_in_group("player")
 	if player == null:
@@ -161,6 +165,7 @@ func start_ice_smash() -> void:
 	if not is_possessed or not ice_smash_ready or ice_smash_active:
 		return
 	ice_smash_ready = false
+	ice_smash_cooldown_timer = ice_smash_active
 	ice_smash_active = true
 	attacking = true
 	var attack_sprite: AnimatedSprite2D = $AttackSprite
@@ -185,9 +190,6 @@ func start_ice_smash() -> void:
 	attack_sprite.visible = false
 	attacking = false
 	ice_smash_active = false
-	await get_tree().create_timer(ice_smash_cooldown).timeout
-	if is_inside_tree():
-		ice_smash_ready = true
 
 func throw_axe() -> void:
 	if not is_possessed or attacking or axe_throw_cooldown_timer > 0.0:

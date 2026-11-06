@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bkxv113kwpyip" path="res://scripts/world.gd" id="1_7g83o"]
 [ext_resource type="PackedScene" uid="uid://ctlp5fwvfjjk0" path="res://scenes/Player.tscn" id="1_32lhk"]
+[ext_resource type="PackedScene" uid="uid://b73h543qaw6c5" path="res://scenes/PossessionHUD.tscn" id="4_d1c63"]
 [ext_resource type="PackedScene" uid="uid://d0jyad7omem2y" path="res://scenes/Level_1.tscn" id="5_1lgw5"]
 
 [sub_resource type="Environment" id="Environment_txj4k"]
@@ -19,7 +20,7 @@ script = ExtResource("1_7g83o")
 [node name="Player" parent="." unique_id=1594491723 instance=ExtResource("1_32lhk")]
 z_index = 1
 y_sort_enabled = true
-position = Vector2(334, -951)
+position = Vector2(210, 151)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1873190623]
 environment = SubResource("Environment_txj4k")
@@ -35,3 +36,5 @@ polygon = PackedVector2Array(-485, -378, -477, 296, 470, 343, 431, -442)
 
 [node name="Level1" parent="." unique_id=19848164 instance=ExtResource("5_1lgw5")]
 z_index = -5
+
+[node name="PossessionHUD" parent="." unique_id=531937331 instance=ExtResource("4_d1c63")]

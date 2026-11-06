@@ -22,6 +22,8 @@ var attacking := false
 var mouse_over_corpse := false
 var dash_ready := true
 var poison_ready := true
+var dash_slash_cooldown_timer: float = 0.0
+var poison_throw_cooldown_timer: float = 0.0
 var soul_transfer_active := false
 var poison_vial_scene: PackedScene = preload("res://scenes/PoisonVial.tscn")
 
@@ -65,6 +67,12 @@ func _ready() -> void:
 		sprite.play("idle")
 
 func _process(delta: float) -> void:
+	dash_slash_cooldown_timer = maxf(0.0, dash_slash_cooldown_timer - delta)
+	poison_throw_cooldown_timer = maxf(0.0, poison_throw_cooldown_timer - delta)
+	if dash_slash_cooldown_timer <= 0.0:
+		dash_ready = true
+	if poison_throw_cooldown_timer <= 0.0:
+		poison_ready = true
 	var player := get_parent().get_tree().get_first_node_in_group("player")
 	if player == null:
 		return
@@ -180,6 +188,7 @@ func dash_slash() -> void:
 		return
 	attacking = true
 	dash_ready = false
+	dash_slash_cooldown_timer = dash_cooldown
 	var target_position := get_global_mouse_position()
 	var direction := (target_position - global_position).normalized()
 	if direction == Vector2.ZERO:
@@ -206,15 +215,13 @@ func dash_slash() -> void:
 	sprite.visible = true
 	sprite.play("idle")
 	attacking = false
-	await get_tree().create_timer(dash_cooldown).timeout
-	if is_inside_tree():
-		dash_ready = true
 
 func throw_poison() -> void:
 	if not is_possessed or attacking or not poison_ready:
 		return
 	attacking = true
 	poison_ready = false
+	poison_throw_cooldown_timer = poison_cooldown
 	var mouse_position := get_global_mouse_position()
 	var direction := (mouse_position - global_position).normalized()
 	if direction == Vector2.ZERO:
@@ -238,9 +245,6 @@ func throw_poison() -> void:
 	sprite.play("idle")
 	poison_sprite.visible = false
 	attacking = false
-	await get_tree().create_timer(poison_cooldown).timeout
-	if is_inside_tree():
-		poison_ready = true
 
 func _play_death() -> void:
 	reversing_death = false
