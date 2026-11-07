@@ -1,6 +1,6 @@
 extends CharacterBody2D
 @export var speed := 200.0
-@export var dash_speed := 800.0
+@export var dash_distance := 200.0
 @export var dash_duration := 0.25
 @export var afterimage_count := 3
 @export var afterimage_spacing := 0.08
@@ -10,6 +10,8 @@ extends CharacterBody2D
 @onready var camera: Camera2D = $Camera2D
 @onready var possession_light: PointLight2D = $PointLight2D
 @onready var possession_hud: Node = get_node_or_null("../PossessionHUD")
+var current_move_speed: float = 200.0
+var current_dash_distance: float = 200.0
 var dash_cooldown_timer: float = 0.0
 var facing_right := false
 var is_dashing := false
@@ -29,6 +31,8 @@ func _ready():
 	sprite.play("idle")
 	camera.zoom = normal_zoom
 	setup_possession_light()
+	current_move_speed = speed
+	current_dash_distance = dash_distance
 	if is_instance_valid(possession_hud):
 		possession_hud.hide_hud()
 	for body in get_tree().get_nodes_in_group("possessable_bodies"):
@@ -63,11 +67,11 @@ func _physics_process(delta):
 		dash_timer -= delta
 		afterimage_timer -= delta
 		if possessing and controlled_body != null:
-			controlled_body.velocity = dash_direction * dash_speed
+			controlled_body.velocity = dash_direction * (current_dash_distance / dash_duration)
 			controlled_body.move_and_slide()
 			global_position = controlled_body.global_position
 		else:
-			velocity = dash_direction * dash_speed
+			velocity = dash_direction * (current_dash_distance / dash_duration)
 			move_and_slide()
 		if afterimages_created < afterimage_count and afterimage_timer <= 0:
 			create_afterimage()
@@ -83,11 +87,11 @@ func _physics_process(delta):
 	if direction.length() > 1.0:
 		direction = direction.normalized()
 	if possessing and controlled_body != null:
-		controlled_body.velocity = direction * speed
+		controlled_body.velocity = direction * current_move_speed
 		controlled_body.move_and_slide()
 		global_position = controlled_body.global_position
 	else:
-		velocity = direction * speed
+		velocity = direction * current_move_speed
 		move_and_slide()
 	if direction != Vector2.ZERO:
 		last_move_direction = direction.normalized()
@@ -178,6 +182,9 @@ func possess_mage(mage):
 	possessing = true
 	controlled_body = mage
 	if mage is EnemyAI:
+		current_move_speed = mage.possessed_move_speed
+		current_dash_distance = mage.possessed_dash_distance
+	if mage is EnemyAI:
 		mage.died.connect(_on_controlled_body_died)
 	sprite.visible = false
 	$Shadow.visible = false
@@ -202,6 +209,8 @@ func _on_controlled_body_died(body: EnemyAI) -> void:
 		return
 	possessing = false
 	controlled_body = null
+	current_move_speed = speed
+	current_dash_distance = dash_distance
 	is_dashing = false
 	velocity = Vector2.ZERO
 	global_position = body.global_position

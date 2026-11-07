@@ -1098,6 +1098,8 @@ shader_parameter/line_half_width = 2.5
 
 [node name="Tank" type="CharacterBody2D" unique_id=1622895860]
 script = ExtResource("1_afltc")
+max_health = 24.0
+possessed_move_speed = 60.0
 
 [node name="Shadow" type="Sprite2D" parent="." unique_id=1113577656]
 modulate = Color(0, 0, 0, 0.6039216)

@@ -22,6 +22,10 @@ const PX: float = 32.0
 @export var primary_unlocked: bool = true
 @export var secondary_unlocked: bool = true
 
+@export_group("Possession Movement")
+@export var possessed_move_speed: float = 165.0
+@export var possessed_dash_distance: float = 165.0
+
 var alerted: bool = false
 var is_dead: bool = false
 var health: float = 5.0
@@ -37,6 +41,8 @@ var _patrol_idx: int = 0
 var _patrol_wait_timer: float = 0.0
 var _patrol_waiting: bool = false
 var _patrol_stopped: bool = false
+var health_bar: ProgressBar
+var health_bar_fill: StyleBoxFlat
 
 @onready var agent: NavigationAgent2D = $NavigationAgent2D
 @onready var detector: Area2D = $PlayerDetector
@@ -53,6 +59,7 @@ func _ready() -> void:
 	agent.target_desired_distance = stopping_distance * PX
 	add_to_group("enemies")
 	health = max_health
+	_setup_health_bar()
 	shadow.visible = not dead_on_start
 	if dead_on_start:
 		start_as_corpse.call_deferred()
@@ -184,6 +191,7 @@ func take_damage(amount: float, _source: Node = null) -> void:
 	if is_dead or amount <= 0.0:
 		return
 	health = maxf(0.0, health - amount)
+	_update_health_bar()
 	if health <= 0.0:
 		die()
 
@@ -191,6 +199,7 @@ func die() -> void:
 	if is_dead:
 		return
 	is_dead = true
+	_update_health_bar()
 	corpse_ready = false
 	alerted = false
 	casting = false
@@ -230,6 +239,7 @@ func on_possessed() -> void:
 	corpse_ready = false
 	health = max_health
 	is_possessed = true
+	_update_health_bar()
 	alerted = false
 	casting = false
 	shadow.visible = true
@@ -242,6 +252,7 @@ func on_possessed() -> void:
 func on_released() -> void:
 	is_possessed = false
 	remove_from_group("player")
+	_update_health_bar()
 
 func _play_death() -> void:
 	_finish_corpse()
@@ -274,3 +285,33 @@ func _on_alert_enter() -> void:
 
 func _alerted_update(_delta: float) -> void:
 	pass
+
+func _setup_health_bar() -> void:
+	health_bar = ProgressBar.new()
+	health_bar.name = "HealthBar"
+	health_bar.min_value = 0
+	health_bar.max_value = max_health
+	health_bar.value = health
+	health_bar.show_percentage = false
+	health_bar.visible = false
+	health_bar.size = Vector2(48, 6)
+	health_bar.position = Vector2(-24, -48)
+	health_bar.z_index = 100
+	health_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var background := StyleBoxFlat.new()
+	background.bg_color = Color(0.12, 0.12, 0.12, 0.9)
+	background.set_corner_radius_all(2)
+	health_bar_fill = StyleBoxFlat.new()
+	health_bar_fill.bg_color = Color("#EF4444")
+	health_bar_fill.set_corner_radius_all(2)
+	health_bar.add_theme_stylebox_override("background", background)
+	health_bar.add_theme_stylebox_override("fill", health_bar_fill)
+	add_child(health_bar)
+
+func _update_health_bar() -> void:
+	if health_bar == null:
+		return
+	health_bar.max_value = max_health
+	health_bar.value = health
+	health_bar.visible = health < max_health and not is_dead
+	health_bar_fill.bg_color = (Color("#39D353") if is_possessed else Color("#EF4444"))

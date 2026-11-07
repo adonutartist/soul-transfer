@@ -144,6 +144,8 @@ height = 14.666668
 [node name="Player" type="CharacterBody2D" unique_id=1594491723]
 scale = Vector2(1.5, 1.5)
 script = ExtResource("1_3li8b")
+speed = 180.0
+dash_distance = 170.0
 
 [node name="Shadow" type="Sprite2D" parent="." unique_id=2068722811]
 modulate = Color(0, 0, 0, 0.6039216)

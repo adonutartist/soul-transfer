@@ -148,19 +148,19 @@ offset_right = 25.0
 offset_bottom = -6.000023
 texture = SubResource("AtlasTexture_ydv5c")
 
-[node name="TextureRect8" type="TextureRect" parent="Control" unique_id=380992618]
-layout_mode = 0
-offset_left = 25.0
-offset_top = -16.0
-offset_right = 83.0
-offset_bottom = -6.000023
-texture = SubResource("AtlasTexture_ydv5c")
-
 [node name="TextureRect9" type="TextureRect" parent="Control" unique_id=738546682]
 layout_mode = 0
 offset_left = 83.0
 offset_top = -16.0
 offset_right = 141.0
+offset_bottom = -6.000023
+texture = SubResource("AtlasTexture_ydv5c")
+
+[node name="TextureRect8" type="TextureRect" parent="Control" unique_id=380992618]
+layout_mode = 0
+offset_left = 25.0
+offset_top = -16.0
+offset_right = 83.0
 offset_bottom = -6.000023
 texture = SubResource("AtlasTexture_ydv5c")
 
@@ -175,7 +175,7 @@ texture = SubResource("AtlasTexture_4ffog")
 [node name="TextureRect2" type="TextureRect" parent="Control" unique_id=1379653832]
 layout_mode = 0
 offset_left = 79.0
-offset_right = 163.0
+offset_right = 163.00003
 offset_bottom = 84.00004
 texture = SubResource("AtlasTexture_txj4k")
 
@@ -183,7 +183,7 @@ texture = SubResource("AtlasTexture_txj4k")
 layout_mode = 0
 offset_left = -9.0
 offset_top = -1.0
-offset_right = 75.0
+offset_right = 75.00003
 offset_bottom = 83.00004
 texture = SubResource("AtlasTexture_txj4k")
 
@@ -262,10 +262,13 @@ offset_bottom = 39.999992
 
 [node name="Portrait" type="TextureRect" parent="Control/HBoxContainer" unique_id=634734071]
 layout_mode = 0
-offset_left = -188.085
-offset_right = -188.085
-offset_bottom = 39.999992
+offset_left = -206.135
+offset_top = -15.655
+offset_right = -110.134995
+offset_bottom = 80.345
 scale = Vector2(2, 2)
+expand_mode = 1
+stretch_mode = 5
 
 [node name="PrimaryAttack" type="Control" parent="Control/HBoxContainer" unique_id=1491503633]
 anchors_preset = 0
@@ -285,10 +288,10 @@ tint_progress = Color(0, 0, 0, 0.85490197)
 
 [node name="AttackImage" type="TextureRect" parent="Control/HBoxContainer/PrimaryAttack" unique_id=1719573718]
 layout_mode = 0
-offset_left = -0.9999924
-offset_top = 13.000017
-offset_right = 39.000008
-offset_bottom = 53.000008
+offset_left = 2.135
+offset_top = 13.0
+offset_right = 42.135
+offset_bottom = 52.999992
 scale = Vector2(1.5, 1.5)
 texture = SubResource("AtlasTexture_a7ikw")
 expand_mode = 1

@@ -822,6 +822,8 @@ height = 28.0
 
 [node name="Mage" type="CharacterBody2D" unique_id=1204145115]
 script = ExtResource("1_mxl01")
+max_health = 12.0
+possessed_move_speed = 80.0
 
 [node name="Shadow" type="Sprite2D" parent="." unique_id=50579445]
 modulate = Color(0, 0, 0, 0.6039216)

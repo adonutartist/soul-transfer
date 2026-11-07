@@ -1,6 +1,9 @@
 extends Area2D
 @export var speed := 100.0
 @export var lifetime := 5.0
+@export var direct_damage: float = 2.0
+@export var lightning_damage: float = 0.4
+@export var lightning_hitbox_size: Vector2 = Vector2(28, 52)
 
 var direction := Vector2.RIGHT
 var impacted := false
@@ -31,9 +34,14 @@ func _on_body_entered(body: Node2D) -> void:
 	if body.name == "Background" or body.name == "Ground" or body.name == "GroundWall":
 		return
 	if body.is_in_group("player"):
+		_impact()
 		return
-	if body is EnemyAI and body.is_dead:
-		return
+	if body is EnemyAI:
+		if body.is_dead:
+			return
+		if owner_body is EnemyAI and body.is_possessed == owner_body.is_possessed:
+			return
+		body.take_damage(direct_damage, owner_body)
 	_impact()
 
 func _impact() -> void:
@@ -77,14 +85,14 @@ func _impact() -> void:
 		var pos := positions[i]
 		if i > 0:
 			await get_tree().create_timer(randf_range(0.25, 0.55)).timeout
-		_spawn_lightning_strike(pos)
+		await _spawn_lightning_strike(pos)
 		if randf() < 0.4:
 			var second_offset := Vector2(
 				randf_range(-30.0, 30.0),
 				randf_range(-30.0, 30.0)
 			)
 			await get_tree().create_timer(randf_range(0.18, 0.35)).timeout
-			_spawn_lightning_strike(pos + second_offset)
+			await _spawn_lightning_strike(pos + second_offset)
 	queue_free()
 
 func _spawn_destruction_effect() -> void:
@@ -130,3 +138,30 @@ func _spawn_lightning_strike(spawn_position: Vector2) -> void:
 	ground.animation_finished.connect(ground.queue_free)
 	lightning.play()
 	ground.play()
+	await _apply_lightning_damage(spawn_position)
+
+func _apply_lightning_damage(spawn_position: Vector2) -> void:
+	var hit_area := Area2D.new()
+	hit_area.collision_layer = 0
+	hit_area.collision_mask = 1
+	hit_area.monitoring = true
+	var hit_shape := CollisionShape2D.new()
+	var rectangle := RectangleShape2D.new()
+	rectangle.size = lightning_hitbox_size
+	hit_shape.shape = rectangle
+	hit_area.add_child(hit_shape)
+	get_parent().add_child(hit_area)
+	hit_area.global_position = spawn_position
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	for body in hit_area.get_overlapping_bodies():
+		if not is_instance_valid(body):
+			continue
+		if body is not EnemyAI or body.is_dead:
+			continue
+		if owner_body is EnemyAI and body.is_possessed == owner_body.is_possessed:
+			continue
+		if body.is_in_group("player"):
+			continue
+		body.take_damage(lightning_damage, owner_body)
+	hit_area.queue_free()

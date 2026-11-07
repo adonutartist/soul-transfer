@@ -3719,6 +3719,11 @@ y_sort_enabled = true
 position = Vector2(210, -1025)
 dead_on_start = true
 
+[node name="Mage2" parent="Enemies" unique_id=513102684 instance=ExtResource("6_bmqp6")]
+y_sort_enabled = true
+position = Vector2(293, 159)
+dead_on_start = true
+
 [node name="MageEnemy" parent="Enemies" unique_id=2120881559 node_paths=PackedStringArray("patrol_points") instance=ExtResource("6_bmqp6")]
 self_modulate = Color(0.012617188, 0.012617188, 0.012617188, 1)
 y_sort_enabled = true

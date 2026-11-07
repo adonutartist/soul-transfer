@@ -1,6 +1,7 @@
 extends Area2D
 @export var speed := 180.0
 @export var lifetime := 3.0
+@export var damage: float = 0.6
 
 var direction := Vector2.RIGHT
 var launched := false
@@ -28,10 +29,13 @@ func _on_body_entered(body: Node2D) -> void:
 		return
 	if body.name == "Background" or body.name == "Ground" or body.name == "GroundWall":
 		return
-	if body.is_in_group("player"):
-		return
-	if body is EnemyAI and body.is_dead:
-		return
+	if body is EnemyAI:
+		if body.is_dead:
+			return
+		if owner_body is EnemyAI:
+			if body.is_possessed == owner_body.is_possessed:
+				return
+			body.take_damage(damage, owner_body)
 	_impact()
 
 func _impact() -> void:

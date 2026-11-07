@@ -69,9 +69,9 @@ func _process(delta: float) -> void:
 		target_particles.emitting = false
 		hide_soul_chain()
 		if not attacking and not reversing_death and Input.is_action_just_pressed("mage_attack_left"):
-			start_ice_smash()
-		if not attacking and not reversing_death and axe_throw_cooldown_timer <= 0.0 and Input.is_action_just_pressed("mage_attack_right"):
 			throw_axe()
+		if not attacking and not reversing_death and axe_throw_cooldown_timer <= 0.0 and Input.is_action_just_pressed("mage_attack_right"):
+			start_ice_smash()
 		return
 	var in_range : bool = (
 		global_position.distance_to(player.global_position) <= player.warp_area.warp_radius
@@ -165,7 +165,7 @@ func start_ice_smash() -> void:
 	if not is_possessed or not ice_smash_ready or ice_smash_active:
 		return
 	ice_smash_ready = false
-	ice_smash_cooldown_timer = ice_smash_active
+	ice_smash_cooldown_timer = ice_smash_cooldown
 	ice_smash_active = true
 	attacking = true
 	var attack_sprite: AnimatedSprite2D = $AttackSprite

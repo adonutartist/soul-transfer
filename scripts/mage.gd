@@ -16,6 +16,7 @@ var soul_dots: Array[Sprite2D] = []
 var soul_dot_count: int = 30
 var mouse_over_corpse := false
 var attacking := false
+var attack_sequence: int = 0
 var just_possessed := false
 var soul_transfer_active := false
 
@@ -193,6 +194,8 @@ func _on_mouse_exited_corpse():
 	hide_soul_chain()
 
 func attack_right(target_position: Vector2 = Vector2.INF):
+	attack_sequence += 1
+	var sequence := attack_sequence
 	attacking = true
 	var aim_position := get_global_mouse_position() if target_position == Vector2.INF else target_position
 	var direction := (aim_position - global_position).normalized()
@@ -201,6 +204,8 @@ func attack_right(target_position: Vector2 = Vector2.INF):
 	$AttackSprite.play("slam")
 	while $AttackSprite.frame < 11:
 		await get_tree().process_frame
+		if sequence != attack_sequence or is_dead:
+			return
 	var ball = preload("res://scenes/EnergyBall.tscn").instantiate()
 	ball.owner_body = self
 	get_parent().get_parent().get_node("Map").add_child(ball)
@@ -208,11 +213,15 @@ func attack_right(target_position: Vector2 = Vector2.INF):
 	ball.direction = direction
 	while $AttackSprite.frame < 15:
 		await get_tree().process_frame
+		if sequence != attack_sequence or is_dead:
+			return
 	sprite.visible = true
 	$AttackSprite.visible = false
 	attacking = false
 
 func attack_left(target_position: Vector2 = Vector2.INF):
+	attack_sequence += 1
+	var sequence := attack_sequence
 	attacking = true
 	sprite.visible = false
 	$AttackSprite.visible = true
@@ -230,8 +239,12 @@ func attack_left(target_position: Vector2 = Vector2.INF):
 		fireball.global_position = global_position + Vector2(cos(angle), sin(angle)) * circle_radius
 		fireballs.append(fireball)
 		await get_tree().create_timer(0.08).timeout
+		if sequence != attack_sequence or is_dead:
+			return
 	while $AttackSprite.frame < 11:
 		await get_tree().process_frame
+		if sequence != attack_sequence or is_dead:
+			return
 	for fireball in fireballs:
 		if is_instance_valid(fireball):
 			var random_angle := deg_to_rad(randf_range(-0.5, 0.5))
@@ -241,6 +254,8 @@ func attack_left(target_position: Vector2 = Vector2.INF):
 			fireball.launched = true
 	while $AttackSprite.frame < 15:
 		await get_tree().process_frame
+		if sequence != attack_sequence or is_dead:
+			return
 	sprite.visible = true
 	$AttackSprite.visible = false
 	attacking = false
@@ -281,6 +296,9 @@ func _play_revive() -> void:
 	play_reverse_death()
 
 func _abort_actions() -> void:
+	attack_sequence += 1
 	attacking = false
 	soul_transfer_active = false
 	hide_soul_chain()
+	$AttackSprite.visible = false
+	sprite.visible = true
