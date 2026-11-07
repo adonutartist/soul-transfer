@@ -28,20 +28,25 @@ func _tick_timers(delta: float) -> void:
 
 func _alerted_update(_delta: float) -> void:
 	movement_dir = Vector2.ZERO
-
 	var player := get_player()
 	if player == null:
 		return
-
 	_can_see = _line_of_sight(player)
-
 	if not _can_see or _attack_timer > 0.0 or casting:
 		return
-
-	if next_attack_is_fireball:
+	if bool(get("attacking")):
+		return
+	var slot := 0 if next_attack_is_fireball else 1
+	if not is_ability_ready(slot):
+		slot = 1 - slot
+	if not is_ability_ready(slot):
+		return
+	if slot == 0:
+		start_ability_cooldown(0, float(get("fireball_burst_cooldown")))
 		call("attack_left", player.global_position)
+		next_attack_is_fireball = false
 	else:
+		start_ability_cooldown(1, float(get("energy_ball_cooldown")))
 		call("attack_right", player.global_position)
-
-	next_attack_is_fireball = not next_attack_is_fireball
-	_attack_timer = 2.5
+		next_attack_is_fireball = true
+	_attack_timer = 1.5

@@ -822,6 +822,8 @@ height = 28.0
 
 [node name="Mage" type="CharacterBody2D" unique_id=1204145115]
 script = ExtResource("1_mxl01")
+energy_ball_cooldown = 10.0
+fireball_burst_cooldown = 4.0
 max_health = 12.0
 possessed_move_speed = 80.0
 

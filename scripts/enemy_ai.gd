@@ -35,7 +35,7 @@ var is_possessed: bool = false
 var movement_dir: Vector2 = Vector2.ZERO
 var _alert_timer: float = 0.0
 var _was_alerted: bool = false
-var _cooldowns: Array[float] = [0.0, 0.0, 0.0]
+var _cooldowns: Array[float] = [0.0, 0.0]
 var _patrol_started: bool = false
 var _patrol_idx: int = 0
 var _patrol_wait_timer: float = 0.0
@@ -65,10 +65,10 @@ func _ready() -> void:
 		start_as_corpse.call_deferred()
 
 func _physics_process(delta: float) -> void:
+	_tick_cooldowns(delta)
 	if is_dead or is_possessed or is_in_group("player"):
 		velocity = Vector2.ZERO
 		return
-	_tick_cooldowns(delta)
 	_tick_timers(delta)
 	_update_detection(delta)
 	if casting:
@@ -95,6 +95,13 @@ func _physics_process(delta: float) -> void:
 func _tick_cooldowns(delta: float) -> void:
 	for i in range(_cooldowns.size()):
 		_cooldowns[i] = maxf(0.0, _cooldowns[i] - delta)
+func is_ability_ready(slot: int) -> bool:
+	return slot >= 0 and slot < _cooldowns.size() and _cooldowns[slot] <= 0.0
+
+func start_ability_cooldown(slot: int, duration: float) -> void:
+	if slot < 0 or slot >= _cooldowns.size():
+		return
+	_cooldowns[slot] = maxf(0.0, duration)
 
 func _update_detection(delta: float) -> void:
 	var player_in_range: bool = false

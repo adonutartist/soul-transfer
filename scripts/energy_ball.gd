@@ -161,7 +161,5 @@ func _apply_lightning_damage(spawn_position: Vector2) -> void:
 			continue
 		if owner_body is EnemyAI and body.is_possessed == owner_body.is_possessed:
 			continue
-		if body.is_in_group("player"):
-			continue
 		body.take_damage(lightning_damage, owner_body)
 	hit_area.queue_free()

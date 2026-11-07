@@ -7,8 +7,6 @@ extends MageAI
 @onready var target_particles: GPUParticles2D = $TargetParticles
 @onready var soul_line_particles: GPUParticles2D = $SoulLineParticles
 
-var energy_ball_cooldown_timer: float = 0.0
-var fireball_burst_cooldown_timer: float = 0.0
 var reversing_death := false
 var can_be_selected := false
 var soul_particle_timer: float = 0.0
@@ -84,15 +82,13 @@ func _on_target_area_input_event(_viewport, event, _shape_idx):
 			player.possess_mage(self)
 
 func _process(delta):
-	energy_ball_cooldown_timer = maxf(0.0, energy_ball_cooldown_timer - delta)
-	fireball_burst_cooldown_timer = maxf(0.0, fireball_burst_cooldown_timer - delta)
 	var player = get_tree().get_first_node_in_group("player")
 	if is_possessed and not attacking and not reversing_death and not just_possessed:
-		if Input.is_action_just_pressed("mage_attack_right") and energy_ball_cooldown_timer <= 0.0:
-			energy_ball_cooldown_timer = energy_ball_cooldown
+		if Input.is_action_just_pressed("mage_attack_right") and is_ability_ready(1):
+			start_ability_cooldown(1, energy_ball_cooldown)
 			attack_right()
-		if Input.is_action_just_pressed("mage_attack_left") and fireball_burst_cooldown_timer <= 0.0:
-			fireball_burst_cooldown_timer = fireball_burst_cooldown
+		if Input.is_action_just_pressed("mage_attack_left") and is_ability_ready(0):
+			start_ability_cooldown(0, fireball_burst_cooldown)
 			attack_left()
 	if just_possessed:
 		just_possessed = false
@@ -201,6 +197,8 @@ func attack_right(target_position: Vector2 = Vector2.INF):
 	var direction := (aim_position - global_position).normalized()
 	sprite.visible = false
 	$AttackSprite.visible = true
+	$AttackSprite.stop()
+	$AttackSprite.frame = 0
 	$AttackSprite.play("slam")
 	while $AttackSprite.frame < 11:
 		await get_tree().process_frame
@@ -225,6 +223,8 @@ func attack_left(target_position: Vector2 = Vector2.INF):
 	attacking = true
 	sprite.visible = false
 	$AttackSprite.visible = true
+	$AttackSprite.stop()
+	$AttackSprite.frame = 0
 	$AttackSprite.play("slam")
 	var aim_position := get_global_mouse_position() if target_position == Vector2.INF else target_position
 	var direction := (aim_position - global_position).normalized()
