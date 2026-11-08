@@ -69,7 +69,7 @@ func _process(delta: float) -> void:
 		target_particles.emitting = false
 		hide_soul_chain()
 		if not attacking and not reversing_death and Input.is_action_just_pressed("mage_attack_left"):
-			throw_axe()
+			throw_axe_at(get_global_mouse_position())
 		if not attacking and not reversing_death and axe_throw_cooldown_timer <= 0.0 and Input.is_action_just_pressed("mage_attack_right"):
 			start_ice_smash()
 		return
@@ -161,16 +161,17 @@ func hide_soul_chain() -> void:
 	soul_line_particles.emitting = false
 	soul_line_particles.visible = false
 
-func start_ice_smash() -> void:
-	if not is_possessed or not ice_smash_ready or ice_smash_active:
+func start_ice_smash(target_position: Vector2 = Vector2.ZERO) -> void:
+	if (not is_possessed and not alerted) or not ice_smash_ready or ice_smash_active:
 		return
+	if target_position == Vector2.ZERO:
+		target_position = get_global_mouse_position()
 	ice_smash_ready = false
 	ice_smash_cooldown_timer = ice_smash_cooldown
 	ice_smash_active = true
 	attacking = true
 	var attack_sprite: AnimatedSprite2D = $AttackSprite
-	var mouse_position := get_global_mouse_position()
-	var facing_right := mouse_position.x >= global_position.x
+	var facing_right := target_position.x >= global_position.x
 	sprite.flip_h = not facing_right
 	attack_sprite.flip_h = not facing_right
 	sprite.visible = false
@@ -191,14 +192,13 @@ func start_ice_smash() -> void:
 	attacking = false
 	ice_smash_active = false
 
-func throw_axe() -> void:
-	if not is_possessed or attacking or axe_throw_cooldown_timer > 0.0:
+func throw_axe_at(target_position: Vector2) -> void:
+	if not (is_possessed and not alerted) or attacking or axe_throw_cooldown_timer > 0.0:
 		return
 	axe_throw_cooldown_timer = axe_throw_cooldown
 	attacking = true
 	var attack_sprite: AnimatedSprite2D = $AttackSprite
-	var mouse_position := get_global_mouse_position()
-	var facing_right := mouse_position.x >= global_position.x
+	var facing_right := target_position.x >= global_position.x
 	sprite.flip_h = not facing_right
 	attack_sprite.flip_h = not facing_right
 	sprite.visible = false
@@ -208,13 +208,13 @@ func throw_axe() -> void:
 		await get_tree().process_frame
 	if not is_inside_tree():
 		return
-	axe.launch(global_position, mouse_position)
+	axe.launch(global_position, target_position)
 	await attack_sprite.animation_finished
 	if not is_inside_tree():
 		return
 	sprite.visible = true
 	sprite.play("idle")
-	attack_sprite.visible= false
+	attack_sprite.visible = false
 	attacking = false
 
 func _play_death() -> void:

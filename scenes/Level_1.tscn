@@ -3728,11 +3728,16 @@ dead_on_start = true
 self_modulate = Color(0.012617188, 0.012617188, 0.012617188, 1)
 y_sort_enabled = true
 position = Vector2(100, 200)
+dead_on_start = true
 patrol_points = [NodePath("../../PatrolPoints/MagePointA"), NodePath("../../PatrolPoints/MagePointB")]
 
 [node name="Tank" parent="Enemies" unique_id=1622895860 instance=ExtResource("7_f63rn")]
 position = Vector2(473, -1016)
 dead_on_start = true
+
+[node name="TankEnemy" parent="Enemies" unique_id=9657545 node_paths=PackedStringArray("patrol_points") instance=ExtResource("7_f63rn")]
+position = Vector2(190, 146)
+patrol_points = [NodePath("../../PatrolPoints/MagePointA"), NodePath("../../PatrolPoints/MagePointB")]
 
 [node name="Tank2" parent="Enemies" unique_id=771452657 instance=ExtResource("7_f63rn")]
 position = Vector2(431, -213)

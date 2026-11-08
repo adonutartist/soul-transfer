@@ -81,11 +81,17 @@ func _check_end() -> void:
 		queue_free()
 
 func _on_body(body: Node2D) -> void:
-	if body.is_in_group("player"):
+	if body is not EnemyAI:
 		return
-	if body == get_tree().get_first_node_in_group("player").controlled_body:
+	var target := body as EnemyAI
+	var owner_body := get_parent() as EnemyAI
+	if target.is_dead or target == owner_body:
 		return
-	if _hit.has(body): return 
-	_hit[body] = true
-	if body.has_method("take_damage"): body.take_damage(base_damage)
-	if body.has_method("apply_speed_multiplier"): body.apply_speed_multiplier(slow_factor, slow_time)
+	if owner_body != null and target.is_possessed == owner_body.is_possessed:
+		return
+	if _hit.has(target):
+		return
+	_hit[target] = true
+	target.take_damage(base_damage, owner_body)
+	if target.has_method("apply_seed_multiplier"):
+		target.apply_seed_multiplier(slow_factor, slow_time)

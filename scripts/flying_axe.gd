@@ -42,6 +42,15 @@ func _on_body_entered(body: Node2D) -> void:
 		return
 	if body is TileMapLayer and body.name == "Walls":
 		_impact()
+		return
+	if body is not EnemyAI:
+		return
+	var target := body as EnemyAI
+	var owner_body := tank_parent as EnemyAI
+	if target.is_dead or target == owner_body:
+		return
+	target.take_damage(damage, owner_body)
+	_impact()
 
 func _impact() -> void:
 	if impacted:
