@@ -43,6 +43,10 @@ var _patrol_waiting: bool = false
 var _patrol_stopped: bool = false
 var health_bar: ProgressBar
 var health_bar_fill: StyleBoxFlat
+var _ice_slow_timer: float = 0.0
+var _ice_slow_multiplier: float = 1.0
+var _ice_slow_active: bool = false
+var _ice_original_modulates: Dictionary = {}
 
 @onready var agent: NavigationAgent2D = $NavigationAgent2D
 @onready var detector: Area2D = $PlayerDetector
@@ -66,6 +70,7 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	_tick_cooldowns(delta)
+	_tick_ice_slow(delta)
 	if is_dead or is_possessed or is_in_group("player"):
 		velocity = Vector2.ZERO
 		return
@@ -89,7 +94,7 @@ func _physics_process(delta: float) -> void:
 		_patrol_update(delta)
 	_was_alerted = alerted
 	_update_facing()
-	velocity = movement_dir.normalized() * speed * PX
+	velocity = movement_dir.normalized() * speed * PX * get_ice_slow_multiplier()
 	move_and_slide()
 
 func _tick_cooldowns(delta: float) -> void:
@@ -133,6 +138,9 @@ func has_arrived() -> bool:
 	)
 
 func get_player() -> Node2D:
+	for body in get_tree().get_nodes_in_group("player"):
+		if body is EnemyAI and (body as EnemyAI).is_possessed:
+			return body as Node2D
 	return get_tree().get_first_node_in_group("player") as Node2D
 
 func dist_to(node: Node2D) -> float:
@@ -322,3 +330,39 @@ func _update_health_bar() -> void:
 	health_bar.value = health
 	health_bar.visible = health < max_health and not is_dead
 	health_bar_fill.bg_color = (Color("#39D353") if is_possessed else Color("#EF4444"))
+
+func apply_ice_slow(multiplier: float, duration: float) -> void:
+	if not _ice_slow_active:
+		_ice_original_modulates.clear()
+		var sprites := find_children("*", "AnimatedSprite2D", true, false)
+		for node in sprites:
+			_ice_original_modulates[node] = node.modulate
+	_ice_slow_active = true
+	_ice_slow_multiplier = minf(_ice_slow_multiplier, clampf(multiplier, 0.0, 1.0))
+	_ice_slow_timer = maxf(_ice_slow_timer, duration)
+	_update_ice_tint()
+
+func _update_ice_tint() -> void:
+	var ice_blue := Color(0.35, 0.7, 1.0)
+	for node in _ice_original_modulates:
+		if is_instance_valid(node):
+			var original: Color = _ice_original_modulates[node]
+			node.modulate = original.lerp(ice_blue, 0.65)
+
+func get_ice_slow_multiplier() -> float:
+	return _ice_slow_multiplier
+
+func _tick_ice_slow(delta: float) -> void:
+	if not _ice_slow_active:
+		return
+	_ice_slow_timer -= delta
+	if _ice_slow_timer <= 0.0:
+		_ice_slow_timer = 0.0
+		_ice_slow_multiplier = 1.0
+		_ice_slow_active = false
+		for node in _ice_original_modulates:
+			if is_instance_valid(node):
+				node.modulate = _ice_original_modulates[node]
+		_ice_original_modulates.clear()
+	else:
+		_update_ice_tint()

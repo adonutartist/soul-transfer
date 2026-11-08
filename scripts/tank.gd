@@ -1,7 +1,7 @@
 extends TankAI
 @export var is_possessable := true
-@export var ice_smash_cooldown: float = 3.0
-@export var axe_throw_cooldown: float = 2.5
+@export var ice_smash_cooldown: float = 10.0
+@export var axe_throw_cooldown: float = 5.0
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var target_area: Area2D = $TargetArea
@@ -9,14 +9,11 @@ extends TankAI
 @onready var soul_line_particles: GPUParticles2D = $SoulLineParticles
 @onready var axe: AnimatedSprite2D = $FlyingAxe
 
-var axe_throw_cooldown_timer: float = 0.0
-var ice_smash_cooldown_timer: float = 0.0
 var reversing_death := false
 var can_be_selected := false
 var just_possessed := false
 var attacking := false
 var mouse_over_corpse := false
-var ice_smash_ready := true
 var ice_smash_scene: PackedScene = preload("res://scenes/IceSmash.tscn")
 var ice_smash_active := false
 
@@ -24,7 +21,9 @@ signal selected
 
 func _ready() -> void:
 	super._ready()
+	speed = possessed_move_speed / PX
 	visual = sprite
+	sprite.scale.x = absf(sprite.scale.x)
 	add_to_group("possessable_bodies")
 	collision_layer = 1
 	collision_mask = 1
@@ -54,11 +53,15 @@ func _ready() -> void:
 	if not dead_on_start:
 		sprite.play("idle")
 
+func _update_facing() -> void:
+	if movement_dir.x > 0.001:
+		sprite.flip_h = false
+	elif movement_dir.x < -0.001:
+		sprite.flip_h = true
+	if alerted and not is_possessed:
+		print("Tank movement:", movement_dir.x, " | flip:", sprite.flip_h)
+
 func _process(delta: float) -> void:
-	ice_smash_cooldown_timer = maxf(0.0, ice_smash_cooldown_timer - delta)
-	if ice_smash_cooldown_timer <= 0.0:
-		ice_smash_ready = true
-	axe_throw_cooldown_timer = maxf(0.0, axe_throw_cooldown_timer - delta)
 	var player := get_parent().get_tree().get_first_node_in_group("player")
 	if player == null:
 		return
@@ -68,10 +71,13 @@ func _process(delta: float) -> void:
 	if is_possessed:
 		target_particles.emitting = false
 		hide_soul_chain()
-		if not attacking and not reversing_death and Input.is_action_just_pressed("mage_attack_left"):
-			throw_axe_at(get_global_mouse_position())
-		if not attacking and not reversing_death and axe_throw_cooldown_timer <= 0.0 and Input.is_action_just_pressed("mage_attack_right"):
-			start_ice_smash()
+		if not attacking and not reversing_death:
+			if Input.is_action_just_pressed("mage_attack_left") and is_ability_ready(0):
+				start_ability_cooldown(0, axe_throw_cooldown)
+				throw_axe_at(get_global_mouse_position())
+			elif Input.is_action_just_pressed("mage_attack_right") and is_ability_ready(1):
+				start_ability_cooldown(1, ice_smash_cooldown)
+				start_ice_smash()
 		return
 	var in_range : bool = (
 		global_position.distance_to(player.global_position) <= player.warp_area.warp_radius
@@ -82,6 +88,13 @@ func _process(delta: float) -> void:
 	else:
 		target_particles.emitting = false
 		hide_soul_chain()
+	if not is_dead and not is_possessed and not attacking:
+		if movement_dir.length_squared() > 0.01:
+			if sprite.animation != "walk":
+				sprite.play("walk")
+		else:
+			if sprite.animation != "idle":
+				sprite.play("idle")
 
 func _on_animation_finished() -> void:
 	if sprite.animation == "death" and not reversing_death:
@@ -162,12 +175,10 @@ func hide_soul_chain() -> void:
 	soul_line_particles.visible = false
 
 func start_ice_smash(target_position: Vector2 = Vector2.ZERO) -> void:
-	if (not is_possessed and not alerted) or not ice_smash_ready or ice_smash_active:
+	if (not is_possessed and not alerted) or ice_smash_active:
 		return
 	if target_position == Vector2.ZERO:
 		target_position = get_global_mouse_position()
-	ice_smash_ready = false
-	ice_smash_cooldown_timer = ice_smash_cooldown
 	ice_smash_active = true
 	attacking = true
 	var attack_sprite: AnimatedSprite2D = $AttackSprite
@@ -178,13 +189,13 @@ func start_ice_smash(target_position: Vector2 = Vector2.ZERO) -> void:
 	attack_sprite.visible = true
 	attack_sprite.play("sword_slam")
 	await get_tree().create_timer(0.333).timeout
-	if not is_inside_tree():
+	if not is_inside_tree() or is_dead:
 		return
 	var smash = ice_smash_scene.instantiate()
 	get_parent().add_child(smash)
-	smash.start(global_position)
+	smash.start(global_position, self)
 	await attack_sprite.animation_finished
-	if not is_inside_tree():
+	if not is_inside_tree() or is_dead:
 		return
 	sprite.visible = true
 	sprite.play("idle")
@@ -193,9 +204,8 @@ func start_ice_smash(target_position: Vector2 = Vector2.ZERO) -> void:
 	ice_smash_active = false
 
 func throw_axe_at(target_position: Vector2) -> void:
-	if not (is_possessed and not alerted) or attacking or axe_throw_cooldown_timer > 0.0:
+	if not (is_possessed or alerted) or attacking:
 		return
-	axe_throw_cooldown_timer = axe_throw_cooldown
 	attacking = true
 	var attack_sprite: AnimatedSprite2D = $AttackSprite
 	var facing_right := target_position.x >= global_position.x
@@ -206,11 +216,11 @@ func throw_axe_at(target_position: Vector2) -> void:
 	attack_sprite.play("axe_throw")
 	while attack_sprite.animation == "axe_throw" and attack_sprite.frame < 3:
 		await get_tree().process_frame
-	if not is_inside_tree():
+	if not is_inside_tree() or is_dead:
 		return
 	axe.launch(global_position, target_position)
 	await attack_sprite.animation_finished
-	if not is_inside_tree():
+	if not is_inside_tree() or is_dead:
 		return
 	sprite.visible = true
 	sprite.play("idle")
@@ -219,6 +229,8 @@ func throw_axe_at(target_position: Vector2) -> void:
 
 func _play_death() -> void:
 	reversing_death = false
+	$AttackSprite.visible = false
+	sprite.visible = true
 	sprite.play("death")
 
 func _show_corpse_pose() -> void:
@@ -233,4 +245,6 @@ func _play_revive() -> void:
 func _abort_actions() -> void:
 	attacking = false
 	ice_smash_active = false
+	$AttackSprite.visible = false
+	sprite.visible = true
 	hide_soul_chain()

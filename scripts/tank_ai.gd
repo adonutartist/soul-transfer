@@ -1,7 +1,7 @@
 extends EnemyAI
 class_name TankAI
 
-const HOLD_DIST := 1.5
+const HOLD_DIST := 3.5
 const SMASH_DISTANCE := 4.0
 const AXE_SPEED_UNITS := 14.0
 
@@ -13,7 +13,7 @@ func _on_alert_enter() -> void:
 	_attack_timer = 0.5 + randf() * 0.75
 
 func _tick_timers(delta: float) -> void:
-	_attack_timer -= maxf(0.0, _attack_timer - delta)
+	_attack_timer = maxf(0.0, _attack_timer - delta)
 
 func _line_of_sight(target: Node2D) -> bool:
 	var query := PhysicsRayQueryParameters2D.create(global_position, target.global_position, blocker_mask)
@@ -31,7 +31,15 @@ func _alerted_update(_delta: float) -> void:
 	if distance > HOLD_DIST:
 		go_to(target.global_position)
 		movement_dir = path_dir()
-	if _attack_timer > 0.0 or casting or bool(get("attacking")):
+		print(
+			"Tank:", global_position,
+			" | Target:", target.global_position,
+			" | Path direction:", movement_dir,
+			" | Distance:", distance)
+	if casting or bool(get("attacking")):
+		movement_dir = Vector2.ZERO
+		return
+	if _attack_timer > 0.0:
 		return
 	if not _line_of_sight(target):
 		return

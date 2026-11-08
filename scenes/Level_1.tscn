@@ -3732,7 +3732,7 @@ dead_on_start = true
 patrol_points = [NodePath("../../PatrolPoints/MagePointA"), NodePath("../../PatrolPoints/MagePointB")]
 
 [node name="Tank" parent="Enemies" unique_id=1622895860 instance=ExtResource("7_f63rn")]
-position = Vector2(473, -1016)
+position = Vector2(420, 135)
 dead_on_start = true
 
 [node name="TankEnemy" parent="Enemies" unique_id=9657545 node_paths=PackedStringArray("patrol_points") instance=ExtResource("7_f63rn")]

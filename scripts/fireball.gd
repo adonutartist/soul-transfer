@@ -22,6 +22,8 @@ func _physics_process(delta: float) -> void:
 		global_position += direction * speed * delta
 
 func _on_body_entered(body: Node2D) -> void:
+	if not is_instance_valid(body):
+		return
 	print("Fireball collided with: ", body.name, " | Type: ", body.get_class())
 	if impacted:
 		return

@@ -9,7 +9,7 @@ const PX := 32.0
 @export var ripple_duration := 0.5
 @export var down_delay := 0.6
 @export var slow_factor := 0.5
-@export var slow_time := 2.0
+@export var slow_time := 5.0
 
 @onready var damage_area: Area2D = $Damage
 @onready var shape: CircleShape2D = $Damage/CollisionShape2D.shape
@@ -22,16 +22,19 @@ var _alive := 0
 var _done_spawning := false
 var _hit := {}
 var ground_layer: TileMapLayer
+var owner_body: EnemyAI = null
 
-func start(pos: Vector2) -> void:
+func start(pos: Vector2, owner: EnemyAI) -> void:
 	global_position = pos
+	owner_body = owner
 	ground_layer = get_tree().current_scene.find_child(
 		"Ground", true, false
 	) as TileMapLayer
 	if ground_layer == null:
 		push_error("IceSmash: Ground TileMapLayer not found.")
 		return
-	shape = shape.duplicate(); $Damage/CollisionShape2D.shape = shape
+	shape = shape.duplicate()
+	$Damage/CollisionShape2D.shape = shape
 	shape.radius = 0.0
 	damage_area.body_entered.connect(_on_body)
 	set_process(true)
@@ -84,14 +87,13 @@ func _on_body(body: Node2D) -> void:
 	if body is not EnemyAI:
 		return
 	var target := body as EnemyAI
-	var owner_body := get_parent() as EnemyAI
 	if target.is_dead or target == owner_body:
 		return
-	if owner_body != null and target.is_possessed == owner_body.is_possessed:
-		return
+	if owner_body != null:
+		if target.is_possessed == owner_body.is_possessed:
+			return
 	if _hit.has(target):
 		return
 	_hit[target] = true
 	target.take_damage(base_damage, owner_body)
-	if target.has_method("apply_seed_multiplier"):
-		target.apply_seed_multiplier(slow_factor, slow_time)
+	target.apply_ice_slow(slow_factor, slow_time)

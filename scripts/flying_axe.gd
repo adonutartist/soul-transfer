@@ -49,6 +49,9 @@ func _on_body_entered(body: Node2D) -> void:
 	var owner_body := tank_parent as EnemyAI
 	if target.is_dead or target == owner_body:
 		return
+	if owner_body != null:
+		if target.is_possessed == owner_body.is_possessed:
+			return
 	target.take_damage(damage, owner_body)
 	_impact()
 

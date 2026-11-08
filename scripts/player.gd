@@ -67,7 +67,10 @@ func _physics_process(delta):
 		dash_timer -= delta
 		afterimage_timer -= delta
 		if possessing and controlled_body != null:
-			controlled_body.velocity = dash_direction * (current_dash_distance / dash_duration)
+			var dash_slow_multiplier := 1.0
+			if controlled_body is EnemyAI:
+				dash_slow_multiplier = controlled_body.get_ice_slow_multiplier()
+			controlled_body.velocity = dash_direction * (current_dash_distance / dash_duration) * dash_slow_multiplier
 			controlled_body.move_and_slide()
 			global_position = controlled_body.global_position
 		else:
@@ -87,7 +90,10 @@ func _physics_process(delta):
 	if direction.length() > 1.0:
 		direction = direction.normalized()
 	if possessing and controlled_body != null:
-		controlled_body.velocity = direction * current_move_speed
+		var move_slow_multiplier := 1.0
+		if controlled_body is EnemyAI:
+			move_slow_multiplier = controlled_body.get_ice_slow_multiplier()
+		controlled_body.velocity = direction * current_move_speed * move_slow_multiplier
 		controlled_body.move_and_slide()
 		global_position = controlled_body.global_position
 	else:
