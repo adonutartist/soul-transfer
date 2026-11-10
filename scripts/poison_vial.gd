@@ -10,7 +10,8 @@ var impacted := false
 var direction := Vector2.RIGHT
 var launched := false
 var hit_bodies: Array[Node2D] = []
-var owner_body: Node2D
+var owner_instance_id: int = 0
+var owner_was_possessed := false
 
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
@@ -18,7 +19,8 @@ func _ready() -> void:
 
 func launch(start_position: Vector2, target_position: Vector2, owner: Node2D) -> void:
 	global_position = start_position
-	owner_body = owner
+	owner_instance_id = owner.get_instance_id()
+	owner_was_possessed = owner.is_possessed
 	direction = (target_position - start_position).normalized()
 	if direction == Vector2.ZERO:
 		direction = Vector2.RIGHT
@@ -31,7 +33,17 @@ func _physics_process(delta: float) -> void:
 		global_position += direction * speed * delta
 
 func _on_body_entered(body: Node2D) -> void:
-	if not launched or impacted or body == owner_body:
+	if not launched or impacted:
+		return
+	if body.get_instance_id() == owner_instance_id:
+		return
+	if body is EnemyAI:
+		if body.is_dead:
+			return
+		if body.is_in_group("player") == owner_was_possessed:
+			return
+		body.take_damage(damage, self)
+		_impact()
 		return
 	if body is TileMapLayer and body.name == "Walls":
 		_impact()

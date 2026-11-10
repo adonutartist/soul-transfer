@@ -186,14 +186,18 @@ func hide_soul_chain() -> void:
 	soul_line_particles.emitting = false
 	soul_line_particles.visible = false
 
-func dash_slash() -> void:
-	if not is_possessed or attacking or not dash_ready:
+func dash_slash(target_position: Vector2 = Vector2.ZERO) -> void:
+	if attacking or not dash_ready or is_dead:
+		return
+	var ai_controlled := not is_possessed
+	if is_possessed:
+		target_position = get_global_mouse_position()
+	elif target_position == Vector2.ZERO:
 		return
 	attacking = true
 	dash_ready = false
 	dash_slash_cooldown_timer = dash_cooldown
 	slash_hit_bodies.clear()
-	var target_position := get_global_mouse_position()
 	var direction := (target_position - global_position).normalized()
 	if direction == Vector2.ZERO:
 		direction = Vector2.RIGHT
@@ -208,15 +212,21 @@ func dash_slash() -> void:
 	slash_sprite.visible = true
 	slash_sprite.play("dash_slash")
 	attack_area.monitoring = true
-	var elapsed := 0.0
-	while elapsed < dash_duration:
+	if is_possessed:
+		var elapsed := 0.0
+		while elapsed < dash_duration:
+			if not is_inside_tree():
+				return
+			velocity = direction * (dash_distance / dash_duration)
+			move_and_slide()
+			elapsed += get_physics_process_delta_time()
+			await get_tree().physics_frame
+		velocity = Vector2.ZERO
+	else:
+		start_ai_dash(direction, dash_duration, dash_distance)
+		await get_tree().create_timer(dash_duration).timeout
 		if not is_inside_tree():
 			return
-		velocity = direction * (dash_distance / dash_duration)
-		move_and_slide()
-		elapsed += get_physics_process_delta_time()
-		await get_tree().physics_frame
-	velocity = Vector2.ZERO
 	attack_area.monitoring = false
 	while slash_sprite.is_playing():
 		if not is_inside_tree():
@@ -227,14 +237,17 @@ func dash_slash() -> void:
 	sprite.play("idle")
 	attacking = false
 
-func throw_poison() -> void:
-	if not is_possessed or attacking or not poison_ready:
+func throw_poison(target_position: Vector2 = Vector2.ZERO) -> void:
+	if attacking or not poison_ready or is_dead:
+		return
+	if is_possessed:
+		target_position = get_global_mouse_position()
+	elif target_position == Vector2.ZERO:
 		return
 	attacking = true
 	poison_ready = false
 	poison_throw_cooldown_timer = poison_cooldown
-	var mouse_position := get_global_mouse_position()
-	var direction := (mouse_position - global_position).normalized()
+	var direction := (target_position - global_position).normalized()
 	if direction == Vector2.ZERO:
 		direction = Vector2.RIGHT
 	sprite.flip_h = direction.x < 0.0
@@ -243,12 +256,12 @@ func throw_poison() -> void:
 	poison_sprite.visible = true
 	poison_sprite.play("poison_throw")
 	while poison_sprite.animation == "poison_throw" and poison_sprite.frame < 3:
-		await get_tree().process_frame
 		if not is_inside_tree():
 			return
+		await get_tree().process_frame
 	var vial := poison_vial_scene.instantiate()
 	get_parent().add_child(vial)
-	vial.launch(global_position, mouse_position, self)
+	vial.launch(global_position, target_position, self)
 	await poison_sprite.animation_finished
 	if not is_inside_tree():
 		return
