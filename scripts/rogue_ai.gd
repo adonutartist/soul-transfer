@@ -46,6 +46,9 @@ func _alerted_update(_delta: float) -> void:
 	if _ai_dash_timer > 0.0:
 		movement_dir = _ai_dash_direction
 		return
+	if bool(get("attacking")) or casting:
+		movement_dir = Vector2.ZERO
+		return
 	var distance := dist_to(player)
 	var away := (global_position - player.global_position).normalized()
 	if distance < FLEE_DIST:

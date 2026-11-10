@@ -3735,9 +3735,9 @@ patrol_points = [NodePath("../../PatrolPoints/MagePointA"), NodePath("../../Patr
 position = Vector2(420, 135)
 dead_on_start = true
 
-[node name="TankEnemy" parent="Enemies" unique_id=9657545 node_paths=PackedStringArray("patrol_points") instance=ExtResource("7_f63rn")]
+[node name="TankEnemy" parent="Enemies" unique_id=9657545 instance=ExtResource("7_f63rn")]
 position = Vector2(190, 146)
-patrol_points = [NodePath("../../PatrolPoints/MagePointA"), NodePath("../../PatrolPoints/MagePointB")]
+dead_on_start = true
 
 [node name="Tank2" parent="Enemies" unique_id=771452657 instance=ExtResource("7_f63rn")]
 position = Vector2(431, -213)
@@ -3745,12 +3745,73 @@ dead_on_start = true
 
 [node name="Rogue" parent="Enemies" unique_id=240379131 instance=ExtResource("8_rp28y")]
 position = Vector2(94.66, -654.24)
+is_possessable = true
+dash_distance = 150.0
+dash_duration = 0.22
+dash_cooldown = 2.0
+poison_cooldown = 3.0
+slash_damage = 2.0
 dead_on_start = true
+speed = 2.0
+alert_radius = 6.0
+time_to_lose_detection = 2.0
+stopping_distance = 0.2
+patrol_waits = Array[float]([])
+primary_unlocked = true
+secondary_unlocked = true
+possessed_dash_distance = 165.0
+
+[node name="RogueEnemy" parent="Enemies" unique_id=31962744 node_paths=PackedStringArray("patrol_points") instance=ExtResource("8_rp28y")]
+position = Vector2(-77, 164)
+is_possessable = true
+dash_distance = 150.0
+dash_duration = 0.22
+dash_cooldown = 2.0
+poison_cooldown = 3.0
+slash_damage = 2.0
+dead_on_start = false
+speed = 2.0
+alert_radius = 6.0
+time_to_lose_detection = 2.0
+stopping_distance = 0.2
+patrol_points = [NodePath("../../PatrolPoints/MagePointA"), NodePath("../../PatrolPoints/MagePointB")]
+patrol_waits = Array[float]([])
+primary_unlocked = true
+secondary_unlocked = true
+possessed_dash_distance = 165.0
 
 [node name="Rogue2" parent="Enemies" unique_id=676044659 instance=ExtResource("8_rp28y")]
 position = Vector2(414.81, -485.025)
+is_possessable = true
+dash_distance = 150.0
+dash_duration = 0.22
+dash_cooldown = 2.0
+poison_cooldown = 3.0
+slash_damage = 2.0
 dead_on_start = true
+speed = 2.0
+alert_radius = 6.0
+time_to_lose_detection = 2.0
+stopping_distance = 0.2
+patrol_waits = Array[float]([])
+primary_unlocked = true
+secondary_unlocked = true
+possessed_dash_distance = 165.0
 
 [node name="Rogue3" parent="Enemies" unique_id=536595343 instance=ExtResource("8_rp28y")]
 position = Vector2(662, -1009)
+is_possessable = true
+dash_distance = 150.0
+dash_duration = 0.22
+dash_cooldown = 2.0
+poison_cooldown = 3.0
+slash_damage = 2.0
 dead_on_start = true
+speed = 2.0
+alert_radius = 6.0
+time_to_lose_detection = 2.0
+stopping_distance = 0.2
+patrol_waits = Array[float]([])
+primary_unlocked = true
+secondary_unlocked = true
+possessed_dash_distance = 165.0

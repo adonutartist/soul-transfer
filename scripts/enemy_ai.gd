@@ -6,6 +6,7 @@ signal became_corpse(body: EnemyAI)
 signal possessed(body: EnemyAI)
 
 const PX: float = 32.0
+const POISON_TICK_INTERVAL := 1.0
 
 @export_group("Lifecycle")
 
@@ -46,7 +47,11 @@ var health_bar_fill: StyleBoxFlat
 var _ice_slow_timer: float = 0.0
 var _ice_slow_multiplier: float = 1.0
 var _ice_slow_active: bool = false
-var _ice_original_modulates: Dictionary = {}
+var _status_original_modulates: Dictionary = {}
+var _poison_active := false
+var _poison_timer := 0.0
+var _poison_tick_timer := 0.0
+var _poison_damage_per_tick := 0.5
 
 @onready var agent: NavigationAgent2D = $NavigationAgent2D
 @onready var detector: Area2D = $PlayerDetector
@@ -71,6 +76,7 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	_tick_cooldowns(delta)
 	_tick_ice_slow(delta)
+	_tick_poison(delta)
 	if is_dead or is_possessed or is_in_group("player"):
 		velocity = Vector2.ZERO
 		return
@@ -331,23 +337,37 @@ func _update_health_bar() -> void:
 	health_bar.visible = health < max_health and not is_dead
 	health_bar_fill.bg_color = (Color("#39D353") if is_possessed else Color("#EF4444"))
 
+func _capture_status_modulates() -> void:
+	_status_original_modulates.clear()
+	var sprites := find_children("*", "AnimatedSprite2D", true, false)
+	for node in sprites:
+		_status_original_modulates[node] = node.modulate
+
+func _restore_status_modulates() -> void:
+	for node in _status_original_modulates:
+		if is_instance_valid(node):
+			node.modulate = _status_original_modulates[node]
+	_status_original_modulates.clear()
+
+func _update_status_tint() -> void:
+	for node in _status_original_modulates:
+		if not is_instance_valid(node):
+			continue
+		var original: Color = _status_original_modulates[node]
+		var tinted := original
+		if _ice_slow_active:
+			tinted = tinted.lerp(Color(0.35, 0.7, 1.0), 0.65)
+		if _poison_active:
+			tinted = tinted.lerp(Color(0.25, 1.0, 0.3), 0.65)
+		node.modulate = tinted
+
 func apply_ice_slow(multiplier: float, duration: float) -> void:
-	if not _ice_slow_active:
-		_ice_original_modulates.clear()
-		var sprites := find_children("*", "AnimatedSprite2D", true, false)
-		for node in sprites:
-			_ice_original_modulates[node] = node.modulate
+	if not _ice_slow_active and not _poison_active:
+		_capture_status_modulates()
 	_ice_slow_active = true
 	_ice_slow_multiplier = minf(_ice_slow_multiplier, clampf(multiplier, 0.0, 1.0))
 	_ice_slow_timer = maxf(_ice_slow_timer, duration)
-	_update_ice_tint()
-
-func _update_ice_tint() -> void:
-	var ice_blue := Color(0.35, 0.7, 1.0)
-	for node in _ice_original_modulates:
-		if is_instance_valid(node):
-			var original: Color = _ice_original_modulates[node]
-			node.modulate = original.lerp(ice_blue, 0.65)
+	_update_status_tint()
 
 func get_ice_slow_multiplier() -> float:
 	return _ice_slow_multiplier
@@ -360,9 +380,48 @@ func _tick_ice_slow(delta: float) -> void:
 		_ice_slow_timer = 0.0
 		_ice_slow_multiplier = 1.0
 		_ice_slow_active = false
-		for node in _ice_original_modulates:
-			if is_instance_valid(node):
-				node.modulate = _ice_original_modulates[node]
-		_ice_original_modulates.clear()
+		if _poison_active:
+			_update_status_tint()
+		else :
+			_restore_status_modulates()
+
+func apply_poison(damage_per_tick: float = 0.5, duration: float = 5.0) -> void:
+	if is_dead:
+		return
+	if not _ice_slow_active and not _poison_active:
+		_capture_status_modulates()
+	if not _poison_active:
+		_poison_tick_timer = POISON_TICK_INTERVAL
+	_poison_active = true
+	_poison_timer = maxf(_poison_timer, duration)
+	_poison_damage_per_tick = maxf(_poison_damage_per_tick, damage_per_tick)
+	_update_status_tint()
+
+func _tick_poison(delta: float) -> void:
+	if not _poison_active:
+		return
+	if is_dead:
+		_end_poison()
+		return
+	_poison_timer -= delta
+	_poison_tick_timer -= delta
+	if _poison_tick_timer <= 0.0:
+		_poison_tick_timer = POISON_TICK_INTERVAL
+		take_damage(_poison_damage_per_tick)
+		if is_dead:
+			_end_poison()
+			return
+	if _poison_timer <= 0.0:
+		_end_poison()
+		return
+	_update_status_tint()
+
+func _end_poison() -> void:
+	_poison_active = false
+	_poison_timer = 0.0
+	_poison_tick_timer = 0.0
+	_poison_damage_per_tick = 0.5
+	if _ice_slow_active:
+		_update_status_tint()
 	else:
-		_update_ice_tint()
+		_restore_status_modulates()

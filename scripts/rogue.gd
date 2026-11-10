@@ -28,12 +28,15 @@ var poison_throw_cooldown_timer: float = 0.0
 var soul_transfer_active := false
 var poison_vial_scene: PackedScene = preload("res://scenes/PoisonVial.tscn")
 var slash_hit_bodies: Array[Node2D] = []
+var slash_collision_exceptions: Array[EnemyAI] = []
+var action_sequence: int = 0
 
 signal selected
 
 func _ready() -> void:
 	super._ready()
 	visual = sprite
+	sprite.scale.x = absf(sprite.scale.x)
 	add_to_group("possessable_bodies")
 	sprite.animation_finished.connect(_on_animation_finished)
 	target_area.input_event.connect(_on_target_area_input_event)
@@ -69,7 +72,20 @@ func _ready() -> void:
 	if not dead_on_start:
 		sprite.play("idle")
 
+func _update_facing() -> void:
+	if movement_dir.x > 0.001:
+		sprite.flip_h = false
+	elif movement_dir.x < -0.001:
+		sprite.flip_h = true
+
 func _process(delta: float) -> void:
+	if not is_dead and not is_possessed and not attacking:
+		if movement_dir.length_squared() > 0.01:
+			if sprite.animation != "walk":
+				sprite.play("walk")
+		else:
+			if sprite.animation != "idle":
+				sprite.play("idle")
 	dash_slash_cooldown_timer = maxf(0.0, dash_slash_cooldown_timer - delta)
 	poison_throw_cooldown_timer = maxf(0.0, poison_throw_cooldown_timer - delta)
 	if dash_slash_cooldown_timer <= 0.0:
@@ -189,6 +205,8 @@ func hide_soul_chain() -> void:
 func dash_slash(target_position: Vector2 = Vector2.ZERO) -> void:
 	if attacking or not dash_ready or is_dead:
 		return
+	action_sequence += 1
+	var sequence := action_sequence
 	var ai_controlled := not is_possessed
 	if is_possessed:
 		target_position = get_global_mouse_position()
@@ -215,7 +233,7 @@ func dash_slash(target_position: Vector2 = Vector2.ZERO) -> void:
 	if is_possessed:
 		var elapsed := 0.0
 		while elapsed < dash_duration:
-			if not is_inside_tree():
+			if not is_inside_tree() or sequence != action_sequence or is_dead:
 				return
 			velocity = direction * (dash_distance / dash_duration)
 			move_and_slide()
@@ -225,11 +243,12 @@ func dash_slash(target_position: Vector2 = Vector2.ZERO) -> void:
 	else:
 		start_ai_dash(direction, dash_duration, dash_distance)
 		await get_tree().create_timer(dash_duration).timeout
-		if not is_inside_tree():
+		if not is_inside_tree() or sequence != action_sequence or is_dead:
 			return
 	attack_area.monitoring = false
+	_clear_slash_collision_exceptions()
 	while slash_sprite.is_playing():
-		if not is_inside_tree():
+		if not is_inside_tree() or sequence != action_sequence or is_dead:
 			return
 		await get_tree().process_frame
 	slash_sprite.visible = false
@@ -240,6 +259,8 @@ func dash_slash(target_position: Vector2 = Vector2.ZERO) -> void:
 func throw_poison(target_position: Vector2 = Vector2.ZERO) -> void:
 	if attacking or not poison_ready or is_dead:
 		return
+	action_sequence += 1
+	var sequence := action_sequence
 	if is_possessed:
 		target_position = get_global_mouse_position()
 	elif target_position == Vector2.ZERO:
@@ -256,14 +277,14 @@ func throw_poison(target_position: Vector2 = Vector2.ZERO) -> void:
 	poison_sprite.visible = true
 	poison_sprite.play("poison_throw")
 	while poison_sprite.animation == "poison_throw" and poison_sprite.frame < 3:
-		if not is_inside_tree():
+		if not is_inside_tree() or sequence != action_sequence or is_dead:
 			return
 		await get_tree().process_frame
 	var vial := poison_vial_scene.instantiate()
 	get_parent().add_child(vial)
 	vial.launch(global_position, target_position, self)
 	await poison_sprite.animation_finished
-	if not is_inside_tree():
+	if not is_inside_tree() or sequence != action_sequence or is_dead:
 		return
 	sprite.visible = true
 	sprite.play("idle")
@@ -284,8 +305,14 @@ func _play_revive() -> void:
 	play_reverse_death()
 
 func _abort_actions() -> void:
+	action_sequence += 1
 	attacking = false
+	attack_area.monitoring = false
+	_clear_slash_collision_exceptions()
 	hide_soul_chain()
+	slash_sprite.visible = false
+	poison_sprite.visible = false
+	sprite.visible = true
 
 func _on_attack_area_body_entered(body: Node2D) -> void:
 	if not body is EnemyAI:
@@ -297,4 +324,13 @@ func _on_attack_area_body_entered(body: Node2D) -> void:
 	if slash_hit_bodies.has(body):
 		return
 	slash_hit_bodies.append(body)
+	if not slash_collision_exceptions.has(body):
+		add_collision_exception_with(body)
+		slash_collision_exceptions.append(body)
 	body.take_damage(slash_damage, self)
+
+func _clear_slash_collision_exceptions() -> void:
+	for body in slash_collision_exceptions:
+		if is_instance_valid(body):
+			remove_collision_exception_with(body)
+	slash_collision_exceptions.clear()
