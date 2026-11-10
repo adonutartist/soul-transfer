@@ -5,6 +5,7 @@ extends RogueAI
 @export var dash_cooldown: float = 2.0
 @export var poison_cooldown: float = 3.0
 @export var dash_end_offset: float = 20.0
+@export var slash_damage: float = 2.0
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var slash_sprite: AnimatedSprite2D = $SlashSprite
@@ -26,6 +27,7 @@ var dash_slash_cooldown_timer: float = 0.0
 var poison_throw_cooldown_timer: float = 0.0
 var soul_transfer_active := false
 var poison_vial_scene: PackedScene = preload("res://scenes/PoisonVial.tscn")
+var slash_hit_bodies: Array[Node2D] = []
 
 signal selected
 
@@ -47,6 +49,7 @@ func _ready() -> void:
 	target_particles.texture = chain_texture
 	soul_line_particles.texture = chain_texture
 	target_particles.one_shot = false
+	attack_area.body_entered.connect(_on_attack_area_body_entered)
 	var target_mat := target_particles.process_material as ParticleProcessMaterial
 	if target_mat:
 		target_mat.scale_min = 0.1
@@ -189,15 +192,22 @@ func dash_slash() -> void:
 	attacking = true
 	dash_ready = false
 	dash_slash_cooldown_timer = dash_cooldown
+	slash_hit_bodies.clear()
 	var target_position := get_global_mouse_position()
 	var direction := (target_position - global_position).normalized()
 	if direction == Vector2.ZERO:
 		direction = Vector2.RIGHT
 	sprite.flip_h = direction.x < 0.0
 	slash_sprite.flip_h = direction.x < 0.0
+	var facing := signf(direction.x)
+	if facing == 0.0:
+		facing = 1.0
+	attack_area.position.x = absf(attack_area.position.x) * facing
+	attack_shape.position.x = absf(attack_shape.position.x) * facing
 	sprite.visible = false
 	slash_sprite.visible = true
 	slash_sprite.play("dash_slash")
+	attack_area.monitoring = true
 	var elapsed := 0.0
 	while elapsed < dash_duration:
 		if not is_inside_tree():
@@ -207,6 +217,7 @@ func dash_slash() -> void:
 		elapsed += get_physics_process_delta_time()
 		await get_tree().physics_frame
 	velocity = Vector2.ZERO
+	attack_area.monitoring = false
 	while slash_sprite.is_playing():
 		if not is_inside_tree():
 			return
@@ -262,3 +273,15 @@ func _play_revive() -> void:
 func _abort_actions() -> void:
 	attacking = false
 	hide_soul_chain()
+
+func _on_attack_area_body_entered(body: Node2D) -> void:
+	if not body is EnemyAI:
+		return
+	if body.is_dead:
+		return
+	if body.is_in_group("player") == is_possessed:
+		return
+	if slash_hit_bodies.has(body):
+		return
+	slash_hit_bodies.append(body)
+	body.take_damage(slash_damage, self)

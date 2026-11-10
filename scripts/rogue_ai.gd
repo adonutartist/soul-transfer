@@ -4,33 +4,28 @@ class_name RogueAI
 const FLEE_DIST := 1.5
 const CIRCLE_DIST := 3.0
 const ATTACK_RANGE := 5.0
-const COMBO_TIME := 0.6
 
 var _attack_timer: float = 0.0
-var _combo_timer: float = 0.0
 var _circle_timer: float = 1.0
 var _circle_left: bool = false
+var _next_attack_is_poison := true
 
 func _on_alert_enter() -> void:
-	_attack_timer = 1.5 + randf()
+	_attack_timer = 1.0
 	_circle_timer = 1.0
 
 func _tick_timers(delta: float) -> void:
-	_attack_timer -= delta
+	_attack_timer = maxf(0.0, _attack_timer - delta)
 	_circle_timer -= delta
 	if _circle_timer <= 0.0:
 		_circle_timer = randf() * 2.0
 		_circle_left = not _circle_left
-	if _combo_timer > 0.0:
-		_combo_timer -= delta
-		if _combo_timer <= 0.0 and alerted:
-			var player := get_player()
-			if player != null:
-				try_enqueue(1, player.global_position)
 
 func _alerted_update(_delta: float) -> void:
 	var player := get_player()
 	if player == null:
+		return
+	if player is EnemyAI and player.is_dead:
 		return
 	var distance := dist_to(player)
 	var away := (global_position - player.global_position).normalized()
@@ -44,7 +39,20 @@ func _alerted_update(_delta: float) -> void:
 	else:
 		go_to(player.global_position)
 		movement_dir = path_dir()
-	if distance < ATTACK_RANGE and _attack_timer <= 0.0:
-		_attack_timer = 1.5 + randf()
-		_combo_timer = COMBO_TIME
-		try_enqueue(0, player.global_position)
+	if bool(get("attacking")) or casting:
+		movement_dir = Vector2.ZERO
+		return
+	if distance > ATTACK_RANGE or _attack_timer > 0.0:
+		return
+	if _next_attack_is_poison:
+		if not is_ability_ready(1):
+			return
+		start_ability_cooldown(1, float(get("poison_cooldown")))
+		call("throw_poison", player.global_position)
+	else:
+		if not is_ability_ready(0):
+			return
+		start_ability_cooldown(0, float(get("dash_cooldown")))
+		call("dash_slash", player.global_position)
+	_next_attack_is_poison = not _next_attack_is_poison
+	_attack_timer = 1.0

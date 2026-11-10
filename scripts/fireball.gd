@@ -6,7 +6,7 @@ extends Area2D
 var direction := Vector2.RIGHT
 var launched := false
 var impacted := false
-var owner_body: Node2D = null
+var owner_was_possessed: bool = false
 
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
@@ -24,20 +24,16 @@ func _physics_process(delta: float) -> void:
 func _on_body_entered(body: Node2D) -> void:
 	if not is_instance_valid(body):
 		return
-	print("Fireball collided with: ", body.name, " | Type: ", body.get_class())
 	if impacted:
-		return
-	if body == owner_body:
 		return
 	if body.name == "Background" or body.name == "Ground" or body.name == "GroundWall":
 		return
 	if body is EnemyAI:
 		if body.is_dead:
 			return
-		if owner_body is EnemyAI:
-			if body.is_possessed == owner_body.is_possessed:
-				return
-			body.take_damage(damage, owner_body)
+		if body.is_possessed == owner_was_possessed:
+			return
+		body.take_damage(damage)
 	_impact()
 
 func _impact() -> void:

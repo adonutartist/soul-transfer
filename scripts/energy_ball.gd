@@ -7,9 +7,10 @@ extends Area2D
 
 var direction := Vector2.RIGHT
 var impacted := false
-var owner_body: Node2D = null
+var owner_was_possessed: bool = false
 var ground_layer: TileMapLayer
 var ground_wall_layer: TileMapLayer
+var owner_instance_id: int = 0
 
 func _ready() -> void:
 	ground_layer = get_tree().current_scene.find_child("Ground", true, false) as TileMapLayer
@@ -27,9 +28,11 @@ func _physics_process(delta):
 		global_position += direction * speed * delta
 
 func _on_body_entered(body: Node2D) -> void:
-	if impacted:
+	if body.get_instance_id() == owner_instance_id:
 		return
-	if body == owner_body:
+	if not is_instance_valid(body):
+		return
+	if impacted:
 		return
 	if body.name == "Background" or body.name == "Ground" or body.name == "GroundWall":
 		return
@@ -39,9 +42,9 @@ func _on_body_entered(body: Node2D) -> void:
 	if body is EnemyAI:
 		if body.is_dead:
 			return
-		if owner_body is EnemyAI and body.is_possessed == owner_body.is_possessed:
+		if body.is_possessed == owner_was_possessed:
 			return
-		body.take_damage(direct_damage, owner_body)
+		body.take_damage(direct_damage)
 	_impact()
 
 func _impact() -> void:
@@ -159,7 +162,7 @@ func _apply_lightning_damage(spawn_position: Vector2) -> void:
 			continue
 		if body is not EnemyAI or body.is_dead:
 			continue
-		if owner_body is EnemyAI and body.is_possessed == owner_body.is_possessed:
+		if body.is_possessed == owner_was_possessed:
 			continue
-		body.take_damage(lightning_damage, owner_body)
+		body.take_damage(lightning_damage)
 	hit_area.queue_free()

@@ -854,6 +854,8 @@ visible = false
 position = Vector2(-3, 7)
 sprite_frames = SubResource("SpriteFrames_4ffog")
 animation = &"dash_slash"
+frame = 10
+frame_progress = 1.0
 
 [node name="PoisonSprite" type="AnimatedSprite2D" parent="." unique_id=1950377791]
 visible = false

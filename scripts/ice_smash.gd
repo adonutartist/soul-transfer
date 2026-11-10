@@ -22,11 +22,11 @@ var _alive := 0
 var _done_spawning := false
 var _hit := {}
 var ground_layer: TileMapLayer
-var owner_body: EnemyAI = null
+var owner_was_possessed: bool = false
 
 func start(pos: Vector2, owner: EnemyAI) -> void:
 	global_position = pos
-	owner_body = owner
+	owner_was_possessed = owner.is_possessed
 	ground_layer = get_tree().current_scene.find_child(
 		"Ground", true, false
 	) as TileMapLayer
@@ -84,16 +84,17 @@ func _check_end() -> void:
 		queue_free()
 
 func _on_body(body: Node2D) -> void:
+	if not is_instance_valid(body):
+		return
 	if body is not EnemyAI:
 		return
 	var target := body as EnemyAI
-	if target.is_dead or target == owner_body:
+	if target.is_dead:
 		return
-	if owner_body != null:
-		if target.is_possessed == owner_body.is_possessed:
-			return
+	if target.is_possessed == owner_was_possessed:
+		return
 	if _hit.has(target):
 		return
 	_hit[target] = true
-	target.take_damage(base_damage, owner_body)
+	target.take_damage(base_damage)
 	target.apply_ice_slow(slow_factor, slow_time)
