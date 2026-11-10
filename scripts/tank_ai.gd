@@ -41,9 +41,7 @@ func _alerted_update(_delta: float) -> void:
 		return
 	if _attack_timer > 0.0:
 		return
-	if not _line_of_sight(target):
-		return
-	if distance <= SMASH_DISTANCE:
+	if distance <= SMASH_DISTANCE and _line_of_sight(target):
 		if is_ability_ready(1):
 			start_ability_cooldown(1, float(get("ice_smash_cooldown")))
 			call("start_ice_smash", target.global_position)

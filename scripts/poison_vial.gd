@@ -43,7 +43,7 @@ func _on_body_entered(body: Node2D) -> void:
 		if body.is_in_group("player") == owner_was_possessed:
 			return
 		body.take_damage(damage, self)
-		body.apply_poison(0.5, 0.5)
+		body.apply_poison(0.5, 5.0)
 		_impact()
 		return
 	if body is TileMapLayer and body.name == "Walls":
