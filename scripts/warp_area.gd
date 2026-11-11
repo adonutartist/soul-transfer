@@ -1,6 +1,6 @@
 extends Node2D
 @export var warp_radius := 416.0
-@export var ember_count := 400
+@export var ember_count := 500
 @export var warp_duration: float = 3.0
 @onready var particles: GPUParticles2D = $EmberParticles
 @onready var warp_lights: PointLight2D = $WarpLights
@@ -9,14 +9,15 @@ var warp_timer: float = 0.0
 
 func _ready():
 	particles.emitting = false
-	particles.amount = 500
+	particles.amount = ember_count
 	particles.lifetime = 0.25
 	particles.local_coords = true
-	particles.emitting = false
 	var mat := ParticleProcessMaterial.new()
 	mat.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_RING
-	mat.emission_ring_radius = warp_radius - 100.0
-	mat.emission_ring_inner_radius = warp_radius - 110.0
+	var local_radius := warp_radius / global_scale.x
+	var local_thickness := 10.0 / global_scale.x
+	mat.emission_ring_radius = local_radius
+	mat.emission_ring_inner_radius = local_radius - local_thickness
 	mat.direction = Vector3.ZERO
 	mat.initial_velocity_min = 0.0
 	mat.initial_velocity_max = 0.0

@@ -149,7 +149,6 @@ dash_distance = 170.0
 
 [node name="Shadow" type="Sprite2D" parent="." unique_id=2068722811]
 modulate = Color(0, 0, 0, 0.6039216)
-z_index = -1
 position = Vector2(-1.1920929e-07, 14.000002)
 scale = Vector2(0.8589744, 0.84782606)
 texture = ExtResource("2_70d11")

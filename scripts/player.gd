@@ -25,6 +25,7 @@ var controlled_body: CharacterBody2D = null
 var possessing := false
 var last_move_direction := Vector2.LEFT
 var transfer_active := false
+var transitioning: bool = false
 
 func _ready():
 	add_to_group("player")
@@ -41,21 +42,18 @@ func _ready():
 
 func _physics_process(delta):
 	dash_cooldown_timer = maxf(0.0, dash_cooldown_timer - delta)
+	if transitioning:
+		velocity = Vector2.ZERO
+		if possessing and is_instance_valid(controlled_body):
+			controlled_body.velocity = Vector2.ZERO
+		return
 	if Input.is_action_just_pressed("warp_area") and not transfer_active:
 		transfer_active = true
-		for body in get_tree().get_nodes_in_group("possessable_bodies"):
-			body.can_be_selected = false
-			body.target_particles.emitting = false
-			body.target_particles.visible = false
-			body.soul_line_particles.emitting = false
-			body.soul_line_particles.visible = false
-			if body.is_dead and global_position.distance_to(body.global_position) <= warp_area.warp_radius:
-				body.can_be_selected = true
-				body.target_particles.visible = true
-				body.soul_line_particles.visible = true
 		warp_area.show_warp()
 		var tween := create_tween().set_ignore_time_scale(true)
 		tween.tween_property(camera, "zoom", warp_zoom, 0.35)
+	if transfer_active and warp_area.warp_active:
+		_update_warp_targets()
 	if possessing and is_instance_valid(controlled_body):
 		if controlled_body.reversing_death or controlled_body.attacking:
 			controlled_body.velocity = Vector2.ZERO
@@ -127,7 +125,9 @@ func _physics_process(delta):
 		for body in get_tree().get_nodes_in_group("possessable_bodies"):
 			body.can_be_selected = false
 			body.target_particles.emitting = false
+			body.target_particles.visible = false
 			body.soul_line_particles.emitting = false
+			body.soul_line_particles.visible = false
 
 func start_dash():
 	is_dashing = true
@@ -245,3 +245,14 @@ func setup_possession_light() -> void:
 	possession_light.color = Color.WHITE
 	possession_light.blend_mode = PointLight2D.BLEND_MODE_ADD
 	possession_light.enabled = true
+
+func _update_warp_targets() -> void:
+	for body in get_tree().get_nodes_in_group("possessable_bodies"):
+		if not is_instance_valid(body):
+			continue
+		var in_range : bool = (body.is_dead and global_position.distance_to(body.global_position) <= warp_area.warp_radius)
+		body.can_be_selected = in_range
+		body.target_particles.visible = in_range
+		body.target_particles.emitting = in_range
+		body.soul_line_particles.visible = in_range
+		body.soul_line_particles.emitting = in_range

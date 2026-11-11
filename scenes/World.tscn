@@ -38,3 +38,15 @@ polygon = PackedVector2Array(-485, -378, -477, 296, 470, 343, 431, -442)
 z_index = -5
 
 [node name="PossessionHUD" parent="." unique_id=531937331 instance=ExtResource("4_d1c63")]
+
+[node name="TransitionLayer" type="CanvasLayer" parent="." unique_id=123767817]
+layer = 100
+
+[node name="Fade" type="ColorRect" parent="TransitionLayer" unique_id=74530035]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)

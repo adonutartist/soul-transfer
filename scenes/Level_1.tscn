@@ -1,7 +1,9 @@
 [gd_scene format=4 uid="uid://d0jyad7omem2y"]
 
+[ext_resource type="Script" uid="uid://dp1mnfqow0jmg" path="res://scripts/level_1.gd" id="1_bmqp6"]
 [ext_resource type="Texture2D" uid="uid://c02m63j2es5rn" path="res://assets/Sprites&Tiles/wall-1- 3 tiles tall.png" id="1_qux8b"]
 [ext_resource type="Texture2D" uid="uid://djsvgeb7duynq" path="res://assets/Sprites&Tiles/wall-2- 3 tiles tall.png" id="2_5f7sk"]
+[ext_resource type="PackedScene" uid="uid://kffbsef1cund" path="res://scenes/Level_2.tscn" id="2_f63rn"]
 [ext_resource type="Texture2D" uid="uid://xf1kesc7cop2" path="res://assets/Sprites&Tiles/Sprite-0002.png" id="3_1tdkx"]
 [ext_resource type="Texture2D" uid="uid://ciky4gfhbivce" path="res://assets/Sprites&Tiles/atlas-props-old prison.png" id="4_wknwv"]
 [ext_resource type="Texture2D" uid="uid://d2forb4dfybya" path="res://assets/Sprites&Tiles/Prison Gate-with wall-18 frames-no-background.png" id="5_fxqaj"]
@@ -182,7 +184,7 @@ polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
 outlines = Array[PackedVector2Array]([PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)])
 agent_radius = 0.0
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_5f7sk"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_kjrqm"]
 texture = ExtResource("1_qux8b")
 texture_region_size = Vector2i(32, 32)
 1:0/0 = 0
@@ -597,9 +599,9 @@ texture_region_size = Vector2i(32, 32)
 tile_size = Vector2i(32, 32)
 physics_layer_0/collision_layer = 1
 navigation_layer_0/layers = 1
-sources/0 = SubResource("TileSetAtlasSource_5f7sk")
+sources/0 = SubResource("TileSetAtlasSource_kjrqm")
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qux8b"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_bmqp6"]
 texture = ExtResource("1_qux8b")
 texture_region_size = Vector2i(32, 32)
 1:0/0 = 0
@@ -917,9 +919,9 @@ texture_region_size = Vector2i(32, 32)
 [sub_resource type="TileSet" id="TileSet_1tdkx"]
 tile_size = Vector2i(32, 32)
 physics_layer_0/collision_layer = 1
-sources/0 = SubResource("TileSetAtlasSource_qux8b")
+sources/0 = SubResource("TileSetAtlasSource_bmqp6")
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_1tdkx"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_f63rn"]
 texture = ExtResource("2_5f7sk")
 texture_region_size = Vector2i(32, 32)
 1:0/0 = 0
@@ -1267,9 +1269,9 @@ texture_region_size = Vector2i(32, 32)
 [sub_resource type="TileSet" id="TileSet_5f7sk"]
 tile_size = Vector2i(32, 32)
 physics_layer_0/collision_layer = 1
-sources/0 = SubResource("TileSetAtlasSource_1tdkx")
+sources/0 = SubResource("TileSetAtlasSource_f63rn")
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wknwv"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rp28y"]
 texture = ExtResource("1_qux8b")
 texture_region_size = Vector2i(32, 32)
 1:0/0 = 0
@@ -1539,9 +1541,9 @@ texture_region_size = Vector2i(32, 32)
 [sub_resource type="TileSet" id="TileSet_txj4k"]
 tile_size = Vector2i(32, 32)
 physics_layer_0/collision_layer = 1
-sources/0 = SubResource("TileSetAtlasSource_wknwv")
+sources/0 = SubResource("TileSetAtlasSource_rp28y")
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_fxqaj"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_crfhr"]
 texture = ExtResource("3_1tdkx")
 texture_region_size = Vector2i(32, 32)
 0:0/0 = 0
@@ -1563,9 +1565,9 @@ texture_region_size = Vector2i(32, 32)
 
 [sub_resource type="TileSet" id="TileSet_4ffog"]
 tile_size = Vector2i(32, 32)
-sources/1 = SubResource("TileSetAtlasSource_fxqaj")
+sources/1 = SubResource("TileSetAtlasSource_crfhr")
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_d6w1m"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_a4osw"]
 texture = ExtResource("4_wknwv")
 texture_region_size = Vector2i(32, 32)
 3:1/0 = 0
@@ -3531,7 +3533,7 @@ texture_region_size = Vector2i(32, 32)
 
 [sub_resource type="TileSet" id="TileSet_d22tc"]
 tile_size = Vector2i(32, 32)
-sources/0 = SubResource("TileSetAtlasSource_d6w1m")
+sources/0 = SubResource("TileSetAtlasSource_a4osw")
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_d6w1m"]
 atlas = ExtResource("5_fxqaj")
@@ -3662,12 +3664,17 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_nqobt")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"default",
 "speed": 5.0
 }]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_txj4k"]
+size = Vector2(67, 61)
+
 [node name="Level1" type="Node2D" unique_id=19848164]
+script = ExtResource("1_bmqp6")
+level_2_scene = ExtResource("2_f63rn")
 
 [node name="Map" type="Node2D" parent="." unique_id=1248311914]
 
@@ -3699,7 +3706,6 @@ tile_set = SubResource("TileSet_d22tc")
 [node name="Sprite2D" type="AnimatedSprite2D" parent="Map" unique_id=2047573036]
 position = Vector2(432, -1093)
 sprite_frames = SubResource("SpriteFrames_txj4k")
-autoplay = "default"
 frame_progress = 0.9306616
 
 [node name="PatrolPoints" type="Node2D" parent="." unique_id=626426206]
@@ -3750,3 +3756,10 @@ dead_on_start = true
 [node name="TankEnemy" parent="Enemies" unique_id=9657545 node_paths=PackedStringArray("patrol_points") instance=ExtResource("7_f63rn")]
 position = Vector2(845, -961)
 patrol_points = [NodePath("../../PatrolPoints/TankPointA"), NodePath("../../PatrolPoints/TankPointB"), NodePath("../../PatrolPoints/TankPointC"), NodePath("../../PatrolPoints/TankPointD")]
+
+[node name="ExitTrigger" type="Area2D" parent="." unique_id=2056908559]
+position = Vector2(432, -1093)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ExitTrigger" unique_id=1566073773]
+position = Vector2(-0.5, -7.5)
+shape = SubResource("RectangleShape2D_txj4k")
