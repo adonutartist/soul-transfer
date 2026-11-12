@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://w0egwphnfxqo"]
+
+[node name="SkillTree" type="Control" unique_id=1622471858]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="ColorRect" parent="." unique_id=171798155]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.09019608, 0.08235294, 0.13333334, 0.9098039)
+
+[node name="MainContainer" type="VBoxContainer" parent="Background" unique_id=2132033564]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 41.0
+offset_top = 39.0
+offset_right = -37.0
+offset_bottom = -34.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 16
+
+[node name="Header" type="HBoxContainer" parent="Background/MainContainer" unique_id=2127368604]
+custom_minimum_size = Vector2(0, 55)
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Background/MainContainer/Header" unique_id=589356948]
+layout_mode = 2
+text = "SKILL TREE"
+
+[node name="SoulsLabel" type="Label" parent="Background/MainContainer/Header" unique_id=585321708]
+layout_mode = 2
+text = "SOULS: 0"
+
+[node name="CloseButton" type="Button" parent="Background/MainContainer/Header" unique_id=188219335]
+layout_mode = 2
+text = "CLOSE"
+
+[node name="ClassTabs" type="HBoxContainer" parent="Background/MainContainer" unique_id=307904542]
+layout_mode = 2
+
+[node name="MageButton" type="Button" parent="Background/MainContainer/ClassTabs" unique_id=839204931]
+layout_mode = 2
+text = "MAGE"
+
+[node name="RogueButton" type="Button" parent="Background/MainContainer/ClassTabs" unique_id=253272411]
+layout_mode = 2
+text = "ROGUE"
+
+[node name="TankButton" type="Button" parent="Background/MainContainer/ClassTabs" unique_id=1213872595]
+layout_mode = 2
+text = "TANK"
+
+[node name="UpgradeArea" type="Control" parent="Background/MainContainer" unique_id=454598272]
+layout_mode = 2

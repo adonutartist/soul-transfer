@@ -1,5 +1,6 @@
 extends Node2D
 @export var level_2_scene: PackedScene
+@export var soul_reward: int = 1
 
 @onready var door: AnimatedSprite2D = $Map/Sprite2D
 @onready var exit_trigger: Area2D = $ExitTrigger
@@ -7,6 +8,7 @@ extends Node2D
 var remaining_enemies: int = 0
 var door_opening: bool = false
 var level_unlocked: bool = false
+var soul_awarded: bool = false
 
 func _ready() -> void:
 	door.stop()
@@ -40,6 +42,9 @@ func _on_door_animation_finished() -> void:
 	if door.animation == &"default":
 		level_unlocked = true
 		exit_trigger.monitoring = true
+		if not soul_awarded:
+			soul_awarded = true
+			SoulManager.add_souls(soul_reward)
 		print("Level 1 completed. Exit unlocked")
 
 func _on_exit_trigger_body_entered(body: Node2D) -> void:
