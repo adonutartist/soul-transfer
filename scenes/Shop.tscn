@@ -1,5 +1,6 @@
 [gd_scene format=4 uid="uid://de0cnpued1dta"]
 
+[ext_resource type="Script" uid="uid://47okr2ukl1js" path="res://scripts/shop.gd" id="1_m0qts"]
 [ext_resource type="Texture2D" uid="uid://c02m63j2es5rn" path="res://assets/Sprites&Tiles/wall-1- 3 tiles tall.png" id="1_yltc6"]
 [ext_resource type="Texture2D" uid="uid://djsvgeb7duynq" path="res://assets/Sprites&Tiles/wall-2- 3 tiles tall.png" id="2_fpbbi"]
 [ext_resource type="Texture2D" uid="uid://xf1kesc7cop2" path="res://assets/Sprites&Tiles/Sprite-0002.png" id="3_m0qts"]
@@ -3685,7 +3686,7 @@ region = Rect2(688, 40, 176, 144)
 radius = 99.31767
 
 [node name="Shop" type="Node2D" unique_id=47924557]
-position = Vector2(18, 29)
+script = ExtResource("1_m0qts")
 
 [node name="Map" type="Node2D" parent="." unique_id=18522956]
 

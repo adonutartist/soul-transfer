@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://w0egwphnfxqo"]
 
+[ext_resource type="Script" uid="uid://bjn66hjn3ij61" path="res://scripts/skill_tree.gd" id="1_4hlmh"]
+
 [node name="SkillTree" type="Control" unique_id=1622471858]
 layout_mode = 3
 anchors_preset = 15
@@ -7,59 +9,81 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_4hlmh")
+start_open_for_testing = true
 
-[node name="Background" type="ColorRect" parent="." unique_id=171798155]
+[node name="Background" type="ColorRect" parent="." unique_id=1609525720]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.09019608, 0.08235294, 0.13333334, 0.9098039)
+color = Color(0, 0, 0, 0.6901961)
 
-[node name="MainContainer" type="VBoxContainer" parent="Background" unique_id=2132033564]
+[node name="MainContainer" type="MarginContainer" parent="." unique_id=281873592]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 41.0
-offset_top = 39.0
-offset_right = -37.0
-offset_bottom = -34.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 16
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 40
 
-[node name="Header" type="HBoxContainer" parent="Background/MainContainer" unique_id=2127368604]
+[node name="Content" type="VBoxContainer" parent="MainContainer" unique_id=1238493429]
+layout_mode = 2
+
+[node name="Header" type="HBoxContainer" parent="MainContainer/Content" unique_id=666740427]
 custom_minimum_size = Vector2(0, 55)
 layout_mode = 2
 
-[node name="Title" type="Label" parent="Background/MainContainer/Header" unique_id=589356948]
-layout_mode = 2
-text = "SKILL TREE"
-
-[node name="SoulsLabel" type="Label" parent="Background/MainContainer/Header" unique_id=585321708]
-layout_mode = 2
-text = "SOULS: 0"
-
-[node name="CloseButton" type="Button" parent="Background/MainContainer/Header" unique_id=188219335]
-layout_mode = 2
-text = "CLOSE"
-
-[node name="ClassTabs" type="HBoxContainer" parent="Background/MainContainer" unique_id=307904542]
+[node name="Title" type="Label" parent="MainContainer/Content/Header" unique_id=154223833]
 layout_mode = 2
 
-[node name="MageButton" type="Button" parent="Background/MainContainer/ClassTabs" unique_id=839204931]
+[node name="SoulsLabel" type="Label" parent="MainContainer/Content/Header" unique_id=1607404124]
 layout_mode = 2
-text = "MAGE"
 
-[node name="RogueButton" type="Button" parent="Background/MainContainer/ClassTabs" unique_id=253272411]
+[node name="Body" type="HBoxContainer" parent="MainContainer/Content" unique_id=1666223457]
 layout_mode = 2
-text = "ROGUE"
+size_flags_vertical = 3
 
-[node name="TankButton" type="Button" parent="Background/MainContainer/ClassTabs" unique_id=1213872595]
+[node name="TreeColumns" type="HBoxContainer" parent="MainContainer/Content/Body" unique_id=924855050]
 layout_mode = 2
-text = "TANK"
+size_flags_horizontal = 3
 
-[node name="UpgradeArea" type="Control" parent="Background/MainContainer" unique_id=454598272]
+[node name="MageTree" type="Control" parent="MainContainer/Content/Body/TreeColumns" unique_id=1642768401]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RogueTree" type="Control" parent="MainContainer/Content/Body/TreeColumns" unique_id=1899582733]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TankTree" type="Control" parent="MainContainer/Content/Body/TreeColumns" unique_id=1012842481]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="DetailsPanel" type="PanelContainer" parent="MainContainer/Content/Body" unique_id=1928458225]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+
+[node name="DetailsContent" type="VBoxContainer" parent="MainContainer/Content/Body/DetailsPanel" unique_id=42839431]
+layout_mode = 2
+
+[node name="UpgradeIcon" type="TextureRect" parent="MainContainer/Content/Body/DetailsPanel/DetailsContent" unique_id=1615222503]
+layout_mode = 2
+
+[node name="UpgradeName" type="Label" parent="MainContainer/Content/Body/DetailsPanel/DetailsContent" unique_id=684399275]
+layout_mode = 2
+
+[node name="UpgradeDescription" type="Label" parent="MainContainer/Content/Body/DetailsPanel/DetailsContent" unique_id=658641402]
+layout_mode = 2
+
+[node name="UpgradeCost" type="Label" parent="MainContainer/Content/Body/DetailsPanel/DetailsContent" unique_id=663828474]
+layout_mode = 2
+
+[node name="BuyButton" type="Button" parent="MainContainer/Content/Body/DetailsPanel/DetailsContent" unique_id=256737095]
 layout_mode = 2

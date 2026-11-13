@@ -96,4 +96,5 @@ func change_level(next_scene: PackedScene) -> void:
 	fade_in.tween_property(fade, "color:a", 0.0, 1.2)
 	await fade_in.finished
 	player.set("transitioning", false)
+	transition_in_progress = false
 	print("Level transition complete")
