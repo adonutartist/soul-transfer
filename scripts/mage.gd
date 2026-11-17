@@ -221,7 +221,7 @@ func attack_right(target_position: Vector2 = Vector2.INF):
 		ball.global_position = global_position
 		var spread := deg_to_rad(8.0)
 		var offset := (float(i) - float(orb_count - 1) / 2.0) * spread
-		ball.direction = direction
+		ball.direction = direction.rotated(offset).normalized()
 	while $AttackSprite.frame < 15:
 		await get_tree().process_frame
 		if sequence != attack_sequence or is_dead:

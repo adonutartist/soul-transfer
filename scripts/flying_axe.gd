@@ -60,6 +60,8 @@ func _on_body_entered(body: Node2D) -> void:
 	if target.is_possessed == owner_was_possessed:
 		return
 	target.take_damage(damage)
+	if is_instance_valid(tank_parent) and tank_parent.has_method("_on_tank_attack_hit"):
+		tank_parent.call("_on_tank_attack_hit")
 	_impact()
 
 func _impact() -> void:

@@ -1,4 +1,7 @@
 extends TankAI
+const HIT_SPEED_BOOST_MULTIPLIER := 1.3
+const HIT_SPEED_BOOST_DURATION := 3.0
+
 @export var is_possessable := true
 @export var ice_smash_cooldown: float = 10.0
 @export var axe_throw_cooldown: float = 5.0
@@ -16,6 +19,7 @@ var attacking := false
 var mouse_over_corpse := false
 var ice_smash_scene: PackedScene = preload("res://scenes/IceSmash.tscn")
 var ice_smash_active := false
+var hit_speed_boost_timer := 0.0
 
 signal selected
 
@@ -62,6 +66,11 @@ func _update_facing() -> void:
 		print("Tank movement:", movement_dir.x, " | flip:", sprite.flip_h)
 
 func _process(delta: float) -> void:
+	if hit_speed_boost_timer > 0.0:
+		hit_speed_boost_timer = maxf(0.0, hit_speed_boost_timer - delta)
+		var multiplier := (HIT_SPEED_BOOST_MULTIPLIER if hit_speed_boost_timer > 0.0 else 1.0)
+		speed = (possessed_move_speed / PX) * multiplier
+		_update_possessed_player_speed(multiplier)
 	var player := get_parent().get_tree().get_first_node_in_group("player")
 	if player == null:
 		return
@@ -251,3 +260,17 @@ func _abort_actions() -> void:
 
 func _get_damage_reduction() -> float:
 	return clampf(SoulManager.get_upgrade_total("Tank", "DamageReduction"), 0.0, 0.75)
+
+func _on_tank_attack_hit() -> void:
+	if not SoulManager.has_upgrade("tank_booster_2"):
+		return
+	hit_speed_boost_timer = HIT_SPEED_BOOST_DURATION
+	speed = (possessed_move_speed / PX) * HIT_SPEED_BOOST_MULTIPLIER
+	_update_possessed_player_speed(HIT_SPEED_BOOST_MULTIPLIER)
+
+func _update_possessed_player_speed(multiplier: float) -> void:
+	for body in get_tree().get_nodes_in_group("player"):
+		if body == self:
+			continue
+		if body.get("controlled_body") == self:
+			body.set("current_move_speed", possessed_move_speed * multiplier)

@@ -23,10 +23,12 @@ var _done_spawning := false
 var _hit := {}
 var ground_layer: TileMapLayer
 var owner_was_possessed: bool = false
+var tank_owner: Node = null
 
 func start(pos: Vector2, owner: EnemyAI) -> void:
 	global_position = pos
 	owner_was_possessed = owner.is_possessed
+	tank_owner = owner
 	ground_layer = get_tree().current_scene.find_child(
 		"Ground", true, false
 	) as TileMapLayer
@@ -98,3 +100,5 @@ func _on_body(body: Node2D) -> void:
 	_hit[target] = true
 	target.take_damage(base_damage)
 	target.apply_ice_slow(slow_factor, slow_time)
+	if is_instance_valid(tank_owner) and tank_owner.has_method("_on_tank_attack_hit"):
+		tank_owner.call("_on_tank_attack_hit")

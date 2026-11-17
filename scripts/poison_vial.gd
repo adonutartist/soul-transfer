@@ -32,6 +32,7 @@ func _physics_process(delta: float) -> void:
 	if launched:
 		global_position += direction * speed * delta
 
+
 func _on_body_entered(body: Node2D) -> void:
 	if not launched or impacted:
 		return
@@ -42,15 +43,21 @@ func _on_body_entered(body: Node2D) -> void:
 			return
 		if body.is_in_group("player") == owner_was_possessed:
 			return
+		_impact(body)
+		return
+	if body.is_in_group("player") and not owner_was_possessed:
 		_impact()
 		return
 	if body is TileMapLayer and body.name == "Walls":
 		_impact()
 
-func _apply_poison_splash() -> void:
+func _apply_poison_splash(direct_target: EnemyAI = null) -> void:
 	var aoe_multiplier := 2.0 if SoulManager.has_upgrade("poison_1") else 1.0
 	var poison_duration := 10.0 if SoulManager.has_upgrade("poison_2") else 5.0
 	var splash_radius := base_aoe_radius * aoe_multiplier
+	var affected: Array[EnemyAI] = []
+	if is_instance_valid(direct_target):
+		affected.append(direct_target)
 	for body in get_tree().get_nodes_in_group("enemies"):
 		if not body is EnemyAI:
 			continue
@@ -62,10 +69,16 @@ func _apply_poison_splash() -> void:
 			continue
 		if global_position.distance_to(body.global_position) > splash_radius:
 			continue
+		if not affected.has(body):
+			affected.append(body)
+	for body in affected:
+		if not is_instance_valid(body) or body.is_dead:
+			continue
 		body.take_damage(damage, self)
 		body.apply_poison(0.5, poison_duration)
 
-func _impact() -> void:
+
+func _impact(direct_target: EnemyAI = null) -> void:
 	if impacted:
 		return
 	impacted = true
@@ -73,7 +86,7 @@ func _impact() -> void:
 	set_physics_process(false)
 	monitoring = false
 	$CollisionShape2D.set_deferred("disabled", true)
-	_apply_poison_splash()
+	_apply_poison_splash(direct_target)
 	vial_sprite.hide()
 	var explosion := explosion_sprite.duplicate() as AnimatedSprite2D
 	get_parent().add_child(explosion)
