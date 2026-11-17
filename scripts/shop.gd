@@ -1,22 +1,30 @@
 extends Node2D
 const SKILL_TREE_SCENE: PackedScene = preload("res://scenes/SkillTree.tscn")
 
+@export var next_scene: PackedScene
+
 @onready var interaction_area: Area2D = $Sprite2D/InteractionArea
 @onready var shop_door: AnimatedSprite2D = $Map/Sprite2D
+@onready var exit_trigger: Area2D = $ExitTrigger
 
 var player_in_range := false
 var player_controller: Node = null
 var skill_tree: Control
 var enter_was_pressed := false
 var door_opened := false
+var level_unlocked := false
 
 func _ready() -> void:
 	interaction_area.body_entered.connect(_on_body_entered)
 	interaction_area.body_exited.connect(_on_body_exited)
+	exit_trigger.monitoring = false
+	exit_trigger.body_entered.connect(_on_exit_trigger_body_entered)
 	player_controller = get_parent().get_node_or_null("Player")
 	SoulManager.balance_changed.connect(_on_souls_changed)
 	shop_door.stop()
 	shop_door.frame = 0
+	shop_door.sprite_frames.set_animation_loop(&"default", false)
+	shop_door.animation_finished.connect(_on_door_animation_finished)
 	_create_skill_tree()
 	if SoulManager.souls <= 0:
 		_open_shop_door()
@@ -67,3 +75,19 @@ func _open_shop_door() -> void:
 		return
 	door_opened = true
 	shop_door.play("default")
+
+func _on_door_animation_finished() -> void:
+	if shop_door.animation == &"default":
+		level_unlocked = true
+		exit_trigger.monitoring = true
+		print("Shop completed. Exit unlocked")
+
+func _on_exit_trigger_body_entered(body: Node2D) -> void:
+	if not level_unlocked:
+		return
+	if not body.is_in_group("player"):
+		return
+	if next_scene == null:
+		push_error("Shop next scene has not been assigned")
+		return
+	get_parent().change_level(next_scene)

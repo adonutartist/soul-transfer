@@ -2,6 +2,7 @@ extends Area2D
 @export var speed: float = 350.0
 @export var lifetime: float = 3.0
 @export var damage: float = 2.0
+@export var base_aoe_radius: float = 48.0
 
 @onready var vial_sprite: AnimatedSprite2D = $VialSprite
 @onready var explosion_sprite: AnimatedSprite2D = $ExplosionSprite
@@ -9,7 +10,6 @@ extends Area2D
 var impacted := false
 var direction := Vector2.RIGHT
 var launched := false
-var hit_bodies: Array[Node2D] = []
 var owner_instance_id: int = 0
 var owner_was_possessed := false
 
@@ -42,12 +42,28 @@ func _on_body_entered(body: Node2D) -> void:
 			return
 		if body.is_in_group("player") == owner_was_possessed:
 			return
-		body.take_damage(damage, self)
-		body.apply_poison(0.5, 5.0)
 		_impact()
 		return
 	if body is TileMapLayer and body.name == "Walls":
 		_impact()
+
+func _apply_poison_splash() -> void:
+	var aoe_multiplier := 2.0 if SoulManager.has_upgrade("poison_1") else 1.0
+	var poison_duration := 10.0 if SoulManager.has_upgrade("poison_2") else 5.0
+	var splash_radius := base_aoe_radius * aoe_multiplier
+	for body in get_tree().get_nodes_in_group("enemies"):
+		if not body is EnemyAI:
+			continue
+		if body.is_dead:
+			continue
+		if body.get_instance_id() == owner_instance_id:
+			continue
+		if body.is_in_group("player") == owner_was_possessed:
+			continue
+		if global_position.distance_to(body.global_position) > splash_radius:
+			continue
+		body.take_damage(damage, self)
+		body.apply_poison(0.5, poison_duration)
 
 func _impact() -> void:
 	if impacted:
@@ -57,6 +73,7 @@ func _impact() -> void:
 	set_physics_process(false)
 	monitoring = false
 	$CollisionShape2D.set_deferred("disabled", true)
+	_apply_poison_splash()
 	vial_sprite.hide()
 	var explosion := explosion_sprite.duplicate() as AnimatedSprite2D
 	get_parent().add_child(explosion)

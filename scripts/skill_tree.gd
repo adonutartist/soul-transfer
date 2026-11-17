@@ -58,7 +58,7 @@ var connectors: Dictionary = {}
 var selected_upgrade_id: String = ""
 
 func _ready() -> void:
-	SoulManager.add_souls(10)
+	SoulManager.add_souls(26)
 	buy_button.pressed.connect(buy_selected)
 	SoulManager.balance_changed.connect(_on_souls_changed)
 	_configure_layout()
@@ -101,7 +101,7 @@ func _get_tree_definitions() -> Dictionary:
 				],
 				[
 					_make_upgrade("orb_2", "Electric Orb Level II", "ORB II", "Spawn 2 additional Electric Orbs", "AdditionalLightningBalls", 2),
-					_make_upgrade("orb_3", "Electric Orb Level III", "ORB III", "Double Electric Orb speed and AOE", "ElectricOrbSpeedAndAOE", 3),
+					_make_upgrade("orb_3", "Electric Orb Level III", "ORB III", "Double Electric Orb speed and AOE", "ElectricOrbSpeedAndAOE", 2),
 					_make_upgrade("orb_4", "Electric Orb Level IV", "ORB IV", "Spawn 4 additional Electric Orbs", "AdditionalLightningBalls", 4)
 				]
 			]
@@ -127,7 +127,7 @@ func _get_tree_definitions() -> Dictionary:
 				],
 				[
 					_make_upgrade("poison_1", "Rogue Ability 2", "POISON I", "Double Poison Bottle AOE", "PoisonAOEMult", 2),
-					_make_upgrade("poison_2", "Rogue Ability 2", "POISON II", "Double Poison duration", "IncreasedPoisonDuration", 3),
+					_make_upgrade("poison_2", "Rogue Ability 2", "POISON II", "Double Poison duration", "IncreasedPoisonDuration", 2),
 					_make_upgrade("poison_3", "Rogue Ability 2", "POISON III", "Spawn 4 Poison Bottles on death", "PoisonOnDeath", 1)
 				]
 			]
@@ -387,7 +387,7 @@ func buy_selected() -> void:
 	if not SoulManager.spend_souls(data["cost"]):
 		return
 	purchased_nodes[id] = true
-	SoulManager.purchased_upgrade(id, data["upgrade_class"],
+	SoulManager.purchase_upgrade(id, data["upgrade_class"],
 	data["stat"], data["amount"])
 	_refresh_upgrade_button(id)
 	_show_upgrade_details(id)

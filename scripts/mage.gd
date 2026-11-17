@@ -204,15 +204,24 @@ func attack_right(target_position: Vector2 = Vector2.INF):
 		await get_tree().process_frame
 		if sequence != attack_sequence or is_dead:
 			return
-	var ball = preload("res://scenes/EnergyBall.tscn").instantiate()
-	var damage_multiplier := 1.0 +SoulManager.get_upgrade_total("Mage", "MageDamageBoost")
-	ball.direct_damage *= damage_multiplier
-	ball.lightning_damage *= damage_multiplier
-	ball.owner_instance_id = get_instance_id()
-	ball.owner_was_possessed = is_possessed
-	get_parent().get_parent().get_node("Map").add_child(ball)
-	ball.global_position = global_position
-	ball.direction = direction
+	var orb_count := 1 + int(SoulManager.get_upgrade_total("Mage", "AdditionalLightningBalls"))
+	var damage_multiplier := 1.0 + SoulManager.get_upgrade_total("Mage", "MageDamageBoost")
+	var orb_multiplier := SoulManager.get_upgrade_total("Mage", "ElectricOrbSpeedAndAOE")
+	var orb_speed_multiplier := 2.0 if orb_multiplier > 0.0 else 1.0
+	var orb_aoe_multiplier := 2.0 if orb_multiplier > 0.0 else 1.0
+	for i in range(orb_count):
+		var ball = preload("res://scenes/EnergyBall.tscn").instantiate()
+		ball.direct_damage *= damage_multiplier
+		ball.lightning_damage *= damage_multiplier
+		ball.speed *= orb_speed_multiplier
+		ball.lightning_hitbox_size *= orb_aoe_multiplier
+		ball.owner_instance_id = get_instance_id()
+		ball.owner_was_possessed = is_possessed
+		get_parent().get_parent().get_node("Map").add_child(ball)
+		ball.global_position = global_position
+		var spread := deg_to_rad(8.0)
+		var offset := (float(i) - float(orb_count - 1) / 2.0) * spread
+		ball.direction = direction
 	while $AttackSprite.frame < 15:
 		await get_tree().process_frame
 		if sequence != attack_sequence or is_dead:
@@ -233,7 +242,7 @@ func attack_left(target_position: Vector2 = Vector2.INF):
 	var aim_position := get_global_mouse_position() if target_position == Vector2.INF else target_position
 	var direction := (aim_position - global_position).normalized()
 	var fireballs: Array[Area2D] = []
-	var fireball_count := 8
+	var fireball_count := 8 + int(SoulManager.get_upgrade_total("Mage", "AdditionalFireballs"))
 	var circle_radius := 35.0
 	for i in range(fireball_count):
 		var fireball = preload("res://scenes/Fireball.tscn").instantiate()
@@ -290,7 +299,23 @@ func play_soul_transfer():
 
 func _play_death() -> void:
 	reversing_death = false
+	if SoulManager.has_upgrade("fireball_death"):
+		_spawn_death_fireballs()
 	sprite.play("death")
+
+func _spawn_death_fireballs() -> void:
+	var fireball_count := 8 + int(SoulManager.get_upgrade_total("Mage", "AdditionalFireballs"))
+	var damage_multiplier := 1.0 +SoulManager.get_upgrade_total("Mage", "MageDamageBoost")
+	for i in range(fireball_count):
+		var fireball = preload("res://scenes/Fireball.tscn").instantiate()
+		fireball.damage *= damage_multiplier
+		fireball.owner_was_possessed = is_possessed
+		get_parent().add_child(fireball)
+		fireball.global_position = global_position
+		var angle := TAU * float(i) / float(fireball_count)
+		fireball.direction = Vector2.from_angle(angle)
+		fireball.speed = randf_range(280.0, 300.0)
+		fireball.launched = true
 
 func _show_corpse_pose() -> void:
 	reversing_death = false

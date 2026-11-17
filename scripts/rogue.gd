@@ -302,7 +302,17 @@ func throw_poison(target_position: Vector2 = Vector2.ZERO) -> void:
 
 func _play_death() -> void:
 	reversing_death = false
+	if SoulManager.has_upgrade("poison_3"):
+		_spawn_death_poison()
 	sprite.play("death")
+
+func _spawn_death_poison() -> void:
+	for i in range(4):
+		var vial := poison_vial_scene.instantiate()
+		get_parent().add_child(vial)
+		var angle := TAU * float(i) / 4.0
+		var target_position := global_position + Vector2.from_angle(angle) * 100.0
+		vial.launch(global_position, target_position, self)
 
 func _show_corpse_pose() -> void:
 	reversing_death = false
@@ -336,7 +346,12 @@ func _on_attack_area_body_entered(body: Node2D) -> void:
 	if not slash_collision_exceptions.has(body):
 		add_collision_exception_with(body)
 		slash_collision_exceptions.append(body)
-	body.take_damage(slash_damage, self)
+	var damage := slash_damage
+	if SoulManager.has_upgrade("dash_4"):
+		damage *= 2.0
+	body.take_damage(damage, self)
+	if SoulManager.has_upgrade("dash_3"):
+		invincibility_timer = maxf(invincibility_timer, 1.0)
 
 func _clear_slash_collision_exceptions() -> void:
 	for body in slash_collision_exceptions:
