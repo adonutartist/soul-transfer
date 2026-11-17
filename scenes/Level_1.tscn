@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://dp1mnfqow0jmg" path="res://scripts/level_1.gd" id="1_bmqp6"]
 [ext_resource type="Texture2D" uid="uid://c02m63j2es5rn" path="res://assets/Sprites&Tiles/wall-1- 3 tiles tall.png" id="1_qux8b"]
 [ext_resource type="Texture2D" uid="uid://djsvgeb7duynq" path="res://assets/Sprites&Tiles/wall-2- 3 tiles tall.png" id="2_5f7sk"]
-[ext_resource type="PackedScene" uid="uid://kffbsef1cund" path="res://scenes/Level_2.tscn" id="2_f63rn"]
+[ext_resource type="PackedScene" uid="uid://de0cnpued1dta" path="res://scenes/Shop.tscn" id="2_f63rn"]
 [ext_resource type="Texture2D" uid="uid://xf1kesc7cop2" path="res://assets/Sprites&Tiles/Sprite-0002.png" id="3_1tdkx"]
 [ext_resource type="Texture2D" uid="uid://ciky4gfhbivce" path="res://assets/Sprites&Tiles/atlas-props-old prison.png" id="4_wknwv"]
 [ext_resource type="Texture2D" uid="uid://d2forb4dfybya" path="res://assets/Sprites&Tiles/Prison Gate-with wall-18 frames-no-background.png" id="5_fxqaj"]

@@ -205,6 +205,9 @@ func attack_right(target_position: Vector2 = Vector2.INF):
 		if sequence != attack_sequence or is_dead:
 			return
 	var ball = preload("res://scenes/EnergyBall.tscn").instantiate()
+	var damage_multiplier := 1.0 +SoulManager.get_upgrade_total("Mage", "MageDamageBoost")
+	ball.direct_damage *= damage_multiplier
+	ball.lightning_damage *= damage_multiplier
 	ball.owner_instance_id = get_instance_id()
 	ball.owner_was_possessed = is_possessed
 	get_parent().get_parent().get_node("Map").add_child(ball)
@@ -234,6 +237,8 @@ func attack_left(target_position: Vector2 = Vector2.INF):
 	var circle_radius := 35.0
 	for i in range(fireball_count):
 		var fireball = preload("res://scenes/Fireball.tscn").instantiate()
+		var damage_multiplier := 1.0 + SoulManager.get_upgrade_total("Mage", "MageDamageBoost")
+		fireball.damage *= damage_multiplier
 		fireball.owner_was_possessed = is_possessed
 		get_parent().add_child(fireball)
 		var angle := (TAU / fireball_count) * i

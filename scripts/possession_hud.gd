@@ -67,8 +67,8 @@ func update_cooldowns() -> void:
 		_set_cooldown(primary_cooldown, active_body._cooldowns[0], active_body.axe_throw_cooldown)
 		_set_cooldown(secondary_cooldown, active_body._cooldowns[1], active_body.ice_smash_cooldown)
 	elif active_body is RogueAI:
-		_set_cooldown(primary_cooldown, active_body._cooldowns[0], active_body.dash_cooldown)
-		_set_cooldown(secondary_cooldown, active_body._cooldowns[1], active_body.poison_cooldown)
+		_set_cooldown(primary_cooldown, active_body.dash_slash_cooldown_timer, active_body.dash_cooldown)
+		_set_cooldown(secondary_cooldown, active_body.poison_throw_cooldown_timer, active_body.poison_cooldown)
 
 func _set_cooldown(bar: TextureProgressBar, remaining: float, duration: float) -> void:
 	if duration <= 0.0:

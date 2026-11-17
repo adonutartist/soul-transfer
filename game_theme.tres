@@ -1,0 +1,7 @@
+[gd_resource type="Theme" format=3 uid="uid://cdt1q6dbuisbk"]
+
+[ext_resource type="FontFile" uid="uid://c6hxoyc3ne2e6" path="res://assets/Font/PerfectDOSVGA437.ttf" id="1_1fvms"]
+
+[resource]
+default_font = ExtResource("1_1fvms")
+default_font_size = 16

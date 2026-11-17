@@ -27,6 +27,10 @@ const POISON_TICK_INTERVAL := 1.0
 @export var possessed_move_speed: float = 165.0
 @export var possessed_dash_distance: float = 165.0
 
+@export_group("Dash Invincibility")
+@export var dash_invincibility_duration: float = 0.25
+
+var invincibility_timer: float = 0.0
 var alerted: bool = false
 var is_dead: bool = false
 var health: float = 5.0
@@ -77,6 +81,8 @@ func _physics_process(delta: float) -> void:
 	_tick_cooldowns(delta)
 	_tick_ice_slow(delta)
 	_tick_poison(delta)
+	if invincibility_timer > 0.0:
+		invincibility_timer = maxf(0.0, invincibility_timer - delta)
 	if is_dead or is_possessed or is_in_group("player"):
 		velocity = Vector2.ZERO
 		return
@@ -209,12 +215,16 @@ func try_enqueue(slot: int, target: Vector2) -> Dictionary:
 	}
 
 func take_damage(amount: float, _source: Node = null) -> void:
-	if is_dead or amount <= 0.0:
+	if is_dead or amount <= 0.0 or invincibility_timer > 0.0:
 		return
+	amount *= 1.0 - _get_damage_reduction()
 	health = maxf(0.0, health - amount)
 	_update_health_bar()
 	if health <= 0.0:
 		die()
+
+func _get_damage_reduction() -> float:
+	return 0.0
 
 func die() -> void:
 	if is_dead:
@@ -385,7 +395,7 @@ func _tick_ice_slow(delta: float) -> void:
 		else :
 			_restore_status_modulates()
 
-func apply_poison(damage_per_tick: float = 0.5, duration: float = 5.0) -> void:
+func apply_poison(damage_per_tick: float = _poison_damage_per_tick, duration: float = 5.0) -> void:
 	if is_dead:
 		return
 	if not _ice_slow_active and not _poison_active:
@@ -425,3 +435,7 @@ func _end_poison() -> void:
 		_update_status_tint()
 	else:
 		_restore_status_modulates()
+
+func grant_dash_invincibility(duration: float = -1.0) -> void:
+	var actual_duration := dash_invincibility_duration if duration < 0.0 else duration
+	invincibility_timer = maxf(invincibility_timer, actual_duration)

@@ -2,8 +2,8 @@ extends RogueAI
 @export var is_possessable := true
 @export var dash_distance: float = 150.0
 @export var dash_duration: float = 0.22
-@export var dash_cooldown: float = 2.0
-@export var poison_cooldown: float = 3.0
+@export var dash_cooldown: float = 5.0
+@export var poison_cooldown: float = 10.0
 @export var dash_end_offset: float = 20.0
 @export var slash_damage: float = 2.0
 
@@ -30,11 +30,19 @@ var poison_vial_scene: PackedScene = preload("res://scenes/PoisonVial.tscn")
 var slash_hit_bodies: Array[Node2D] = []
 var slash_collision_exceptions: Array[EnemyAI] = []
 var action_sequence: int = 0
+var _base_speed: float
+var _base_possessed_move_speed: float
+var _base_dash_distance: float
 
 signal selected
 
 func _ready() -> void:
 	super._ready()
+	_base_speed = speed
+	_base_possessed_move_speed = possessed_move_speed
+	_base_dash_distance = dash_distance
+	SoulManager.upgrades_changed.connect(_apply_skill_tree_upgrades)
+	_apply_skill_tree_upgrades()
 	visual = sprite
 	sprite.scale.x = absf(sprite.scale.x)
 	add_to_group("possessable_bodies")
@@ -231,6 +239,7 @@ func dash_slash(target_position: Vector2 = Vector2.ZERO) -> void:
 	slash_sprite.play("dash_slash")
 	attack_area.monitoring = true
 	if is_possessed:
+		grant_dash_invincibility(dash_duration)
 		var elapsed := 0.0
 		while elapsed < dash_duration:
 			if not is_inside_tree() or sequence != action_sequence or is_dead:
@@ -334,3 +343,10 @@ func _clear_slash_collision_exceptions() -> void:
 		if is_instance_valid(body):
 			remove_collision_exception_with(body)
 	slash_collision_exceptions.clear()
+
+func _apply_skill_tree_upgrades() -> void:
+	var speed_bonus := SoulManager.get_upgrade_total("Rogue", "Speed")
+	var dash_bonus := SoulManager.get_upgrade_total("Rogue", "DashDistance")
+	speed = _base_speed * (1.0 + speed_bonus)
+	possessed_move_speed = _base_possessed_move_speed * (1.0 + speed_bonus)
+	dash_distance = _base_dash_distance * (1.0 + dash_bonus)

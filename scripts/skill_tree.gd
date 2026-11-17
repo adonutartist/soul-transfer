@@ -1,14 +1,37 @@
 extends Control
 @export var start_open_for_testing: bool = false
+@export_group("Mage Textures")
+@export var mage_root_border: Texture2D
+@export var mage_node_border: Texture2D
+@export var mage_lock: Texture2D
+@export_group("Rogue Textures")
+@export var rogue_root_border: Texture2D
+@export var rogue_node_border: Texture2D
+@export var rogue_lock: Texture2D
+@export_group("Tank Textures")
+@export var tank_root_border: Texture2D
+@export var tank_node_border: Texture2D
+@export var tank_lock: Texture2D
+@export_group("Tree Icons")
+@export var mage_tree_icon: Texture2D
+@export var rogue_tree_icon: Texture2D
+@export var tank_tree_icon: Texture2D
+@export_group("Menu Frames")
+@export var details_panel_border: Texture2D
+@export var buy_button_border: Texture2D
+@export_group("Frame Margins")
+@export_range(0, 128) var panel_corner_size: int = 24
+@export_range(0, 128) var button_corner_size: int = 16
 
 const TREE_WIDTH := 270.0
-const ROOT_POSITION := Vector2(20, 32)
-const ROOT_SIZE := Vector2(230, 48)
-const NODE_WIDTH := 82.0
-const NODE_HEIGHT := 58.0
-const NODE_START_Y := 126.0
-const NODE_SPACING := 74.0
-const BRANCH_X_POSITIONS := [4.0, 94.0, 184.0]
+const TREE_HEIGHT := 440.0
+const ROOT_POSITION := Vector2(94, 32)
+const ROOT_SIZE := Vector2(82, 82)
+const NODE_WIDTH := 70.0
+const NODE_HEIGHT := 70.0
+const NODE_START_Y := 150.0
+const NODE_SPACING := 96.0
+const BRANCH_X_POSITIONS := [0.0, 100.0, 200.0]
 const CLASS_COLORS := {
 	"Mage": Color(0.35, 0.72, 1.0),
 	"Rogue": Color(0.45, 0.95, 0.55),
@@ -24,6 +47,7 @@ const CLASS_COLORS := {
 @onready var upgrade_description: Label = $MainContainer/Content/Body/DetailsPanel/DetailsContent/UpgradeDescription
 @onready var upgrade_cost: Label = $MainContainer/Content/Body/DetailsPanel/DetailsContent/UpgradeCost
 @onready var buy_button: Button = $MainContainer/Content/Body/DetailsPanel/DetailsContent/BuyButton
+@onready var details_panel: PanelContainer = $MainContainer/Content/Body/DetailsPanel
 
 var upgrade_data: Dictionary = {}
 var upgrade_buttons: Dictionary = {}
@@ -37,7 +61,10 @@ func _ready() -> void:
 	SoulManager.add_souls(10)
 	buy_button.pressed.connect(buy_selected)
 	SoulManager.balance_changed.connect(_on_souls_changed)
+	_configure_layout()
+	_add_menu_frames()
 	_build_all_trees()
+	_restore_purchased_upgrades()
 	_on_souls_changed(SoulManager.souls)
 	_clear_details()
 	visible = start_open_for_testing
@@ -94,8 +121,8 @@ func _get_tree_definitions() -> Dictionary:
 					_make_upgrade("rogue_booster_3", "Rogue Booster III", "BOOSTER III", "Rogue gains another 20% speed boost", "Speed", 0.2)
 				],
 				[
-					_make_upgrade("dash_2", "Dash Attack Level II", "DASH II", "Double the distance traveled by Dash Attack", "DashDistance", 0.2),
-					_make_upgrade("dash_3", "Dash Attack Level III", "DASH III", "Gain one second of invincibility if Dash Attack Hits", "DashDistance", 1),
+					_make_upgrade("dash_2", "Dash Attack Level II", "DASH II", "Double the distance traveled by Dash Attack", "DashDistance", 1.0),
+					_make_upgrade("dash_3", "Dash Attack Level III", "DASH III", "Gain one second of invincibility if Dash Attack Hits", "DashInvincibility", 1),
 					_make_upgrade("dash_4", "Dash Attack Level IV", "DASH IV", "Dash Attack deals double damage.", "DashDamage", 7)
 				],
 				[
@@ -143,7 +170,7 @@ func _build_all_trees() -> void:
 
 func _build_class_tree(character_class: String, tree: Control, data: Dictionary) -> void:
 	var accent: Color = CLASS_COLORS[character_class]
-	tree.custom_minimum_size = Vector2(TREE_WIDTH, 370)
+	tree.custom_minimum_size = Vector2(TREE_WIDTH, TREE_HEIGHT)
 	tree.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var heading := Label.new()
 	heading.text = character_class.to_upper()
@@ -211,46 +238,76 @@ func _register_upgrade(data: Dictionary) -> void:
 	upgrade_data[id] = data
 	
 func _create_upgrade_button(
-	data: Dictionary, accent: Color,
+	data: Dictionary,
+	accent: Color,
 	is_root: bool
 ) -> Button:
 	var button := Button.new()
 	var id: String = data["id"]
-	button.text = data["short_title"]
-	button.custom_minimum_size = (ROOT_SIZE if is_root else Vector2(NODE_WIDTH, NODE_HEIGHT))
-	button.add_theme_font_size_override("font_size", 11)
-	button.add_theme_color_override("font_color", Color.WHITE)
-	button.add_theme_color_override("font_hover_color", Color.WHITE)
-	button.add_theme_color_override("font_pressed_color", Color.WHITE)
+	var character_class: String = data["upgrade_class"]
+	button.text = ""
+	button.custom_minimum_size = (
+		ROOT_SIZE if is_root else Vector2(NODE_WIDTH, NODE_HEIGHT))
+	button.focus_mode = Control.FOCUS_NONE
 	button.pressed.connect(_on_upgrade_pressed.bind(id))
 	_style_upgrade_button(button, accent, false, false)
+	var border_texture: Texture2D
+	match character_class:
+		"Mage": border_texture = mage_root_border if is_root else mage_node_border
+		"Rogue": border_texture = rogue_root_border if is_root else rogue_node_border
+		"Tank": border_texture = tank_root_border if is_root else tank_node_border
+	if border_texture != null:
+		var frame := TextureRect.new()
+		frame.name = "Border"
+		frame.texture = border_texture
+		frame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		frame.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		frame.stretch_mode = TextureRect.STRETCH_SCALE
+		frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		button.add_child(frame)
+	var icon := TextureRect.new()
+	icon.name = "TreeIcon"
+	match character_class:
+		"Mage": icon.texture = mage_tree_icon
+		"Rogue": icon.texture = rogue_tree_icon
+		"Tank": icon.texture = tank_tree_icon
+	icon.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	var icon_size := 38.0 if is_root else 32.0
+	icon.offset_left = -icon_size / 2.0
+	icon.offset_top = -icon_size / 2.0
+	icon.offset_right = icon_size / 2.0
+	icon.offset_bottom = icon_size / 2.0
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	button.add_child(icon)
+	var lock := TextureRect.new()
+	lock.name = "LockIcon"
+	match character_class:
+		"Mage": lock.texture = mage_lock
+		"Rogue": lock.texture = rogue_lock
+		"Tank": lock.texture = tank_lock
+	lock.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	lock.offset_left = -14
+	lock.offset_top = -14
+	lock.offset_right = 14
+	lock.offset_bottom = 14
+	lock.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	lock.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	lock.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	lock.visible = not is_root
+	button.add_child(lock)
 	return button
 
 func _style_upgrade_button(
-	button: Button, accent: Color,
-	is_unlocked: bool, is_purchased: bool
-) -> void:
-	var background := Color(0.10, 0.10, 0.15)
-	var border := Color(0.30, 0.30, 0.36)
-	if is_purchased:
-		background = accent.darkened(0.65)
-		border = accent
-	elif is_unlocked:
-		background = accent.darkened(0.8)
-		border = accent
-	var normal := StyleBoxFlat.new()
-	normal.bg_color = background
-	normal.border_color = border
-	normal.set_border_width_all(2)
-	normal.set_corner_radius_all(5)
-	var hover := normal.duplicate() as StyleBoxFlat
-	hover.bg_color = background.lightened(0.15)
-	var pressed := normal.duplicate() as StyleBoxFlat
-	pressed.bg_color = background.lightened(0.25)
-	button.add_theme_stylebox_override("normal", normal)
-	button.add_theme_stylebox_override("hover", hover)
-	button.add_theme_stylebox_override("pressed", pressed)
-	button.add_theme_stylebox_override("focus", normal)
+	button: Button, _accent: Color,
+	_is_unlocked: bool, _is_purchased: bool) -> void:
+	var empty_style := StyleBoxEmpty.new()
+	button.add_theme_stylebox_override("normal", empty_style)
+	button.add_theme_stylebox_override("hover", empty_style)
+	button.add_theme_stylebox_override("pressed", empty_style)
+	button.add_theme_stylebox_override("focus", empty_style)
+	button.add_theme_stylebox_override("disabled", empty_style)
 
 func _add_connector(
 	tree: Control, node_id: String,
@@ -270,18 +327,11 @@ func _add_connector(
 
 func _refresh_upgrade_button(id: String) -> void:
 	var button: Button = upgrade_buttons[id]
-	var data: Dictionary = upgrade_data[id]
-	var character_class: String = data["upgrade_class"]
-	var accent: Color = CLASS_COLORS[character_class]
 	var is_unlocked: bool = unlocked_nodes[id]
-	var is_purchased: bool = purchased_nodes.get(id, false)
-	if is_purchased:
-		button.text = "PURCHASED\n" + data["short_title"]
-	elif is_unlocked:
-		button.text = "AVAILABLE\n" + data["short_title"]
-	else:
-		button.text = "LOCKED\n" + data["short_title"]
-	_style_upgrade_button(button, accent, is_unlocked, is_purchased)
+	var lock: TextureRect = button.get_node("LockIcon")
+	var icon: TextureRect = button.get_node("TreeIcon")
+	lock.visible = not is_unlocked
+	icon.visible = is_unlocked and icon.texture != null
 
 func _on_upgrade_pressed(id: String) -> void:
 	selected_upgrade_id = id
@@ -337,6 +387,8 @@ func buy_selected() -> void:
 	if not SoulManager.spend_souls(data["cost"]):
 		return
 	purchased_nodes[id] = true
+	SoulManager.purchased_upgrade(id, data["upgrade_class"],
+	data["stat"], data["amount"])
 	_refresh_upgrade_button(id)
 	_show_upgrade_details(id)
 	await _animate_child_unlocks(id)
@@ -365,3 +417,80 @@ func open_tree() -> void:
 
 func close_tree() -> void:
 	visible = false
+
+func _make_nine_patch(texture: Texture2D, corner_size: int) -> NinePatchRect:
+	if texture == null:
+		return null
+	var frame := NinePatchRect.new()
+	frame.texture = texture
+	frame.draw_center = false
+	frame.patch_margin_left = corner_size
+	frame.patch_margin_right = corner_size
+	frame.patch_margin_top = corner_size
+	frame.patch_margin_bottom = corner_size
+	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	frame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	return frame
+
+func _add_menu_frames() -> void:
+	var panel_frame := _make_nine_patch(details_panel_border, panel_corner_size)
+	if panel_frame != null:
+		panel_frame.name = "DecorativeBorder"
+		details_panel.add_child(panel_frame)
+		details_panel.move_child(panel_frame, 0)
+	var button_frame := _make_nine_patch(buy_button_border, button_corner_size)
+	if button_frame != null:
+		button_frame.name = "DecorativeBorder"
+		button_frame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		buy_button.add_child(button_frame)
+		buy_button.move_child(button_frame, 0)
+
+func _configure_layout() -> void:
+	var tree_columns := $MainContainer/Content/Body/TreeColumns
+	tree_columns.custom_minimum_size = Vector2(TREE_WIDTH * 3, TREE_HEIGHT)
+	for tree in [mage_tree, rogue_tree, tank_tree]:
+		tree.custom_minimum_size = Vector2(TREE_WIDTH, TREE_HEIGHT)
+		tree.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		tree.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	details_panel.custom_minimum_size = Vector2(250, 0)
+	details_panel.size_flags_horizontal = Control.SIZE_SHRINK_END
+	details_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	var details_content := $MainContainer/Content/Body/DetailsPanel/DetailsContent
+	var margin_wrapper := MarginContainer.new()
+	margin_wrapper.name = "DetailsMargin"
+	margin_wrapper.add_theme_constant_override("margin_left", 14)
+	margin_wrapper.add_theme_constant_override("margin_right", 14)
+	margin_wrapper.add_theme_constant_override("margin_top", 14)
+	margin_wrapper.add_theme_constant_override("margin_bottom", 14)
+	details_panel.remove_child(details_content)
+	details_panel.add_child(margin_wrapper)
+	margin_wrapper.add_child(details_content)
+	margin_wrapper.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	margin_wrapper.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	details_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	details_content.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	details_content.add_theme_constant_override("separation", 10)
+	upgrade_name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	upgrade_name.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	upgrade_description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	upgrade_description.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	buy_button.custom_minimum_size = Vector2(0, 48)
+	buy_button.custom_maximum_size = Vector2(10000, 48)
+	buy_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	buy_button.size_flags_vertical = Control.SIZE_SHRINK_END
+	var spacer := Control.new()
+	spacer.name = "DetailsFlexibleSpacer"
+	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	details_content.add_child(spacer)
+	details_content.move_child(spacer, buy_button.get_index())
+
+func _restore_purchased_upgrades() -> void:
+	for id in upgrade_data.keys():
+		if SoulManager.has_upgrade(id):
+			purchased_nodes[id] = true
+	for parent_id in children_by_id.keys():
+		if purchased_nodes.get(parent_id, false):
+			for child_id in children_by_id[parent_id]:
+				unlocked_nodes[child_id] = true
+	for id in upgrade_buttons.keys():
+		_refresh_upgrade_button(id)

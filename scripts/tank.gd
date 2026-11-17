@@ -248,3 +248,6 @@ func _abort_actions() -> void:
 	$AttackSprite.visible = false
 	sprite.visible = true
 	hide_soul_chain()
+
+func _get_damage_reduction() -> float:
+	return clampf(SoulManager.get_upgrade_total("Tank", "DamageReduction"), 0.0, 0.75)

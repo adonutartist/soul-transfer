@@ -826,6 +826,7 @@ energy_ball_cooldown = 10.0
 fireball_burst_cooldown = 5.0
 max_health = 12.0
 possessed_move_speed = 80.0
+possessed_dash_distance = 90.0
 
 [node name="Shadow" type="Sprite2D" parent="." unique_id=50579445]
 modulate = Color(0, 0, 0, 0.6039216)

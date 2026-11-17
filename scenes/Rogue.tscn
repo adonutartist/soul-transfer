@@ -837,6 +837,7 @@ script = ExtResource("1_65x0j")
 dash_end_offset = 60.0
 max_health = 6.0
 possessed_move_speed = 230.0
+possessed_dash_distance = 150.0
 
 [node name="Shadow" type="Sprite2D" parent="." unique_id=764368403]
 modulate = Color(0, 0, 0, 0.6039216)

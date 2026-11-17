@@ -1,6 +1,70 @@
 [gd_scene format=3 uid="uid://w0egwphnfxqo"]
 
 [ext_resource type="Script" uid="uid://bjn66hjn3ij61" path="res://scripts/skill_tree.gd" id="1_4hlmh"]
+[ext_resource type="Texture2D" uid="uid://b26irg7a5qfve" path="res://assets/Sprites&Tiles/Border All 5.png" id="2_ej1ce"]
+[ext_resource type="Texture2D" uid="uid://bms6mmpt4bh8n" path="res://assets/Sprites&Tiles/Locks.png" id="3_k1s1p"]
+[ext_resource type="Texture2D" uid="uid://d3cgnwsur7oh3" path="res://assets/Sprites&Tiles/Border All 16.png" id="4_77ask"]
+[ext_resource type="Texture2D" uid="uid://dt2k3o2gq2ir1" path="res://assets/Sprites&Tiles/Border All 12.png" id="5_h8vf7"]
+[ext_resource type="Texture2D" uid="uid://c7atpcdicpkha" path="res://assets/Sprites&Tiles/Explosion.png" id="6_js5pq"]
+[ext_resource type="Texture2D" uid="uid://bmw4i603e4rk0" path="res://assets/Sprites&Tiles/Border All 10.png" id="6_n6i5t"]
+[ext_resource type="Texture2D" uid="uid://dt8c1t22pa5kj" path="res://assets/Sprites&Tiles/Poison Glass Bottle-Explosion.png" id="7_jplou"]
+[ext_resource type="Texture2D" uid="uid://bd3vm3dkravwl" path="res://assets/Sprites&Tiles/Boomerang Axe 36x32.png" id="8_xix42"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ej1ce"]
+atlas = ExtResource("2_ej1ce")
+region = Rect2(384, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vcq8j"]
+atlas = ExtResource("2_ej1ce")
+region = Rect2(576, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nosqt"]
+atlas = ExtResource("3_k1s1p")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dpn7q"]
+atlas = ExtResource("4_77ask")
+region = Rect2(384, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k1s1p"]
+atlas = ExtResource("4_77ask")
+region = Rect2(576, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_77ask"]
+atlas = ExtResource("3_k1s1p")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h8vf7"]
+atlas = ExtResource("5_h8vf7")
+region = Rect2(384, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n6i5t"]
+atlas = ExtResource("5_h8vf7")
+region = Rect2(576, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_js5pq"]
+atlas = ExtResource("3_k1s1p")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dv6w4"]
+atlas = ExtResource("6_js5pq")
+region = Rect2(0, 16, 56, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nv21m"]
+atlas = ExtResource("7_jplou")
+region = Rect2(0, 8, 64, 40)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atpxp"]
+atlas = ExtResource("8_xix42")
+region = Rect2(0, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jplou"]
+atlas = ExtResource("6_n6i5t")
+region = Rect2(448, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xix42"]
+atlas = ExtResource("6_n6i5t")
+region = Rect2(448, 0, 64, 64)
 
 [node name="SkillTree" type="Control" unique_id=1622471858]
 layout_mode = 3
@@ -11,6 +75,20 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_4hlmh")
 start_open_for_testing = true
+mage_root_border = SubResource("AtlasTexture_ej1ce")
+mage_node_border = SubResource("AtlasTexture_vcq8j")
+mage_lock = SubResource("AtlasTexture_nosqt")
+rogue_root_border = SubResource("AtlasTexture_dpn7q")
+rogue_node_border = SubResource("AtlasTexture_k1s1p")
+rogue_lock = SubResource("AtlasTexture_77ask")
+tank_root_border = SubResource("AtlasTexture_h8vf7")
+tank_node_border = SubResource("AtlasTexture_n6i5t")
+tank_lock = SubResource("AtlasTexture_js5pq")
+mage_tree_icon = SubResource("AtlasTexture_dv6w4")
+rogue_tree_icon = SubResource("AtlasTexture_nv21m")
+tank_tree_icon = SubResource("AtlasTexture_atpxp")
+details_panel_border = SubResource("AtlasTexture_jplou")
+buy_button_border = SubResource("AtlasTexture_xix42")
 
 [node name="Background" type="ColorRect" parent="." unique_id=1609525720]
 layout_mode = 1

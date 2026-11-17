@@ -83,9 +83,7 @@ func change_level(next_scene: PackedScene) -> void:
 		next_level.queue_free()
 		return
 	var spawn_position := spawn.global_position
-	if player.possessing and is_instance_valid(player.controlled_body):
-		player.controlled_body.reparent(self, true)
-		player.controlled_body.global_position = spawn_position
+	player.end_possession_for_level_transition()
 	player.global_position = spawn_position
 	if is_instance_valid(current_level):
 		current_level.queue_free()

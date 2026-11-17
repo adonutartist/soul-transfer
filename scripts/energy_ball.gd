@@ -2,7 +2,7 @@ extends Area2D
 @export var speed := 100.0
 @export var lifetime := 5.0
 @export var direct_damage: float = 2.0
-@export var lightning_damage: float = 0.4
+@export var lightning_damage: float = 1
 @export var lightning_hitbox_size: Vector2 = Vector2(28, 52)
 
 var direction := Vector2.RIGHT

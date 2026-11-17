@@ -136,6 +136,8 @@ func start_dash():
 	afterimages_created = 0
 	afterimage_timer = 0.0
 	dash_direction = last_move_direction
+	if possessing and is_instance_valid(controlled_body) and controlled_body is EnemyAI:
+		controlled_body.grant_dash_invincibility(dash_duration)
 	if possessing and controlled_body != null:
 		var body_sprite: AnimatedSprite2D = controlled_body.get_node("AnimatedSprite2D")
 		body_sprite.play("walk")
@@ -256,3 +258,23 @@ func _update_warp_targets() -> void:
 		body.target_particles.emitting = in_range
 		body.soul_line_particles.visible = in_range
 		body.soul_line_particles.emitting = in_range
+
+func end_possession_for_level_transition() -> void:
+	transfer_active = false
+	is_dashing = false
+	dash_timer = 0.0
+	velocity = Vector2.ZERO
+	warp_area.hide_warp()
+	if possessing and is_instance_valid(controlled_body):
+		controlled_body.on_released()
+		controlled_body.queue_free()
+	possessing = false
+	controlled_body = null
+	current_move_speed = speed
+	current_dash_distance = dash_distance
+	sprite.visible = true
+	$Shadow.visible = true
+	$CollisionShape2D.set_deferred("disabled", false)
+	camera.zoom = normal_zoom
+	if is_instance_valid(possession_hud):
+		possession_hud.hide_hud()

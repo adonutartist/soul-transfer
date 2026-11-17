@@ -25,6 +25,10 @@ SoulManager="*uid://bd2bbqjt672i2"
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
+[gui]
+
+theme/custom="uid://cdt1q6dbuisbk"
+
 [input]
 
 move_up={
