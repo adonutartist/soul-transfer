@@ -24,6 +24,7 @@ var _hit := {}
 var ground_layer: TileMapLayer
 var owner_was_possessed: bool = false
 var tank_owner: Node = null
+var affect_all_factions := false
 
 func start(pos: Vector2, owner: EnemyAI) -> void:
 	global_position = pos
@@ -43,10 +44,11 @@ func start(pos: Vector2, owner: EnemyAI) -> void:
 
 func _process(delta: float) -> void:
 	_elapsed += delta
-	var per := ripple_duration / spike_count
+	var effective_spike_count := roundi(spike_count * range_multiplier * range_multiplier)
+	var per := ripple_duration / effective_spike_count
 	var r_max := radius_units * range_multiplier * PX
-	while _next < spike_count and _elapsed >= _next * per:
-		var t := float(_next) / float(spike_count - 1)
+	while _next < effective_spike_count and _elapsed >= _next * per:
+		var t := float(_next) / float(effective_spike_count - 1)
 		var inner_radius := 1.1 * PX
 		var dist := lerpf(inner_radius, r_max, sqrt(t))
 		var ang := randf() * TAU
@@ -54,7 +56,7 @@ func _process(delta: float) -> void:
 		shape.radius = dist
 		_spawn(pos, t)
 		_next += 1
-	if _next >= spike_count:
+	if _next >= effective_spike_count:
 		_done_spawning = true
 		_check_end()
 
@@ -93,7 +95,7 @@ func _on_body(body: Node2D) -> void:
 	var target := body as EnemyAI
 	if target.is_dead:
 		return
-	if target.is_possessed == owner_was_possessed:
+	if not affect_all_factions and target.is_possessed == owner_was_possessed:
 		return
 	if _hit.has(target):
 		return

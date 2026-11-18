@@ -7,6 +7,8 @@ signal possessed(body: EnemyAI)
 
 const PX: float = 32.0
 const POISON_TICK_INTERVAL := 1.0
+const ICE_SLOW_DOT_INTERVAL := 1.0
+const ICE_SLOW_DOT_DAMAGE := 0.5
 
 @export_group("Lifecycle")
 
@@ -51,6 +53,7 @@ var health_bar_fill: StyleBoxFlat
 var _ice_slow_timer: float = 0.0
 var _ice_slow_multiplier: float = 1.0
 var _ice_slow_active: bool = false
+var _ice_slow_dot_timer: float = 0.0
 var _status_original_modulates: Dictionary = {}
 var _poison_active := false
 var _poison_timer := 0.0
@@ -374,6 +377,8 @@ func _update_status_tint() -> void:
 func apply_ice_slow(multiplier: float, duration: float) -> void:
 	if not _ice_slow_active and not _poison_active:
 		_capture_status_modulates()
+	if not _ice_slow_active:
+		_ice_slow_dot_timer = ICE_SLOW_DOT_INTERVAL
 	_ice_slow_active = true
 	_ice_slow_multiplier = minf(_ice_slow_multiplier, clampf(multiplier, 0.0, 1.0))
 	_ice_slow_timer = maxf(_ice_slow_timer, duration)
@@ -386,10 +391,18 @@ func _tick_ice_slow(delta: float) -> void:
 	if not _ice_slow_active:
 		return
 	_ice_slow_timer -= delta
+	if SoulManager.has_upgrade("axe_slow"):
+		_ice_slow_dot_timer -= delta
+		if _ice_slow_dot_timer <= 0.0:
+			_ice_slow_dot_timer = ICE_SLOW_DOT_INTERVAL
+			take_damage(ICE_SLOW_DOT_DAMAGE)
+			if is_dead:
+				return
 	if _ice_slow_timer <= 0.0:
 		_ice_slow_timer = 0.0
 		_ice_slow_multiplier = 1.0
 		_ice_slow_active = false
+		_ice_slow_dot_timer = 0.0
 		if _poison_active:
 			_update_status_tint()
 		else :

@@ -12,6 +12,7 @@ const HIT_SPEED_BOOST_DURATION := 3.0
 @onready var soul_line_particles: GPUParticles2D = $SoulLineParticles
 @onready var axe: AnimatedSprite2D = $FlyingAxe
 
+var extra_axes: Array[AnimatedSprite2D] = []
 var reversing_death := false
 var can_be_selected := false
 var just_possessed := false
@@ -201,6 +202,7 @@ func start_ice_smash(target_position: Vector2 = Vector2.ZERO) -> void:
 	if not is_inside_tree() or is_dead:
 		return
 	var smash = ice_smash_scene.instantiate()
+	smash.range_multiplier = (1.0 + SoulManager.get_upgrade_total("Tank", "IceSmashRange"))
 	get_parent().add_child(smash)
 	smash.start(global_position, self)
 	await attack_sprite.animation_finished
@@ -227,7 +229,25 @@ func throw_axe_at(target_position: Vector2) -> void:
 		await get_tree().process_frame
 	if not is_inside_tree() or is_dead:
 		return
-	axe.launch(global_position, target_position)
+	var additional_axes := int(SoulManager.get_upgrade_total("Tank", "AdditionalAxes"))
+	var total_axes := 1 + additional_axes
+	var axes: Array[AnimatedSprite2D] = [axe]
+	while extra_axes.size() < additional_axes:
+		var extra_axe := axe.duplicate() as AnimatedSprite2D
+		add_child(extra_axe)
+		extra_axes.append(extra_axe)
+	for extra_axe in extra_axes:
+		if axes.size() >= total_axes:
+			break
+		axes.append(extra_axe)
+	var base_direction := (target_position - global_position).normalized()
+	var throw_distance := global_position.distance_to(target_position)
+	var spread := deg_to_rad(12.0)
+	for i in range(total_axes):
+		var offset := (float(i) - float(total_axes - 1) / 2.0) * spread
+		var direction := base_direction.rotated(offset)
+		var individual_target := global_position + direction * throw_distance
+		axes[i].launch(global_position, individual_target)
 	await attack_sprite.animation_finished
 	if not is_inside_tree() or is_dead:
 		return
@@ -241,6 +261,12 @@ func _play_death() -> void:
 	$AttackSprite.visible = false
 	sprite.visible = true
 	sprite.play("death")
+	if SoulManager.has_upgrade("ice_death"):
+		var smash = ice_smash_scene.instantiate()
+		smash.range_multiplier = (1.0 + SoulManager.get_upgrade_total("Tank", "IceSmashRange"))
+		smash.affect_all_factions = true 
+		get_parent().add_child(smash)
+		smash.start(global_position, self)
 
 func _show_corpse_pose() -> void:
 	reversing_death = false
