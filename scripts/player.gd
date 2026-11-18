@@ -54,6 +54,8 @@ func _physics_process(delta):
 		tween.tween_property(camera, "zoom", warp_zoom, 0.35)
 	if transfer_active and warp_area.warp_active:
 		_update_warp_targets()
+		if is_instance_valid(possession_hud):
+			possession_hud.set_warp_progress(warp_area.warp_timer, warp_area.warp_duration)
 	if possessing and is_instance_valid(controlled_body):
 		if controlled_body.reversing_death or controlled_body.attacking:
 			controlled_body.velocity = Vector2.ZERO
@@ -122,6 +124,8 @@ func _physics_process(delta):
 			sprite.play("idle")
 	if transfer_active and not warp_area.warp_active:
 		transfer_active = false
+		if is_instance_valid(possession_hud):
+			possession_hud.hide_warp_timer()
 		for body in get_tree().get_nodes_in_group("possessable_bodies"):
 			body.can_be_selected = false
 			body.target_particles.emitting = false
@@ -207,6 +211,7 @@ func possess_mage(mage):
 	global_position = mage.global_position
 	warp_area.global_position = global_position
 	if is_instance_valid(possession_hud):
+		possession_hud.hide_warp_timer()
 		possession_hud.show_for_body(mage)
 
 func _on_body_selected():
