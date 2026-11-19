@@ -6,6 +6,8 @@ signal became_corpse(body: EnemyAI)
 signal possessed(body: EnemyAI)
 
 const PX: float = 32.0
+const ACTIVE_Z_INDEX := 0
+const CORPSE_Z_INDEX := -1
 const POISON_TICK_INTERVAL := 1.0
 const ICE_SLOW_DOT_INTERVAL := 1.0
 const ICE_SLOW_DOT_DAMAGE := 0.5
@@ -59,6 +61,7 @@ var _poison_active := false
 var _poison_timer := 0.0
 var _poison_tick_timer := 0.0
 var _poison_damage_per_tick := 0.5
+var delete_after_death_animation := false
 
 @onready var agent: NavigationAgent2D = $NavigationAgent2D
 @onready var detector: Area2D = $PlayerDetector
@@ -74,6 +77,7 @@ func _ready() -> void:
 	shape_node.shape = circle
 	agent.target_desired_distance = stopping_distance * PX
 	add_to_group("enemies")
+	z_index = CORPSE_Z_INDEX if dead_on_start else ACTIVE_Z_INDEX
 	health = max_health
 	_setup_health_bar()
 	shadow.visible = not dead_on_start
@@ -233,6 +237,7 @@ func die() -> void:
 	if is_dead:
 		return
 	is_dead = true
+	z_index = CORPSE_Z_INDEX
 	_update_health_bar()
 	corpse_ready = false
 	alerted = false
@@ -250,6 +255,7 @@ func start_as_corpse() -> void:
 	if is_dead:
 		return
 	is_dead = true
+	z_index = CORPSE_Z_INDEX
 	$CollisionShape2D.set_deferred("disabled", true)
 	corpse_ready = false
 	alerted = false
@@ -266,9 +272,12 @@ func _finish_corpse() -> void:
 	corpse_ready = true
 	$CollisionShape2D.set_deferred("disabled", true)
 	became_corpse.emit(self)
+	if delete_after_death_animation:
+		queue_free()
 
 func on_possessed() -> void:
 	is_dead = false
+	z_index = ACTIVE_Z_INDEX
 	$CollisionShape2D.set_deferred("disabled", false)
 	corpse_ready = false
 	health = max_health

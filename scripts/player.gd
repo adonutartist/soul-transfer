@@ -26,6 +26,7 @@ var possessing := false
 var last_move_direction := Vector2.LEFT
 var transfer_active := false
 var transitioning: bool = false
+var forced_warp_excluded_body: EnemyAI = null
 
 func _ready():
 	add_to_group("player")
@@ -34,6 +35,7 @@ func _ready():
 	setup_possession_light()
 	current_move_speed = speed
 	current_dash_distance = dash_distance
+	warp_area.warp_expired.connect(_on_warp_expired)
 	if is_instance_valid(possession_hud):
 		possession_hud.hide_hud()
 	for body in get_tree().get_nodes_in_group("possessable_bodies"):
@@ -122,16 +124,6 @@ func _physics_process(delta):
 			sprite.flip_h = facing_right
 		else:
 			sprite.play("idle")
-	if transfer_active and not warp_area.warp_active:
-		transfer_active = false
-		if is_instance_valid(possession_hud):
-			possession_hud.hide_warp_timer()
-		for body in get_tree().get_nodes_in_group("possessable_bodies"):
-			body.can_be_selected = false
-			body.target_particles.emitting = false
-			body.target_particles.visible = false
-			body.soul_line_particles.emitting = false
-			body.soul_line_particles.visible = false
 
 func start_dash():
 	is_dashing = true
@@ -220,13 +212,16 @@ func _on_body_selected():
 func _on_controlled_body_died(body: EnemyAI) -> void:
 	if controlled_body != body:
 		return
+	forced_warp_excluded_body = body
+	body.delete_after_death_animation = true
+	var death_position := body.global_position
 	possessing = false
 	controlled_body = null
 	current_move_speed = speed
 	current_dash_distance = dash_distance
 	is_dashing = false
 	velocity = Vector2.ZERO
-	global_position = body.global_position
+	global_position = death_position
 	sprite.visible = true
 	$Shadow.visible = true
 	$CollisionShape2D.set_deferred("disabled", false)
@@ -234,6 +229,12 @@ func _on_controlled_body_died(body: EnemyAI) -> void:
 	sprite.play("idle")
 	if is_instance_valid(possession_hud):
 		possession_hud.hide_hud()
+	transfer_active = true
+	warp_area.global_position = global_position
+	warp_area.show_warp()
+	var tween := create_tween().set_ignore_time_scale(true)
+	tween.tween_property(camera, "zoom", warp_zoom, 0.35)
+	print("possessed body ded find another corpse to leach on lol ;-;")
 
 func setup_possession_light() -> void:
 	var gradient := Gradient.new()
@@ -257,7 +258,7 @@ func _update_warp_targets() -> void:
 	for body in get_tree().get_nodes_in_group("possessable_bodies"):
 		if not is_instance_valid(body):
 			continue
-		var in_range : bool = (body.is_dead and global_position.distance_to(body.global_position) <= warp_area.warp_radius)
+		var in_range : bool = (body != forced_warp_excluded_body and body.is_dead and body.corpse_ready and global_position.distance_to(body.global_position) <= warp_area.warp_radius)
 		body.can_be_selected = in_range
 		body.target_particles.visible = in_range
 		body.target_particles.emitting = in_range
@@ -283,3 +284,13 @@ func end_possession_for_level_transition() -> void:
 	camera.zoom = normal_zoom
 	if is_instance_valid(possession_hud):
 		possession_hud.hide_hud()
+
+func _on_warp_expired() -> void:
+	if not transfer_active:
+		return
+	print("warp failed respawning...")
+	var world := get_parent()
+	if world.has_method("reset_current_level"):
+		world.reset_current_level()
+	else:
+		push_error("world is missing reset_current_level()")

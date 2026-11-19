@@ -18,7 +18,7 @@ adjustment_brightness = 0.8
 script = ExtResource("1_7g83o")
 
 [node name="Player" parent="." unique_id=1594491723 instance=ExtResource("1_32lhk")]
-z_index = 1
+z_index = 5
 y_sort_enabled = true
 position = Vector2(-84.355, 192.32)
 

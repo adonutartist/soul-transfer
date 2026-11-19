@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://6o84o7f2w5yd" path="res://scripts/level_2.gd" id="1_0qfqs"]
 [ext_resource type="Texture2D" uid="uid://c02m63j2es5rn" path="res://assets/Sprites&Tiles/wall-1- 3 tiles tall.png" id="1_uih6o"]
+[ext_resource type="PackedScene" uid="uid://de0cnpued1dta" path="res://scenes/Shop.tscn" id="2_3v32c"]
 [ext_resource type="Texture2D" uid="uid://djsvgeb7duynq" path="res://assets/Sprites&Tiles/wall-2- 3 tiles tall.png" id="2_wl4sj"]
 [ext_resource type="Texture2D" uid="uid://xf1kesc7cop2" path="res://assets/Sprites&Tiles/Sprite-0002.png" id="3_knhd3"]
 [ext_resource type="Texture2D" uid="uid://ciky4gfhbivce" path="res://assets/Sprites&Tiles/atlas-props-old prison.png" id="4_at62m"]
@@ -3682,6 +3683,7 @@ size = Vector2(67, 61)
 
 [node name="Level2" type="Node2D" unique_id=1081944255]
 script = ExtResource("1_0qfqs")
+shop_scene = ExtResource("2_3v32c")
 
 [node name="Map" type="Node2D" parent="." unique_id=264542731]
 

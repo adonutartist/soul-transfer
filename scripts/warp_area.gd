@@ -1,4 +1,6 @@
 extends Node2D
+signal warp_expired
+
 @export var warp_radius := 416.0
 @export var ember_count := 500
 @export var warp_duration: float = 3.0
@@ -30,8 +32,9 @@ func _process(delta):
 	if warp_active:
 		warp_timer -= delta / Engine.time_scale
 		if warp_timer <= 0.0:
-			hide_warp()
 			warp_active = false
+			hide_warp()
+			warp_expired.emit()
 
 func create_warp_light():
 	var radius: float = warp_radius
@@ -73,6 +76,7 @@ func show_warp():
 	Engine.time_scale = 0.3
 
 func hide_warp():
+	warp_active = false
 	Engine.time_scale = 1.0
 	visible = false
 	particles.emitting = false
