@@ -20,6 +20,7 @@ const ORIGINAL_MODULATE := "environment_original_modulate"
 
 var current_level: Node2D
 var transition_in_progress := false
+var shop_next_scene_path: String = ""
 
 func _ready() -> void:
 	fade.color = Color(0, 0, 0, 0)

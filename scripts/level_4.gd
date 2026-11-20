@@ -1,5 +1,4 @@
 extends Node2D
-@export var shop_scene: PackedScene
 @export var souls_reward: int = 5
 var souls_awarded: bool = false
 
@@ -11,8 +10,6 @@ var door_opening: bool = false
 var level_unlocked: bool = false
 
 func _ready() -> void:
-	print("LEVEL 4 SHOP SCENE: ", shop_scene)
-	print("LEVEL 4 SHOP PATH: ", shop_scene.resource_path if shop_scene != null else "NULL")
 	door.stop()
 	door.frame = 0
 	door.sprite_frames.set_animation_loop(&"default", false)
@@ -58,9 +55,11 @@ func _on_exit_trigger_body_entered(body: Node2D) -> void:
 		return
 	if not body.is_in_group("player"):
 		return
+	var shop_scene := load("res://scenes/Shop.tscn") as PackedScene
 	print("EXIT SHOP SCENE: ", shop_scene)
 	print("EXIT SHOP PATH: ", shop_scene.resource_path if shop_scene != null else "NULL")
 	if shop_scene == null:
-		push_error("shop scene has not been assigned")
+		push_error("couldnt load")
 		return
+	get_parent().shop_next_scene_path = ""
 	get_parent().change_level(shop_scene)

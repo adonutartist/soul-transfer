@@ -1,8 +1,6 @@
 extends Node2D
 const SKILL_TREE_SCENE: PackedScene = preload("res://scenes/SkillTree.tscn")
 
-@export var next_scene: PackedScene
-
 @onready var interaction_area: Area2D = $Sprite2D/InteractionArea
 @onready var shop_door: AnimatedSprite2D = $Map/Sprite2D
 @onready var exit_trigger: Area2D = $ExitTrigger
@@ -87,7 +85,12 @@ func _on_exit_trigger_body_entered(body: Node2D) -> void:
 		return
 	if not body.is_in_group("player"):
 		return
-	if next_scene == null:
-		push_error("Shop next scene has not been assigned")
+	var world = get_parent()
+	if world.shop_next_scene_path.is_empty():
+		push_error("Shop destination has not been set")
 		return
-	get_parent().change_level(next_scene)
+	var destination := load(world.shop_next_scene_path) as PackedScene
+	if destination == null:
+		push_error("couldnt load shop destination")
+		return
+	world.change_level(destination)

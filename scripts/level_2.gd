@@ -55,4 +55,5 @@ func _on_exit_trigger_body_entered(body: Node2D) -> void:
 	if shop_scene == null:
 		push_error("level 3 scene has not been assigned")
 		return
+	get_parent().shop_next_scene_path = "res://scenes/Level_3.tscn"
 	get_parent().change_level(shop_scene)
