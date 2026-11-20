@@ -3741,6 +3741,7 @@ dead_on_start = true
 [node name="Mage3" parent="Enemies" unique_id=1100816676 instance=ExtResource("6_bmqp6")]
 y_sort_enabled = true
 position = Vector2(130, -963)
+max_health = 40.0
 dead_on_start = true
 
 [node name="Mage4" parent="Enemies" unique_id=352414252 instance=ExtResource("6_bmqp6")]

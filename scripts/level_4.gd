@@ -11,6 +11,8 @@ var door_opening: bool = false
 var level_unlocked: bool = false
 
 func _ready() -> void:
+	print("LEVEL 4 SHOP SCENE: ", shop_scene)
+	print("LEVEL 4 SHOP PATH: ", shop_scene.resource_path if shop_scene != null else "NULL")
 	door.stop()
 	door.frame = 0
 	door.sprite_frames.set_animation_loop(&"default", false)
@@ -45,14 +47,20 @@ func _on_door_animation_finished() -> void:
 		if not souls_awarded:
 			souls_awarded = true
 			SoulManager.add_souls(souls_reward)
-		print("Level 2 completed. Exit unlocked")
+		print("Level 4 completed. Exit unlocked")
+		await get_tree().physics_frame
+		for body in exit_trigger.get_overlapping_bodies():
+			_on_exit_trigger_body_entered(body)
 
 func _on_exit_trigger_body_entered(body: Node2D) -> void:
+	print("Level 4 exit detected: ", body.name)
 	if not level_unlocked:
 		return
 	if not body.is_in_group("player"):
 		return
+	print("EXIT SHOP SCENE: ", shop_scene)
+	print("EXIT SHOP PATH: ", shop_scene.resource_path if shop_scene != null else "NULL")
 	if shop_scene == null:
-		push_error("level 3 scene has not been assigned")
+		push_error("shop scene has not been assigned")
 		return
 	get_parent().change_level(shop_scene)

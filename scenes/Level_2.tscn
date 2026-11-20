@@ -3812,6 +3812,7 @@ dead_on_start = true
 
 [node name="Rogue" parent="Enemies" unique_id=240379131 instance=ExtResource("8_3v32c")]
 position = Vector2(-306, -353)
+max_health = 40.0
 dead_on_start = true
 
 [node name="Rogue2" parent="Enemies" unique_id=480732533 instance=ExtResource("8_3v32c")]
