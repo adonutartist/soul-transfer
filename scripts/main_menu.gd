@@ -5,10 +5,13 @@ extends Control
 @onready var music_value: Label = $CenterContainer/MenuBox/MusicRow/MusicValue
 @onready var sfx_slider: HSlider = $CenterContainer/MenuBox/SFXRow/SFXSlider
 @onready var sfx_value: Label = $CenterContainer/MenuBox/SFXRow/SFXValue
+@onready var flashlight_overlay: ColorRect = $FlashlightOverlay
 
 const BUTTON_BORDER_ATLAS: Texture2D = preload("res://assets/Sprites&Tiles/Border All 10.png")
 const BUTTON_BORDER_REGION := Rect2(448, 0, 64, 64)
 const BUTTON_CORNER_SIZE := 16
+
+var flashlight_uv := Vector2(0.5, 0.5)
 
 func _ready() -> void:
 	play_button.pressed.connect(_on_play_pressed)
@@ -62,3 +65,12 @@ func _add_button_border(button: Button) -> void:
 	button.add_theme_stylebox_override("disabled", empty_style)
 	button.add_child(frame)
 	button.move_child(frame, 0)
+
+func _process(delta: float) -> void:
+	var viewport_size := get_viewport_rect().size
+	var mouse_position := get_viewport().get_mouse_position()
+	var target_uv := mouse_position / viewport_size
+	target_uv.x = clampf(target_uv.x, 0.0, 1.0)
+	target_uv.y = clampf(target_uv.y, 0.0, 1.0)
+	flashlight_uv = flashlight_uv.lerp(target_uv, 1.0 - exp(-delta * 14.0))
+	flashlight_overlay.material.set_shader_parameter("mouse_uv", flashlight_uv)

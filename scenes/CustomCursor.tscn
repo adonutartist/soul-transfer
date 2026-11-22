@@ -7,7 +7,7 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_o3gm8"]
 shader = ExtResource("2_4qdhd")
 shader_parameter/tint = Color(1, 1, 1, 1)
-shader_parameter/brightness = 15.0
+shader_parameter/brightness = 5.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4qdhd"]
 atlas = ExtResource("2_o3gm8")
@@ -79,13 +79,14 @@ script = ExtResource("1_o3gm8")
 [node name="CursorEmission" type="AnimatedSprite2D" parent="." unique_id=357917255]
 self_modulate = Color(1.8248, 1.8248, 1.8248, 1)
 material = SubResource("ShaderMaterial_o3gm8")
-scale = Vector2(2.5, 2.5)
+scale = Vector2(2.09, 2.09)
 sprite_frames = SubResource("SpriteFrames_txj4k")
 autoplay = "default"
-frame_progress = 0.4028782
+frame_progress = 0.34161302
 
 [node name="CursorSprite" type="AnimatedSprite2D" parent="." unique_id=998144386]
+visible = false
 scale = Vector2(2.5, 2.5)
 sprite_frames = SubResource("SpriteFrames_txj4k")
 autoplay = "default"
-frame_progress = 0.023935275
+frame_progress = 0.96266425
