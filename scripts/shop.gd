@@ -39,11 +39,18 @@ func _process(_delta: float) -> void:
 
 func _create_skill_tree() -> void:
 	var canvas := CanvasLayer.new()
-	canvas.layer = 30
+	canvas.layer = 0
 	add_child(canvas)
 	skill_tree = SKILL_TREE_SCENE.instantiate() as Control
 	canvas.add_child(skill_tree)
+	_set_skill_tree_light_mask(skill_tree)
 	skill_tree.visible = false
+
+func _set_skill_tree_light_mask(node: Node) -> void:
+	if node is CanvasItem:
+		node.light_mask = 1
+	for child in node.get_children():
+		_set_skill_tree_light_mask(child)
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.is_in_group("player"):

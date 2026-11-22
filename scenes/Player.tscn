@@ -183,4 +183,5 @@ position = Vector2(0, 8.666666)
 shape = SubResource("CapsuleShape2D_txj4k")
 
 [node name="PointLight2D" type="PointLight2D" parent="." unique_id=2121928408]
+light_mask = 2
 range_z_min = -4096

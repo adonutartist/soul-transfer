@@ -67,6 +67,7 @@ atlas = ExtResource("6_n6i5t")
 region = Rect2(448, 0, 64, 64)
 
 [node name="SkillTree" type="Control" unique_id=1622471858]
+light_mask = 2
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

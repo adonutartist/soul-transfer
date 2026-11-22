@@ -249,7 +249,7 @@ func setup_possession_light() -> void:
 	light_texture.height = 256
 	possession_light.texture = light_texture
 	possession_light.texture_scale = 0.6
-	possession_light.energy = 1.6
+	possession_light.energy = 3.5
 	possession_light.color = Color.WHITE
 	possession_light.blend_mode = PointLight2D.BLEND_MODE_ADD
 	possession_light.enabled = true

@@ -18,6 +18,7 @@ adjustment_brightness = 0.8
 
 [node name="World" type="Node2D" unique_id=2033759001]
 script = ExtResource("1_7g83o")
+darkness = 0.46
 
 [node name="Player" parent="." unique_id=1594491723 instance=ExtResource("1_32lhk")]
 z_index = 5
