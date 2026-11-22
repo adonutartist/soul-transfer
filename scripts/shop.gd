@@ -48,7 +48,7 @@ func _create_skill_tree() -> void:
 
 func _set_skill_tree_light_mask(node: Node) -> void:
 	if node is CanvasItem:
-		node.light_mask = 1
+		node.light_mask = 2
 	for child in node.get_children():
 		_set_skill_tree_light_mask(child)
 
