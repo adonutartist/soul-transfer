@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://ctlp5fwvfjjk0" path="res://scenes/Player.tscn" id="1_32lhk"]
 [ext_resource type="PackedScene" uid="uid://b73h543qaw6c5" path="res://scenes/PossessionHUD.tscn" id="4_d1c63"]
 [ext_resource type="PackedScene" uid="uid://d0jyad7omem2y" path="res://scenes/Level_1.tscn" id="5_1lgw5"]
+[ext_resource type="PackedScene" uid="uid://ce057pi46k1w4" path="res://scenes/CustomCursor.tscn" id="5_hlk0d"]
 
 [sub_resource type="Environment" id="Environment_txj4k"]
 background_mode = 3
@@ -50,3 +51,5 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
+
+[node name="CustomCursor" parent="." unique_id=536089676 instance=ExtResource("5_hlk0d")]

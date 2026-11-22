@@ -6,7 +6,8 @@ extends Node2D
 const EXCLUDED_ROOTS := [
 	"Player",
 	"EnergyBall",
-	"Fireball"
+	"Fireball",
+	"CustomCursor"
 ]
 const GLOW_PREFIXES := [
 	"LightningSprite",

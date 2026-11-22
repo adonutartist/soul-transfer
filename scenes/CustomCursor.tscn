@@ -1,0 +1,91 @@
+[gd_scene format=3 uid="uid://ce057pi46k1w4"]
+
+[ext_resource type="Script" uid="uid://bjj5gfuhr5qua" path="res://scripts/custom_cursor.gd" id="1_o3gm8"]
+[ext_resource type="Shader" uid="uid://yemlos8mqjaw" path="res://materials/Fireball.gdshader" id="2_4qdhd"]
+[ext_resource type="Texture2D" uid="uid://doknjkcogi1da" path="res://assets/Sprites&Tiles/magic flame.png" id="2_o3gm8"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_o3gm8"]
+shader = ExtResource("2_4qdhd")
+shader_parameter/tint = Color(1, 1, 1, 1)
+shader_parameter/brightness = 15.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4qdhd"]
+atlas = ExtResource("2_o3gm8")
+region = Rect2(0, 28, 32, 28)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g68o0"]
+atlas = ExtResource("2_o3gm8")
+region = Rect2(32, 28, 32, 28)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qla5g"]
+atlas = ExtResource("2_o3gm8")
+region = Rect2(64, 28, 32, 28)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wwoyh"]
+atlas = ExtResource("2_o3gm8")
+region = Rect2(96, 28, 32, 28)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u0y3v"]
+atlas = ExtResource("2_o3gm8")
+region = Rect2(128, 28, 32, 28)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tb0wd"]
+atlas = ExtResource("2_o3gm8")
+region = Rect2(160, 28, 32, 28)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q603j"]
+atlas = ExtResource("2_o3gm8")
+region = Rect2(192, 28, 32, 28)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4551t"]
+atlas = ExtResource("2_o3gm8")
+region = Rect2(224, 28, 32, 28)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_txj4k"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4qdhd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g68o0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qla5g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wwoyh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u0y3v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tb0wd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q603j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4551t")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 12.0
+}]
+
+[node name="CustomCursor" type="CanvasLayer" unique_id=536089676]
+script = ExtResource("1_o3gm8")
+
+[node name="CursorEmission" type="AnimatedSprite2D" parent="." unique_id=357917255]
+self_modulate = Color(1.8248, 1.8248, 1.8248, 1)
+material = SubResource("ShaderMaterial_o3gm8")
+scale = Vector2(2.5, 2.5)
+sprite_frames = SubResource("SpriteFrames_txj4k")
+autoplay = "default"
+frame_progress = 0.4028782
+
+[node name="CursorSprite" type="AnimatedSprite2D" parent="." unique_id=998144386]
+scale = Vector2(2.5, 2.5)
+sprite_frames = SubResource("SpriteFrames_txj4k")
+autoplay = "default"
+frame_progress = 0.023935275
