@@ -3763,6 +3763,7 @@ patrol_points = [NodePath("../../PatrolPoints/TankPointA"), NodePath("../../Patr
 
 [node name="ExitTrigger" type="Area2D" parent="." unique_id=2056908559]
 position = Vector2(432, -1093)
+collision_mask = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ExitTrigger" unique_id=1566073773]
 position = Vector2(-0.5, -7.5)

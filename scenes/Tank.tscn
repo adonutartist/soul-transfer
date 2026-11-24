@@ -1119,6 +1119,7 @@ position = Vector2(3, 23)
 shape = SubResource("CapsuleShape2D_65x0j")
 
 [node name="HurtBox" type="Area2D" parent="." unique_id=1634364654]
+collision_mask = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox" unique_id=51340228]
 
@@ -1128,6 +1129,7 @@ sprite_frames = SubResource("SpriteFrames_4ffog")
 animation = &"sword_slam"
 
 [node name="AttackArea" type="Area2D" parent="." unique_id=2048242741]
+collision_mask = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea" unique_id=811007287]
 
@@ -1137,6 +1139,7 @@ animation = &"axe_hit_ground"
 script = ExtResource("9_nowge")
 
 [node name="HitDetector" type="Area2D" parent="FlyingAxe" unique_id=1811976994]
+collision_mask = 5
 monitoring = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="FlyingAxe/HitDetector" unique_id=1116888323]
@@ -1144,6 +1147,7 @@ position = Vector2(-2, 3)
 shape = SubResource("CircleShape2D_4ffog")
 
 [node name="TargetArea" type="Area2D" parent="." unique_id=822489879]
+collision_mask = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="TargetArea" unique_id=193811042]
 position = Vector2(-2, 42.16)
@@ -1177,6 +1181,7 @@ path_desired_distance = 4.0
 target_desired_distance = 6.4
 
 [node name="PlayerDetector" type="Area2D" parent="." unique_id=744155336]
+collision_mask = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetector" unique_id=1148003000]
 shape = SubResource("CircleShape2D_nowge")

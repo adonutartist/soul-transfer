@@ -32,7 +32,7 @@ func _alerted_update(_delta: float) -> void:
 	if player == null:
 		return
 	_can_see = _line_of_sight(player)
-	if not _can_see or _attack_timer > 0.0 or casting:
+	if _attack_timer > 0.0 or casting:
 		return
 	if bool(get("attacking")):
 		return

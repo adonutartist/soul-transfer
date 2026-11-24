@@ -375,6 +375,7 @@ animations = [{
 }]
 
 [node name="Fireball" type="Area2D" unique_id=2071411829]
+collision_mask = 5
 script = ExtResource("1_2map7")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1859079284]

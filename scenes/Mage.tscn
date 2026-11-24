@@ -840,6 +840,7 @@ sprite_frames = SubResource("SpriteFrames_txj4k")
 animation = &"idle"
 
 [node name="TargetArea" type="Area2D" parent="." unique_id=1175623626]
+collision_mask = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="TargetArea" unique_id=401135379]
 position = Vector2(-2, 38)
@@ -884,6 +885,7 @@ path_desired_distance = 4.0
 target_desired_distance = 6.4
 
 [node name="PlayerDetector" type="Area2D" parent="." unique_id=1588585267]
+collision_mask = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetector" unique_id=181386860]
 shape = SubResource("CircleShape2D_4ffog")

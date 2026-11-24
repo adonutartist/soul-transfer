@@ -149,8 +149,9 @@ func create_afterimage():
 		var frame_count := source_sprite.sprite_frames.get_frame_count("walk")
 		ghost.frame = min(afterimages_created, frame_count - 1)
 		ghost.flip_h = source_sprite.flip_h
+		ghost.flip_v = source_sprite.flip_v
 		ghost.global_position = source_sprite.global_position
-		ghost.global_scale = source_sprite.global_scale
+		ghost.global_scale = source_sprite.global_scale.abs()
 	else:
 		ghost.sprite_frames = sprite.sprite_frames
 		ghost.animation = "run"
@@ -194,6 +195,7 @@ func possess_mage(mage):
 	$Shadow.visible = false
 	$CollisionShape2D.set_deferred("disabled", true)
 	mage.on_possessed()
+	set_possessed_collision(mage, true)
 	mage.can_be_selected = false
 	mage.just_possessed = true
 	mage.target_particles.emitting = false
@@ -202,6 +204,10 @@ func possess_mage(mage):
 	mage.soul_line_particles.visible = false
 	global_position = mage.global_position
 	warp_area.global_position = global_position
+	var mage_sprite: AnimatedSprite2D = mage.get_node("AnimatedSprite2D")
+	mage_sprite.scale = mage_sprite.scale.abs()
+	mage_sprite.flip_h = false
+	mage_sprite.flip_v = false
 	if is_instance_valid(possession_hud):
 		possession_hud.hide_warp_timer()
 		possession_hud.show_for_body(mage)
@@ -225,6 +231,7 @@ func _on_controlled_body_died(body: EnemyAI) -> void:
 	sprite.visible = true
 	$Shadow.visible = true
 	$CollisionShape2D.set_deferred("disabled", false)
+	set_possessed_collision(body, false)
 	body.on_released()
 	sprite.play("idle")
 	if is_instance_valid(possession_hud):
@@ -294,3 +301,17 @@ func _on_warp_expired() -> void:
 		world.reset_current_level()
 	else:
 		push_error("world is missing reset_current_level()")
+
+func set_possessed_collision(body: EnemyAI, enabled: bool) -> void:
+	if enabled:
+		body.collision_layer = 4
+		for enemy in get_tree().get_nodes_in_group("enemies"):
+			var detector := enemy.get_node_or_null("PlayerDetector") as Area2D
+			if detector:
+				detector.set_collision_mask_value(3, true)
+	else:
+		body.collision_layer = 1
+		for enemy in get_tree().get_nodes_in_group("enemies"):
+			var detector := enemy.get_node_or_null("PlayerDetector") as Area2D
+			if detector:
+				detector.set_collision_mask_value(3, false)

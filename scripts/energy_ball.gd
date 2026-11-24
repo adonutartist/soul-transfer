@@ -146,7 +146,7 @@ func _spawn_lightning_strike(spawn_position: Vector2) -> void:
 func _apply_lightning_damage(spawn_position: Vector2) -> void:
 	var hit_area := Area2D.new()
 	hit_area.collision_layer = 0
-	hit_area.collision_mask = 1
+	hit_area.collision_mask = 1 | 4
 	hit_area.monitoring = true
 	var hit_shape := CollisionShape2D.new()
 	var rectangle := RectangleShape2D.new()

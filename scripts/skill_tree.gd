@@ -473,7 +473,7 @@ func _configure_layout() -> void:
 	margin_wrapper.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	details_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	details_content.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	details_content.add_theme_constant_override("separation", 10)
+	details_content.add_theme_constant_override("separation", 38)
 	upgrade_name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	upgrade_name.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	upgrade_description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -487,7 +487,7 @@ func _configure_layout() -> void:
 	upgrade_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	upgrade_name.add_theme_color_override("font_color", Color(0.92, 0.88, 1.0))
 	upgrade_name.add_theme_font_size_override("font_size", 20)
-	upgrade_description.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	upgrade_description.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	upgrade_description.add_theme_color_override("font_color", Color(0.76, 0.74, 0.82))
 	upgrade_description.add_theme_font_size_override("font_size", 15)
 	upgrade_cost.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -525,5 +525,11 @@ func _restore_purchased_upgrades() -> void:
 		if purchased_nodes.get(parent_id, false):
 			for child_id in children_by_id[parent_id]:
 				unlocked_nodes[child_id] = true
+	for child_id in connectors.keys():
+		if unlocked_nodes.get(child_id, false):
+			var line: Line2D = connectors[child_id]
+			var data: Dictionary = upgrade_data[child_id]
+			var accent: Color = CLASS_COLORS[data["upgrade_class"]]
+			line.default_color = accent
 	for id in upgrade_buttons.keys():
 		_refresh_upgrade_button(id)

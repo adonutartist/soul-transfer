@@ -442,6 +442,7 @@ animations = [{
 }]
 
 [node name="EnergyBall" type="Area2D" unique_id=1829095982]
+collision_mask = 5
 script = ExtResource("1_862cn")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1671567641]

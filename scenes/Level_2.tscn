@@ -3826,6 +3826,7 @@ dead_on_start = true
 
 [node name="ExitTrigger" type="Area2D" parent="." unique_id=69561496]
 position = Vector2(16, -965)
+collision_mask = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ExitTrigger" unique_id=1552522631]
 position = Vector2(-0.5, -7.5)

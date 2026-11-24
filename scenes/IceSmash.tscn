@@ -11,6 +11,7 @@ script = ExtResource("1_x552o")
 spike_scene = ExtResource("2_apaa3")
 
 [node name="Damage" type="Area2D" parent="." unique_id=738195084]
+collision_mask = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Damage" unique_id=1120232375]
 shape = SubResource("CircleShape2D_txj4k")

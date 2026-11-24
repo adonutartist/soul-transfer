@@ -869,17 +869,20 @@ position = Vector2(1, 14)
 shape = SubResource("CapsuleShape2D_5y4tf")
 
 [node name="Hurtbox" type="Area2D" parent="." unique_id=1025719041]
+collision_mask = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=175801083]
 
 [node name="AttackArea" type="Area2D" parent="." unique_id=1509220405]
 position = Vector2(36.475, 0)
+collision_mask = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea" unique_id=564592541]
 position = Vector2(36.025, 6.5)
 shape = SubResource("RectangleShape2D_txj4k")
 
 [node name="TargetArea" type="Area2D" parent="." unique_id=499564273]
+collision_mask = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="TargetArea" unique_id=1170744534]
 position = Vector2(14, 28)
@@ -913,6 +916,7 @@ path_desired_distance = 4.0
 target_desired_distance = 6.4
 
 [node name="PlayerDetector" type="Area2D" parent="." unique_id=1676274664]
+collision_mask = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetector" unique_id=763114419]
 shape = SubResource("CircleShape2D_65x0j")
