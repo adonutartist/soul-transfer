@@ -12,6 +12,8 @@ const BUTTON_BORDER_REGION := Rect2(448, 0, 64, 64)
 const BUTTON_CORNER_SIZE := 16
 
 var flashlight_uv := Vector2(0.5, 0.5)
+var transition_fade: ColorRect
+var transitioning := false
 
 func _ready() -> void:
 	play_button.pressed.connect(_on_play_pressed)
@@ -22,11 +24,23 @@ func _ready() -> void:
 	sfx_slider.value_changed.connect(_on_sfx_slider_changed)
 	_update_music_value(music_slider.value)
 	_update_sfx_value(sfx_slider.value)
+	_create_transition_fade()
 
 func _on_play_pressed() -> void:
+	if transitioning:
+		return
+	transitioning = true
+	play_button.disabled = true
+	var fade_out := create_tween()
+	fade_out.set_trans(Tween.TRANS_SINE)
+	fade_out.set_ease(Tween.EASE_IN_OUT)
+	fade_out.tween_property(transition_fade, "color:a", 1.0, 0.7)
+	await fade_out.finished
 	var error := get_tree().change_scene_to_file("res://scenes/World.tscn")
 	if error != OK:
 		push_error("Could not load world scene")
+		transitioning = false
+		play_button.disabled = false
 
 func _on_quit_pressed() -> void:
 	get_tree().quit()
@@ -74,3 +88,16 @@ func _process(delta: float) -> void:
 	target_uv.y = clampf(target_uv.y, 0.0, 1.0)
 	flashlight_uv = flashlight_uv.lerp(target_uv, 1.0 - exp(-delta * 14.0))
 	flashlight_overlay.material.set_shader_parameter("mouse_uv", flashlight_uv)
+
+func _create_transition_fade() -> void:
+	var canvas := CanvasLayer.new()
+	canvas.name = "TransitionLayer"
+	canvas.layer = 1000
+	add_child(canvas)
+	transition_fade = ColorRect.new()
+	transition_fade.name = "Fade"
+	transition_fade.color = Color.BLACK
+	transition_fade.color.a = 0.0
+	transition_fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	transition_fade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	canvas.add_child(transition_fade)

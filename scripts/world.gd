@@ -24,11 +24,16 @@ var transition_in_progress := false
 var shop_next_scene_path: String = ""
 
 func _ready() -> void:
-	fade.color = Color(0, 0, 0, 0)
+	fade.color = Color.BLACK
+	fade.color.a = 1.0
 	fade.show()
 	current_level = $Level1
 	get_tree().node_added.connect(_on_node_added)
 	_apply_recursive(self)
+	var fade_in := create_tween()
+	fade_in.set_trans(Tween.TRANS_SINE)
+	fade_in.set_ease(Tween.EASE_IN_OUT)
+	fade_in.tween_property(fade, "color:a", 0.0, 1.2)
 
 func _on_node_added(node: Node) -> void:
 	_apply_recursive(node)

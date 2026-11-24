@@ -3676,6 +3676,9 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5kwbs"]
+size = Vector2(57, 52)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_77cvi"]
 size = Vector2(67, 61)
 
@@ -3712,6 +3715,14 @@ tile_set = SubResource("TileSet_jis5f")
 [node name="Sprite2D" type="AnimatedSprite2D" parent="Map" unique_id=279408757]
 position = Vector2(16, -1221)
 sprite_frames = SubResource("SpriteFrames_n8cfg")
+
+[node name="GateCollision" type="StaticBody2D" parent="Map" unique_id=1148213593]
+position = Vector2(16, -1221)
+collision_mask = 5
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Map/GateCollision" unique_id=837761424]
+position = Vector2(-1, -6)
+shape = SubResource("RectangleShape2D_5kwbs")
 
 [node name="PlayerSpawn" type="Marker2D" parent="." unique_id=869319849]
 position = Vector2(0, -64)

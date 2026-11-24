@@ -3669,6 +3669,9 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4ffog"]
+size = Vector2(57, 52)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_txj4k"]
 size = Vector2(67, 61)
 
@@ -3707,6 +3710,14 @@ tile_set = SubResource("TileSet_d22tc")
 position = Vector2(432, -1093)
 sprite_frames = SubResource("SpriteFrames_txj4k")
 frame_progress = 0.9306616
+
+[node name="GateCollision" type="StaticBody2D" parent="Map" unique_id=2096155456]
+position = Vector2(432, -1093)
+collision_mask = 5
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Map/GateCollision" unique_id=1384469722]
+position = Vector2(-0.5, -7)
+shape = SubResource("RectangleShape2D_4ffog")
 
 [node name="PlayerSpawn" type="Marker2D" parent="." unique_id=1999447597]
 position = Vector2(-84, 205)

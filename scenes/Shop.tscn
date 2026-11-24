@@ -3675,6 +3675,9 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ht580"]
+size = Vector2(57, 52)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_m0qts"]
 size = Vector2(67, 61)
 
@@ -3684,6 +3687,9 @@ region = Rect2(688, 40, 176, 144)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_txj4k"]
 radius = 99.31767
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_skkvx"]
+radius = 46.010868
 
 [node name="Shop" type="Node2D" unique_id=47924557]
 position = Vector2(0, 0.055)
@@ -3720,6 +3726,14 @@ tile_set = SubResource("TileSet_ne4h4")
 position = Vector2(-16, -677)
 sprite_frames = SubResource("SpriteFrames_kltm8")
 
+[node name="GateCollision" type="StaticBody2D" parent="Map" unique_id=785227]
+position = Vector2(-15, -677.055)
+collision_mask = 5
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Map/GateCollision" unique_id=908232991]
+position = Vector2(-1, -6)
+shape = SubResource("RectangleShape2D_ht580")
+
 [node name="PlayerSpawn" type="Marker2D" parent="." unique_id=1153590256]
 position = Vector2(-17, -96)
 
@@ -3739,3 +3753,11 @@ texture = SubResource("AtlasTexture_txj4k")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D/InteractionArea" unique_id=1601765253]
 position = Vector2(0, 6)
 shape = SubResource("CircleShape2D_txj4k")
+
+[node name="ShopCollision" type="StaticBody2D" parent="." unique_id=1751317305]
+position = Vector2(-27, -337.055)
+collision_mask = 5
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ShopCollision" unique_id=1243669707]
+position = Vector2(3, 26)
+shape = SubResource("CircleShape2D_skkvx")
