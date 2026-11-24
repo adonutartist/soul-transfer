@@ -58,7 +58,6 @@ var connectors: Dictionary = {}
 var selected_upgrade_id: String = ""
 
 func _ready() -> void:
-	SoulManager.add_souls(8)
 	buy_button.pressed.connect(buy_selected)
 	SoulManager.balance_changed.connect(_on_souls_changed)
 	_configure_layout()
