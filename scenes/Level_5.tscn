@@ -3684,6 +3684,7 @@ size = Vector2(67, 61)
 [node name="Level5" type="Node2D" unique_id=82580239]
 script = ExtResource("1_nf60x")
 level_6_scene = ExtResource("2_n2crr")
+soul_reward = 6
 
 [node name="Map" type="Node2D" parent="." unique_id=2089757570]
 

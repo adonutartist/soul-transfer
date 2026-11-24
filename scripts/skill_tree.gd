@@ -48,6 +48,7 @@ const CLASS_COLORS := {
 @onready var upgrade_cost: Label = $MainContainer/Content/Body/DetailsPanel/DetailsContent/UpgradeCost
 @onready var buy_button: Button = $MainContainer/Content/Body/DetailsPanel/DetailsContent/BuyButton
 @onready var details_panel: PanelContainer = $MainContainer/Content/Body/DetailsPanel
+@onready var header_title: Label = $MainContainer/Content/Header/Title
 
 var upgrade_data: Dictionary = {}
 var upgrade_buttons: Dictionary = {}
@@ -56,6 +57,7 @@ var purchased_nodes: Dictionary = {}
 var children_by_id: Dictionary = {}
 var connectors: Dictionary = {}
 var selected_upgrade_id: String = ""
+var upgrade_warning: Label
 
 func _ready() -> void:
 	buy_button.pressed.connect(buy_selected)
@@ -338,6 +340,8 @@ func _on_upgrade_pressed(id: String) -> void:
 
 func _show_upgrade_details(id: String) -> void:
 	var data: Dictionary = upgrade_data[id]
+	upgrade_name.add_theme_color_override("font_color", CLASS_COLORS[data["upgrade_class"]])
+	upgrade_warning.visible = true
 	upgrade_icon.visible = false
 	upgrade_name.text = data["title"]
 	upgrade_description.text = data["description"]
@@ -346,6 +350,7 @@ func _show_upgrade_details(id: String) -> void:
 
 func _clear_details() -> void:
 	selected_upgrade_id = ""
+	upgrade_warning.visible = false
 	upgrade_icon.visible = false
 	upgrade_name.text = "Select an upgrade"
 	upgrade_description.text = "Choose a node from one of the three class trees to view its details."
@@ -473,6 +478,35 @@ func _configure_layout() -> void:
 	upgrade_name.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	upgrade_description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	upgrade_description.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	header_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	header_title.add_theme_color_override("font_color", Color(0.92, 0.88, 1.0))
+	header_title.add_theme_font_size_override("font_size", 22)
+	souls_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	souls_label.add_theme_color_override("font_color", Color(1.0, 0.82, 0.48))
+	souls_label.add_theme_font_size_override("font_size", 18)
+	upgrade_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	upgrade_name.add_theme_color_override("font_color", Color(0.92, 0.88, 1.0))
+	upgrade_name.add_theme_font_size_override("font_size", 20)
+	upgrade_description.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	upgrade_description.add_theme_color_override("font_color", Color(0.76, 0.74, 0.82))
+	upgrade_description.add_theme_font_size_override("font_size", 15)
+	upgrade_cost.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	upgrade_cost.add_theme_color_override("font_color", Color(1.0, 0.82, 0.48))
+	upgrade_cost.add_theme_font_size_override("font_size", 16)
+	buy_button.add_theme_color_override("font_color", Color(0.95, 0.91, 1.0))
+	buy_button.add_theme_font_size_override("font_size", 16)
+	upgrade_warning = Label.new()
+	upgrade_warning.name = "UpgradeWarning"
+	upgrade_warning.text = "UPGRADE WITH CAUTION\nEnemies become stronger too..."
+	upgrade_warning.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	upgrade_warning.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	upgrade_warning.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	upgrade_warning.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	upgrade_warning.add_theme_color_override("font_color", Color(1.0, 0.65, 0.25))
+	upgrade_warning.add_theme_font_size_override("font_size", 14)
+	upgrade_warning.visible = false
+	details_content.add_child(upgrade_warning)
+	details_content.move_child(upgrade_warning, upgrade_cost.get_index() + 1)
 	buy_button.custom_minimum_size = Vector2(0, 48)
 	buy_button.custom_maximum_size = Vector2(10000, 48)
 	buy_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL

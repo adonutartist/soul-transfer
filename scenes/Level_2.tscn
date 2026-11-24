@@ -3684,6 +3684,7 @@ size = Vector2(67, 61)
 [node name="Level2" type="Node2D" unique_id=1081944255]
 script = ExtResource("1_0qfqs")
 shop_scene = ExtResource("2_3v32c")
+souls_reward = 3
 
 [node name="Map" type="Node2D" parent="." unique_id=264542731]
 
