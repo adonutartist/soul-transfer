@@ -40,7 +40,12 @@ func _ready() -> void:
 	fade.color = Color.BLACK
 	fade.color.a = 1.0
 	fade.show()
-	current_level = $Level1
+	var test_scene: PackedScene = load("res://scenes/Level_6.tscn")
+	var test_level: Node2D = test_scene.instantiate() as Node2D
+	add_child(test_level)
+	test_level.z_index = -5
+	$Level1.queue_free()
+	current_level = test_level
 	get_tree().node_added.connect(_on_node_added)
 	_apply_recursive(self)
 	var fade_in := create_tween()

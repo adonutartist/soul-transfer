@@ -1,6 +1,7 @@
 [gd_scene format=4 uid="uid://buf7gum0ud88w"]
 
 [ext_resource type="Texture2D" uid="uid://c02m63j2es5rn" path="res://assets/Sprites&Tiles/wall-1- 3 tiles tall.png" id="1_5kwbs"]
+[ext_resource type="Script" uid="uid://dpdgy0i2ald4a" path="res://scripts/level_6.gd" id="1_e0qgs"]
 [ext_resource type="Texture2D" uid="uid://djsvgeb7duynq" path="res://assets/Sprites&Tiles/wall-2- 3 tiles tall.png" id="2_e0qgs"]
 [ext_resource type="Texture2D" uid="uid://xf1kesc7cop2" path="res://assets/Sprites&Tiles/Sprite-0002.png" id="3_vmh03"]
 [ext_resource type="Texture2D" uid="uid://ciky4gfhbivce" path="res://assets/Sprites&Tiles/atlas-props-old prison.png" id="4_6newl"]
@@ -3683,6 +3684,7 @@ size = Vector2(57, 52)
 size = Vector2(67, 61)
 
 [node name="Level6" type="Node2D" unique_id=715818764]
+script = ExtResource("1_e0qgs")
 
 [node name="Map" type="Node2D" parent="." unique_id=1986128517]
 
