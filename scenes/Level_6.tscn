@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://de2ew0toofreg" path="res://scenes/Mage.tscn" id="6_rtsaj"]
 [ext_resource type="PackedScene" uid="uid://wtcyb0tpj1sy" path="res://scenes/Tank.tscn" id="7_la7i6"]
 [ext_resource type="PackedScene" uid="uid://rfmi3vc5k46q" path="res://scenes/Rogue.tscn" id="8_vj534"]
+[ext_resource type="Texture2D" uid="uid://b87drsx7wlb6s" path="res://assets/Sprites&Tiles/Demons.png" id="10_vmh03"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ncd6c"]
 texture = ExtResource("1_5kwbs")
@@ -3683,6 +3684,14 @@ size = Vector2(57, 52)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_77cvi"]
 size = Vector2(67, 61)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_txj4k"]
+atlas = ExtResource("10_vmh03")
+region = Rect2(688, 40, 176, 144)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4ffog"]
+atlas = ExtResource("10_vmh03")
+region = Rect2(536, 32, 144, 144)
+
 [node name="Level6" type="Node2D" unique_id=715818764]
 script = ExtResource("1_e0qgs")
 
@@ -3873,3 +3882,13 @@ collision_mask = 5
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ExitTrigger" unique_id=1943026191]
 position = Vector2(-0.5, -7.5)
 shape = SubResource("RectangleShape2D_77cvi")
+
+[node name="Shopkeeper" type="Sprite2D" parent="." unique_id=2140758927]
+visible = false
+z_index = 10
+texture = SubResource("AtlasTexture_txj4k")
+
+[node name="FinalFigure" type="Sprite2D" parent="." unique_id=935652937]
+visible = false
+z_index = 10
+texture = SubResource("AtlasTexture_4ffog")
