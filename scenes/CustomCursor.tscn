@@ -74,6 +74,7 @@ animations = [{
 }]
 
 [node name="CustomCursor" type="CanvasLayer" unique_id=536089676]
+process_mode = 3
 script = ExtResource("1_o3gm8")
 
 [node name="CursorEmission" type="AnimatedSprite2D" parent="." unique_id=357917255]

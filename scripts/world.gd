@@ -205,6 +205,17 @@ func _create_pause_menu() -> void:
 	panel_frame.patch_margin_top = MENU_CORNER_SIZE
 	panel_frame.patch_margin_bottom = MENU_CORNER_SIZE
 	panel_frame.draw_center = false
+	var panel_fill := ColorRect.new()
+	panel_fill.name = "PanelFill"
+	panel_fill.color = Color("#201e26")
+	panel_fill.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	panel_fill.offset_left = MENU_CORNER_SIZE
+	panel_fill.offset_top = MENU_CORNER_SIZE
+	panel_fill.offset_right = -MENU_CORNER_SIZE
+	panel_fill.offset_bottom = -MENU_CORNER_SIZE
+	panel_fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	pause_panel.add_child(panel_fill)
+	panel_frame.modulate = Color.WHITE
 	panel_frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	pause_panel.add_child(panel_frame)
 	var content := VBoxContainer.new()
@@ -220,7 +231,8 @@ func _create_pause_menu() -> void:
 	title.text = "PAUSED"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.custom_minimum_size = Vector2(0, 38)
-	title.add_theme_font_size_override("font_size", 26)
+	title.add_theme_font_size_override("font_size", 22)
+	title.add_theme_color_override("font_color", Color(0.92, 0.88, 1.0))
 	content.add_child(title)
 	resume_button = _create_pause_button("RESUME")
 	resume_button.pressed.connect(_resume_game)
@@ -245,9 +257,12 @@ func _get_menu_border_texture() -> AtlasTexture:
 func _create_pause_button(button_text: String) -> Button:
 	var button: Button = Button.new()
 	button.text = button_text
-	button.custom_minimum_size = Vector2(0, 48)
+	button.custom_minimum_size = Vector2(0, 52)
+	button.add_theme_constant_override("v_separation", 2)
 	button.focus_mode = Control.FOCUS_NONE
 	button.add_theme_font_size_override("font_size", 18)
+	button.add_theme_color_override("font_color", Color(0.95, 0.91, 1.0))
+	button.add_theme_color_override("font_hover_color", Color(0.92, 0.88, 1.0))
 	var empty_style := StyleBoxEmpty.new()
 	button.add_theme_stylebox_override("normal", empty_style)
 	button.add_theme_stylebox_override("hover", empty_style)
@@ -275,6 +290,7 @@ func _create_pause_slider(parent: VBoxContainer, slider_title: String) -> HSlide
 	parent.add_child(row)
 	var label := Label.new()
 	label.text = slider_title
+	label.add_theme_color_override("font_color", Color(0.76, 0.74, 0.82))
 	label.custom_minimum_size = Vector2(70, 0)
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	row.add_child(label)
@@ -286,6 +302,7 @@ func _create_pause_slider(parent: VBoxContainer, slider_title: String) -> HSlide
 	row.add_child(slider)
 	var value_label := Label.new()
 	value_label.text = "80%"
+	value_label.add_theme_color_override("font_color", Color(1.0, 0.82, 0.48))
 	value_label.custom_minimum_size = Vector2(42, 0)
 	value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	value_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -317,12 +334,10 @@ func _on_pause_quit_pressed() -> void:
 		quit_button.custom_minimum_size.y = 72
 		_update_pause_panel_size()
 		return
-	quit_button.disabled = true
-	resume_button.disabled = true
-	pause_menu.visible = false
 	fade.color = Color.BLACK
 	fade.color.a = 0.0
 	var fade_out := create_tween()
+	fade_out.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	fade_out.set_trans(Tween.TRANS_SINE)
 	fade_out.set_ease(Tween.EASE_IN_OUT)
 	fade_out.tween_property(fade, "color:a", 1.0, 0.6)

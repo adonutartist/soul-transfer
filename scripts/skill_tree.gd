@@ -437,12 +437,31 @@ func _make_nine_patch(texture: Texture2D, corner_size: int) -> NinePatchRect:
 	return frame
 
 func _add_menu_frames() -> void:
+	details_panel.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+	var fill_holder := Control.new()
+	fill_holder.name = "PanelFillHolder"
+	fill_holder.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	fill_holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	details_panel.add_child(fill_holder)
+	details_panel.move_child(fill_holder, 0)
+	var panel_fill := ColorRect.new()
+	panel_fill.name = "PanelFill"
+	panel_fill.color = Color("#201e26")
+	panel_fill.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	panel_fill.offset_left = panel_corner_size
+	panel_fill.offset_top = panel_corner_size
+	panel_fill.offset_right = -panel_corner_size
+	panel_fill.offset_bottom = -panel_corner_size
+	panel_fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	fill_holder.add_child(panel_fill)
 	var panel_frame := _make_nine_patch(details_panel_border, panel_corner_size)
 	if panel_frame != null:
 		panel_frame.name = "DecorativeBorder"
 		details_panel.add_child(panel_frame)
-		details_panel.move_child(panel_frame, 0)
-	var button_frame := _make_nine_patch(buy_button_border, button_corner_size)
+		details_panel.move_child(panel_frame, 1)
+	var button_frame := _make_nine_patch(
+		buy_button_border, button_corner_size
+	)
 	if button_frame != null:
 		button_frame.name = "DecorativeBorder"
 		button_frame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
