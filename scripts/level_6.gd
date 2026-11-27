@@ -15,8 +15,9 @@ var final_sequence_started := false
 var shopkeeper_material: ShaderMaterial
 var shopkeeper_target_scale: Vector2
 var encounter_running := false
+var counted_enemy_ids: Dictionary = {}
 
-@export var gate_activation_range: float = 160.0
+@export var gate_activation_range: float = 370.0
 @export var shopkeeper_arrival_offset := Vector2(0, 350)
 
 func _ready() -> void:
@@ -33,12 +34,19 @@ func _ready() -> void:
 		if enemy is EnemyAI:
 			if not enemy.dead_on_start and not enemy.is_dead:
 				remaining_enemies += 1
+				var enemy_id := enemy.get_instance_id()
+				counted_enemy_ids[enemy_id] = true
 				enemy.died.connect(_on_enemy_died)
 	if remaining_enemies == 0:
 		_open_door()
 
-func _on_enemy_died(_body: EnemyAI) -> void:
+func _on_enemy_died(body: EnemyAI) -> void:
+	var enemy_id := body.get_instance_id()
+	if not counted_enemy_ids.has(enemy_id):
+		return
+	counted_enemy_ids.erase(enemy_id)
 	remaining_enemies = maxi(0, remaining_enemies - 1)
+	print("Level 6 enemies remaining: ", remaining_enemies)
 	if remaining_enemies == 0:
 		_open_door()
 
