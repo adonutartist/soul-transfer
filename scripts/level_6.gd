@@ -28,6 +28,9 @@ var dialogue_choice := ""
 @export_range(0.1, 60.0, 0.1) var choice_prompt_typing_duration: float = 3.5
 @export_range(0.1, 60.0, 0.1) var win_response_typing_duration: float = 5.0
 @export_range(0.1, 60.0, 0.1) var kill_response_typing_duration: float = 8.0
+@export_group("Final Figure Transformation")
+@export_range(0.5, 6.0, 0.1) var figure_rearrage_duration:float = 1.7
+@export_range(0.2, 5.0, 0.1) var figure_reveal_duration: float = 1.4
 
 func _ready() -> void:
 	shopkeeper.visible = false
@@ -199,26 +202,71 @@ func _show_shopkeeper_dialogue() -> void:
 	screen.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	screen.mouse_filter = Control.MOUSE_FILTER_STOP
 	dialogue_layer.add_child(screen)
+	var portrait_sheet := load("res://assets/Sprites&Tiles/All Full Portaits.png") as Texture2D
+	var unknown_portrait_atlas := AtlasTexture.new()
+	unknown_portrait_atlas.atlas = portrait_sheet
+	unknown_portrait_atlas.region = Rect2(1220, 55, 170, 217)
+	var unknown_portrait := TextureRect.new()
+	unknown_portrait.name = "UnknownFigurePortrait"
+	unknown_portrait.texture = unknown_portrait_atlas
+	unknown_portrait.anchor_left = 0.0
+	unknown_portrait.anchor_top = 0.04
+	unknown_portrait.anchor_right = 0.40
+	unknown_portrait.anchor_bottom = 0.82
+	unknown_portrait.offset_left = -25
+	unknown_portrait.offset_right = 0
+	unknown_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	unknown_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	unknown_portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	screen.add_child(unknown_portrait)
+	var player_portrait_atlas := AtlasTexture.new()
+	player_portrait_atlas.atlas = portrait_sheet
+	player_portrait_atlas.region = Rect2(920, 55, 175, 217)
+	var player_portrait := TextureRect.new()
+	player_portrait.name = "PlayerPortrait"
+	player_portrait.texture = player_portrait_atlas
+	player_portrait.anchor_left = 0.60
+	player_portrait.anchor_top = 0.04
+	player_portrait.anchor_bottom = 0.82
+	player_portrait.anchor_right = 1.0
+	player_portrait.offset_left = 0
+	player_portrait.offset_right = 25
+	player_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	player_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	player_portrait.flip_h = true
+	player_portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	screen.add_child(player_portrait)
 	var panel := Panel.new()
 	panel.name = "DialoguePanel"
+	panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	panel.anchor_left = 0.02
-	panel.anchor_top = 0.40
+	panel.anchor_top = 0.52
 	panel.anchor_right = 0.98
 	panel.anchor_bottom = 0.98
+	panel.offset_left = 0
+	panel.offset_top = 0
+	panel.offset_right = 0
+	panel.offset_bottom = 0
 	panel.clip_contents = true
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	screen.add_child(panel)
 	panel.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+	var panel_fill_holder := Control.new()
+	panel_fill_holder.name = "PanelFillHolder"
+	panel_fill_holder.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	panel_fill_holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	panel.add_child(panel_fill_holder)
 	var panel_fill := ColorRect.new()
-	panel_fill.name = "PanelBackground"
+	panel_fill.name = "PanelFill"
 	panel_fill.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	panel_fill.offset_left = 16
+	panel_fill.offset_top = 16
+	panel_fill.offset_right = -16
+	panel_fill.offset_bottom = -16
 	panel_fill.color = Color("#201e26")
 	panel_fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	panel.add_child(panel_fill)
-	panel.move_child(panel_fill, 0)
-	var border_atlas := load(
-		"res://assets/Sprites&Tiles/Border All 10.png"
-	) as Texture2D
+	panel_fill_holder.add_child(panel_fill)
+	var border_atlas := load("res://assets/Sprites&Tiles/Border All 10.png") as Texture2D
 	var border_texture := AtlasTexture.new()
 	border_texture.atlas = border_atlas
 	border_texture.region = Rect2(448, 0, 64, 64)
@@ -238,8 +286,8 @@ func _show_shopkeeper_dialogue() -> void:
 	margins.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	margins.add_theme_constant_override("margin_left", 28)
 	margins.add_theme_constant_override("margin_right", 28)
-	margins.add_theme_constant_override("margin_top", 24)
-	margins.add_theme_constant_override("margin_bottom", 24)
+	margins.add_theme_constant_override("margin_top", 14)
+	margins.add_theme_constant_override("margin_bottom", 14)
 	panel.add_child(margins)
 	var layout := VBoxContainer.new()
 	layout.name = "DialogueLayout"
@@ -249,44 +297,38 @@ func _show_shopkeeper_dialogue() -> void:
 	margins.add_child(layout)
 	var top_row := HBoxContainer.new()
 	top_row.name = "PortraitAndText"
-	top_row.custom_minimum_size.y = 155
+	top_row.custom_minimum_size.y = 120
 	top_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	top_row.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	top_row.add_theme_constant_override("separation", 20)
 	layout.add_child(top_row)
-	var portrait := TextureRect.new()
-	portrait.name = "ShopkeeperPortrait"
-	portrait.texture = shopkeeper.texture
-	portrait.custom_minimum_size = Vector2(120, 150)
-	portrait.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	portrait.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	top_row.add_child(portrait)
 	var message_scroll := ScrollContainer.new()
 	message_scroll.name = "DialogueScroll"
 	message_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	message_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	message_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	message_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
-	message_scroll.custom_minimum_size.y = 155
+	message_scroll.custom_minimum_size.y = 120
 	top_row.add_child(message_scroll)
-	var message := Label.new()
+	var message := RichTextLabel.new()
+	message.bbcode_enabled = true
+	message.fit_content = true
+	message.scroll_active = false
+	message.clip_contents = false
 	message.name = "DialogueText"
 	message.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	message.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	message.custom_minimum_size.y = 120
 	message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	message.clip_text = false
 	message.vertical_alignment = VERTICAL_ALIGNMENT_TOP
-	message.add_theme_color_override("font_color", Color("#eee9f4"))
-	message.add_theme_font_size_override("font_size", 17)
+	message.add_theme_color_override("default_color", Color("#eee9f4"))
+	message.add_theme_font_size_override("normal_font_size", 17)
 	message_scroll.add_child(message)
 	var choices_scroll := ScrollContainer.new()
 	choices_scroll.name = "ChoiceScroll"
 	choices_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	choices_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	choices_scroll.custom_minimum_size.y = 130
+	choices_scroll.custom_minimum_size.y = 90
 	choices_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	choices_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
 	choices_scroll.visible = false
@@ -311,7 +353,7 @@ func _show_shopkeeper_dialogue() -> void:
 		"I seee you have cleared every level... "
 		+ "and now you believe you can simply leave?\n\n"
 		+ "I can't allow that. The soulsss you stole from my pawns, "
-		+ "your LIFEFORCE... they belong to thissss game."
+		+ "your [shake rate=15 level=5]LIFEFORCE[/shake]... they belong to thissss game."
 	)
 	continue_button.disabled = true
 	await _type_dialogue_text(message, message.text, opening_typing_duration)
@@ -363,14 +405,14 @@ func _show_shopkeeper_dialogue() -> void:
 		)
 	else:
 		message.text = (
-			"Kill me HAHAHAHAHA\n\n"
+			"Kill me [shake rate=22 level=7][color=#c58aff]HAHAHAHAHA[/color][/shake]\n\n"
 			+ "You can't do anything without my help. "
 			+ "I was the one who put those corpses in each level "
 			+ "for you to possess...\n\n"
 			+ "Without me the best you can do is roll around "
 			+ "like a little pesky dungworm and dodge attacks "
 			+ "as you try to cling to your dear life...\n\n"
-			+ "DIEEEEEEEEEEEE"
+			+ "[shake rate=30 level=12][color=#ff3030]DIEEEEEEEEEEEE[/color][/shake]"
 		)
 	continue_button.disabled = true
 	var response_duration := win_response_typing_duration
@@ -382,11 +424,65 @@ func _show_shopkeeper_dialogue() -> void:
 	bottom_row.visible = true
 	continue_button.visible = true
 	await continue_button.pressed
-	dialogue_layer.queue_free()
 	if cursor_canvas != null and is_instance_valid(cursor_canvas):
 		cursor_canvas.layer = original_cursor_layer
+	dialogue_layer.queue_free()
+	await get_tree().process_frame
+	await _play_final_figure_transformation()
 	if player != null:
 		player.transitioning = false
+
+func _play_final_figure_transformation() -> void:
+	if shopkeeper.texture == null or final_figure.texture == null:
+		push_error("Level 6: Missing shopkeeper or final figure texture.")
+		return
+	var transformation_position := shopkeeper.global_position
+	var final_figure_original_scale := final_figure.scale
+	shopkeeper.visible = true
+	shopkeeper.global_position = transformation_position
+	shopkeeper.scale = shopkeeper_target_scale
+	shopkeeper.modulate = Color.WHITE
+	shopkeeper.material = _make_white_shader()
+	final_figure.visible = false
+	final_figure.material = null
+	final_figure.modulate = Color.WHITE
+	final_figure.global_position = transformation_position
+	final_figure.scale = final_figure_original_scale
+	var blob := _create_white_blob()
+	blob.global_position = transformation_position
+	blob.scale = Vector2(0.65, 0.65)
+	blob.modulate = Color.WHITE
+	blob.z_index = final_figure.z_index - 1
+	blob.z_as_relative = false
+	var become_blob_tween := create_tween()
+	become_blob_tween.set_parallel(true)
+	become_blob_tween.tween_property(shopkeeper, "modulate:a", 0.0, 0.45).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	become_blob_tween.tween_property(blob, "scale", Vector2(3.5, 3.5), 0.45).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	await become_blob_tween.finished
+	shopkeeper.visible = false
+	shopkeeper.modulate = Color.WHITE
+	shopkeeper.material = null
+	var final_white_material := _make_white_shader()
+	final_figure.global_position = blob.global_position
+	final_figure.scale = final_figure_original_scale * 0.05
+	final_figure.material = final_white_material
+	final_figure.modulate = Color.WHITE
+	final_figure.visible = true
+	var form_tween := create_tween()
+	form_tween.set_parallel(true)
+	form_tween.tween_property(final_figure, "scale", final_figure_original_scale, figure_rearrage_duration).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	form_tween.tween_property(blob, "scale", Vector2(0.02, 0.02), figure_rearrage_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	form_tween.tween_property(blob, "modulate:a", 0.0, figure_rearrage_duration * 0.65).set_delay(figure_rearrage_duration * 0.2)
+	await form_tween.finished
+	blob.queue_free()
+	var reveal_tween := create_tween()
+	reveal_tween.tween_method(func(value: float):final_white_material.set_shader_parameter("white_amount", value), 1.0, 0.0, figure_reveal_duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	await reveal_tween.finished
+	final_figure.material = null
+	final_figure.modulate = Color.WHITE
+	final_figure.scale = final_figure_original_scale
+	final_figure.global_position = transformation_position
+	final_figure.visible = true
 
 func _on_dialogue_choice_pressed(choice: String) -> void:
 	dialogue_choice_made.emit(choice)
@@ -453,10 +549,10 @@ func _fit_dialogue_button_height(button: Button) -> void:
 	var required_height := float(line_count) * line_height + 24.0
 	button.custom_minimum_size.y = maxf(58.0, required_height)
 
-func _type_dialogue_text(label: Label, full_text: String, duration: float) -> void:
+func _type_dialogue_text(label: RichTextLabel, full_text: String, duration: float) -> void:
 	label.text = full_text
 	label.visible_characters = 0
-	var character_count := full_text.length()
+	var character_count := label.get_total_character_count()
 	if character_count <= 0:
 		return
 	if duration <= 0.0:
