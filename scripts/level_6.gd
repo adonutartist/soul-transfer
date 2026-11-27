@@ -21,8 +21,13 @@ var counted_enemy_ids: Dictionary = {}
 var gate_interaction_armed := true
 var dialogue_choice := ""
 
-@export var gate_activation_range: float = 400.0
+@export var gate_activation_range: float = 600.0
 @export var shopkeeper_arrival_offset := Vector2(0, 350)
+@export_group("Shopkeeper Voice Sync")
+@export_range(0.1, 60.0, 0.1) var opening_typing_duration: float = 5.0
+@export_range(0.1, 60.0, 0.1) var choice_prompt_typing_duration: float = 3.5
+@export_range(0.1, 60.0, 0.1) var win_response_typing_duration: float = 5.0
+@export_range(0.1, 60.0, 0.1) var kill_response_typing_duration: float = 8.0
 
 func _ready() -> void:
 	shopkeeper.visible = false
@@ -185,39 +190,35 @@ func _show_shopkeeper_dialogue() -> void:
 	dialogue_layer.layer = 80
 	dialogue_layer.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(dialogue_layer)
-	var cursor_node := get_tree().root.find_child("CustomCursor", true, false)
-	var cursor_canvas: CanvasLayer = cursor_node as CanvasLayer
-	while cursor_node == null and cursor_node != null:
-		cursor_node = cursor_node.get_parent()
-		cursor_canvas = cursor_node as CanvasLayer
+	var cursor_canvas := get_tree().root.find_child("CustomCursor", true, false) as CanvasLayer
+	var original_cursor_layer := -1
 	if cursor_canvas != null:
-		cursor_canvas.layer = 100
+		original_cursor_layer = cursor_canvas.layer
+		cursor_canvas.layer = maxi(cursor_canvas.layer, 100)
 	var screen := Control.new()
 	screen.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	screen.mouse_filter = Control.MOUSE_FILTER_STOP
 	dialogue_layer.add_child(screen)
 	var panel := Panel.new()
 	panel.name = "DialoguePanel"
-	panel.anchor_left = 0.07
-	panel.anchor_top = 0.50
-	panel.anchor_right = 0.93
-	panel.anchor_bottom = 0.97
+	panel.anchor_left = 0.02
+	panel.anchor_top = 0.40
+	panel.anchor_right = 0.98
+	panel.anchor_bottom = 0.98
 	panel.clip_contents = true
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	screen.add_child(panel)
-	var panel_style := StyleBoxEmpty.new()
-	panel.add_theme_stylebox_override("panel", panel_style)
+	panel.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
 	var panel_fill := ColorRect.new()
 	panel_fill.name = "PanelBackground"
-	panel_fill.anchor_left = 0.025
-	panel_fill.anchor_top = 0.025
-	panel_fill.anchor_right = 0.975
-	panel_fill.anchor_bottom = 0.975
-	panel_fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	panel_fill.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	panel_fill.color = Color("#201e26")
+	panel_fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	panel.add_child(panel_fill)
 	panel.move_child(panel_fill, 0)
-	var border_atlas := load("res://assets/Sprites&Tiles/Border All 10.png") as Texture2D
+	var border_atlas := load(
+		"res://assets/Sprites&Tiles/Border All 10.png"
+	) as Texture2D
 	var border_texture := AtlasTexture.new()
 	border_texture.atlas = border_atlas
 	border_texture.region = Rect2(448, 0, 64, 64)
@@ -232,107 +233,158 @@ func _show_shopkeeper_dialogue() -> void:
 	panel_frame.draw_center = false
 	panel_frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	panel.add_child(panel_frame)
+	var margins := MarginContainer.new()
+	margins.name = "DialogueMargins"
+	margins.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	margins.add_theme_constant_override("margin_left", 28)
+	margins.add_theme_constant_override("margin_right", 28)
+	margins.add_theme_constant_override("margin_top", 24)
+	margins.add_theme_constant_override("margin_bottom", 24)
+	panel.add_child(margins)
+	var layout := VBoxContainer.new()
+	layout.name = "DialogueLayout"
+	layout.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	layout.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	layout.add_theme_constant_override("separation", 12)
+	margins.add_child(layout)
+	var top_row := HBoxContainer.new()
+	top_row.name = "PortraitAndText"
+	top_row.custom_minimum_size.y = 155
+	top_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	top_row.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	top_row.add_theme_constant_override("separation", 20)
+	layout.add_child(top_row)
 	var portrait := TextureRect.new()
 	portrait.name = "ShopkeeperPortrait"
 	portrait.texture = shopkeeper.texture
-	portrait.position = Vector2(28, 24)
-	portrait.size = Vector2(130, 175)
+	portrait.custom_minimum_size = Vector2(120, 150)
+	portrait.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	portrait.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	panel.add_child(portrait)
+	top_row.add_child(portrait)
+	var message_scroll := ScrollContainer.new()
+	message_scroll.name = "DialogueScroll"
+	message_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	message_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	message_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	message_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	message_scroll.custom_minimum_size.y = 155
+	top_row.add_child(message_scroll)
 	var message := Label.new()
 	message.name = "DialogueText"
-	message.anchor_left = 0.17
-	message.anchor_top = 0.07
-	message.anchor_right = 0.94
-	message.anchor_bottom = 0.43
-	message.offset_left = 8
-	message.offset_top = 4
-	message.offset_right = -12
-	message.offset_bottom = -4
+	message.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	message.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	message.clip_text = true
-	message.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	message.clip_text = false
+	message.vertical_alignment = VERTICAL_ALIGNMENT_TOP
 	message.add_theme_color_override("font_color", Color("#eee9f4"))
 	message.add_theme_font_size_override("font_size", 17)
-	panel.add_child(message)
+	message_scroll.add_child(message)
+	var choices_scroll := ScrollContainer.new()
+	choices_scroll.name = "ChoiceScroll"
+	choices_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	choices_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	choices_scroll.custom_minimum_size.y = 130
+	choices_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	choices_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	choices_scroll.visible = false
+	layout.add_child(choices_scroll)
+	var choices_list := VBoxContainer.new()
+	choices_list.name = "ChoiceButtons"
+	choices_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	choices_list.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	choices_list.add_theme_constant_override("separation", 10)
+	choices_scroll.add_child(choices_list)
+	var bottom_row := HBoxContainer.new()
+	bottom_row.name = "DialogueBottomRow"
+	bottom_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	bottom_row.custom_minimum_size.y = 52
+	bottom_row.alignment = BoxContainer.ALIGNMENT_END
+	layout.add_child(bottom_row)
 	var continue_button := _create_dialogue_button("CONTINUE")
 	continue_button.name = "ContinueButton"
-	continue_button.anchor_left = 1.0
-	continue_button.anchor_top = 1.0
-	continue_button.anchor_bottom = 1.0
-	continue_button.anchor_right = 1.0
-	continue_button.offset_left = -190
-	continue_button.offset_right = -24
-	continue_button.offset_top = -65
-	continue_button.offset_bottom = -20
-	panel.add_child(continue_button)
+	continue_button.custom_minimum_size = Vector2(170, 52)
+	bottom_row.add_child(continue_button)
 	message.text = (
 		"I seee you have cleared every level... "
 		+ "and now you believe you can simply leave?\n\n"
 		+ "I can't allow that. The soulsss you stole from my pawns, "
 		+ "your LIFEFORCE... they belong to thissss game."
 	)
+	continue_button.disabled = true
+	await _type_dialogue_text(message, message.text, opening_typing_duration)
+	continue_button.disabled = false
 	await continue_button.pressed
-	continue_button.visible = false
 	message.text = (
 		"Then tell me, player.\n\n"
 		+ "How do you wish to end thisssss? "
 		+ "Because there's no end to thiss that you seeeeek."
 	)
-	var choices := HBoxContainer.new()
-	choices.name = "ChoiceButtons"
-	choices.anchor_left = 0.17
-	choices.anchor_right = 0.94
-	choices.anchor_top = 0.48
-	choices.anchor_bottom = 0.94
-	choices.offset_left = 8
-	choices.offset_right = -12
-	choices.offset_top = 4
-	choices.offset_bottom = -4
-	choices.add_theme_constant_override("separation", 8)
-	choices.mouse_filter = Control.MOUSE_FILTER_PASS
-	choices.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	panel.add_child(choices)
+	await _type_dialogue_text(message, message.text, choice_prompt_typing_duration)
+	message_scroll.scroll_vertical = 0
+	bottom_row.visible = false
+	choices_scroll.visible = true
 	var win_button := _create_dialogue_button(
 		"I WILL WIN THIS GAME, GAMES ARE MADE TO BE BEATEN :p"
 	)
 	win_button.name = "WinChoice"
-	win_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	win_button.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	choices.add_child(win_button)
-	var kill_button := _create_dialogue_button("I WILL KILL YOU IF I MUST TO GET THE TRUE ENDING FOR THIS GAME :D")
+	choices_list.add_child(win_button)
+	var kill_button := _create_dialogue_button(
+		"I WILL KILL YOU IF I MUST TO GET THE TRUE ENDING FOR THIS GAME :D"
+	)
 	kill_button.name = "KillChoice"
-	kill_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	kill_button.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	choices.add_child(kill_button)
-	win_button.pressed.connect(_on_dialogue_choice_pressed.bind("win"))
-	kill_button.pressed.connect(_on_dialogue_choice_pressed.bind("kill"))
+	choices_list.add_child(kill_button)
+	win_button.pressed.connect(
+		_on_dialogue_choice_pressed.bind("win")
+	)
+	kill_button.pressed.connect(
+		_on_dialogue_choice_pressed.bind("kill")
+	)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	_fit_dialogue_button_height(win_button)
+	_fit_dialogue_button_height(kill_button)
+	await get_tree().process_frame
+	_fit_dialogue_button_height(win_button)
+	_fit_dialogue_button_height(kill_button)
 	dialogue_choice = ""
 	var choice: String = await dialogue_choice_made
 	dialogue_choice = choice
-	choices.queue_free()
+	choices_scroll.visible = false
+	choices_list.queue_free()
 	if dialogue_choice == "win":
 		message.text = (
 			"I already told youuu there is no end that you seeeek...\n\n"
 			+ "I never made an end to this. "
 			+ "You aren't meant to leave this game, "
-			+ "you must keep playing... "
+			+ "you must keep playing..."
 		)
 	else:
 		message.text = (
-			"Kill me HAHAHAHAHA \n\n"
+			"Kill me HAHAHAHAHA\n\n"
 			+ "You can't do anything without my help. "
-			+ "I was the one who put those corpses in each level for you to possess...\n\n"
-			+ "Without me the best you can do is roll around like a little pesky dungworm "
-			+ "and dodge attacks as you try to cling to your dear life...\n\n"
+			+ "I was the one who put those corpses in each level "
+			+ "for you to possess...\n\n"
+			+ "Without me the best you can do is roll around "
+			+ "like a little pesky dungworm and dodge attacks "
+			+ "as you try to cling to your dear life...\n\n"
 			+ "DIEEEEEEEEEEEE"
 		)
-	continue_button.text = "CONTINUE"
+	continue_button.disabled = true
+	var response_duration := win_response_typing_duration
+	if dialogue_choice == "kill":
+		response_duration = kill_response_typing_duration
+	await _type_dialogue_text(message, message.text, response_duration)
+	continue_button.disabled = false
+	message_scroll.scroll_vertical = 0
+	bottom_row.visible = true
 	continue_button.visible = true
 	await continue_button.pressed
 	dialogue_layer.queue_free()
+	if cursor_canvas != null and is_instance_valid(cursor_canvas):
+		cursor_canvas.layer = original_cursor_layer
 	if player != null:
 		player.transitioning = false
 
@@ -342,15 +394,11 @@ func _on_dialogue_choice_pressed(choice: String) -> void:
 func _create_dialogue_button(button_text: String) -> Button:
 	var button := Button.new()
 	button.text = ""
-	button.clip_contents = true
+	button.name = "DialogueButton"
+	button.clip_contents = false
 	button.focus_mode = Control.FOCUS_NONE
 	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	button.add_theme_color_override("font_color", Color("#f2edf7"))
-	button.add_theme_color_override("font_hover_color", Color("#ffcf75"))
-	var viewport_width := get_viewport().get_visible_rect().size.x
-	var max_chars_per_line := maxi(28, int((viewport_width * 0.62) / 9.0))
-	var estimated_lines := maxi(1, ceili(float(button_text.length()) / float(max_chars_per_line)))
-	button.custom_minimum_size = Vector2(0, maxf(58.0, float(estimated_lines * 24 + 24)))
+	button.custom_minimum_size = Vector2(0, 58)
 	var empty_style := StyleBoxEmpty.new()
 	button.add_theme_stylebox_override("normal", empty_style)
 	button.add_theme_stylebox_override("hover", empty_style)
@@ -360,17 +408,19 @@ func _create_dialogue_button(button_text: String) -> Button:
 	label.name = "WrappedButtonText"
 	label.text = button_text
 	label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	label.offset_left = 14
-	label.offset_right = -14
-	label.offset_top = 8
-	label.offset_bottom = -8
+	label.offset_left = 18
+	label.offset_right = -18
+	label.offset_top = 10
+	label.offset_bottom = -10
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.clip_text = false
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	label.clip_text = true
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	label.add_theme_font_size_override("font_size", 16)
 	label.add_theme_color_override("font_color", Color("#f2edf7"))
+	label.add_theme_color_override("font_hover_color", Color("#ffcf75"))
 	button.add_child(label)
 	var border_atlas := load("res://assets/Sprites&Tiles/Border All 10.png") as Texture2D
 	var border_texture := AtlasTexture.new()
@@ -389,3 +439,30 @@ func _create_dialogue_button(button_text: String) -> Button:
 	button.add_child(frame)
 	button.move_child(frame, button.get_child_count() - 1)
 	return button
+
+func _fit_dialogue_button_height(button: Button) -> void:
+	var label := button.get_node_or_null("WrappedButtonText") as Label
+	if label == null:
+		return
+	var line_count := maxi(1, label.get_line_count())
+	var font := label.get_theme_font("font")
+	var font_size := label.get_theme_font_size("font_size")
+	var line_height := 20.0
+	if font != null:
+		line_height = font.get_height(font_size)
+	var required_height := float(line_count) * line_height + 24.0
+	button.custom_minimum_size.y = maxf(58.0, required_height)
+
+func _type_dialogue_text(label: Label, full_text: String, duration: float) -> void:
+	label.text = full_text
+	label.visible_characters = 0
+	var character_count := full_text.length()
+	if character_count <= 0:
+		return
+	if duration <= 0.0:
+		label.visible_characters = -1
+		return
+	var typing_tween := create_tween()
+	typing_tween.tween_property(label, "visible_characters", character_count, duration)
+	await typing_tween.finished
+	label.visible_characters = -1
