@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://wtcyb0tpj1sy" path="res://scenes/Tank.tscn" id="7_la7i6"]
 [ext_resource type="PackedScene" uid="uid://rfmi3vc5k46q" path="res://scenes/Rogue.tscn" id="8_vj534"]
 [ext_resource type="Texture2D" uid="uid://b87drsx7wlb6s" path="res://assets/Sprites&Tiles/Demons.png" id="10_vmh03"]
+[ext_resource type="PackedScene" uid="uid://7lqqkosx8um1" path="res://effects/AtmosphereFX.tscn" id="11_6newl"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ncd6c"]
 texture = ExtResource("1_5kwbs")
@@ -3895,3 +3896,12 @@ texture = SubResource("AtlasTexture_txj4k")
 visible = false
 z_index = 10
 texture = SubResource("AtlasTexture_4ffog")
+
+[node name="AtmosphereFX" parent="." unique_id=328065046 instance=ExtResource("11_6newl")]
+rays_enabled = false
+fog_enabled = false
+lights_enabled = false
+dust_color = Color(1, 0.9490196, 0.8, 0.03137255)
+feather_color = Color(0.5019608, 0.45882353, 0.4392157, 0.08627451)
+fog_color = Color(0.9490196, 0.9607843, 1, 0.37254903)
+fog_density = 0.1

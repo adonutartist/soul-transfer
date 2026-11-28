@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://7lqqkosx8um1"]
+
+[ext_resource type="Script" uid="uid://mtxso1ykwouu" path="res://effects/atmosphere_fx.gd" id="1"]
+
+[node name="AtmosphereFX" type="Node2D" unique_id=328065046]
+script = ExtResource("1")
